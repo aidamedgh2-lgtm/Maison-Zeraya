@@ -1180,9 +1180,8 @@
             console.error(error);
 
             alert(
-                "Une erreur est survenue lors de l'enregistrement de la commande.\n\n" +
-                "Veuillez réessayer."
-            );
+                alert("ERREUR SUPABASE : " + error.message);
+            )
 
         } finally {
 
