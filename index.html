@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Maison Zeraya — Lingerie & Homewear</title>
+    <title>Maison Zeraya — Lingerie & Homewear</title>
 
-<meta name="description"
-      content="Maison Zeraya — Lingerie & Homewear. Élégance sans limites.">
+    <meta name="description"
+          content="Maison Zeraya — Lingerie & Homewear. Élégance sans limites.">
 
 <style>
 * {
@@ -1809,10 +1809,6 @@ async function loadProducts() {
             result.data || [];
 
 
-        /*
-         * Load additional product images.
-         */
-
         if (products.length > 0) {
 
             const ids =
@@ -2276,22 +2272,16 @@ function showFavorites() {
     container.innerHTML = "";
 
 
-    favoriteProducts.forEach(
-        function(product) {
+    const original =
+        products;
 
-            const original =
-                products;
+    products =
+        favoriteProducts;
 
-            products =
-                favoriteProducts;
+    renderProducts();
 
-            renderProducts();
-
-            products =
-                original;
-
-        }
-    );
+    products =
+        original;
 
 }
 
@@ -3385,4 +3375,4 @@ document.addEventListener(
 </script>
 
 </body>
-      </html>
+    </html>
