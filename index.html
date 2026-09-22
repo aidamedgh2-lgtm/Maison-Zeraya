@@ -1175,13 +1175,13 @@
             closeCheckout();
 
 
-        } catch (error) {
+                } catch (error) {
 
-            console.error(error);
+            console.error("Supabase error:", error);
 
             alert(
-                alert("ERREUR SUPABASE : " + error.message);
-            )
+                "ERREUR SUPABASE : " + error.message
+            );
 
         } finally {
 
