@@ -1,340 +1,474 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Maison Zeraya — Administration</title>
+    <title>Maison Zeraya — Administration</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<style>
-* {
-    box-sizing: border-box;
-}
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f5f7f6;
-    color: #183c38;
-}
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7f6;
+            color: #173f3b;
+        }
 
-header {
-    background: #164c46;
-    color: white;
-    padding: 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-}
+        header {
+            background: #123f3a;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
 
-header h1 {
-    margin: 0;
-    font-size: 20px;
-}
+        header h1 {
+            margin: 0;
+            font-size: 25px;
+        }
 
-button {
-    border: none;
-    border-radius: 8px;
-    padding: 11px 15px;
-    cursor: pointer;
-}
+        header p {
+            margin: 6px 0 0;
+            color: #d8c27a;
+        }
 
-.logout {
-    background: white;
-    color: #164c46;
-}
+        .container {
+            width: 94%;
+            max-width: 1100px;
+            margin: 25px auto;
+        }
 
-.container {
-    max-width: 1100px;
-    margin: auto;
-    padding: 20px;
-}
+        .box {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 22px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+        }
 
-.box {
-    max-width: 420px;
-    margin: 60px auto;
-    background: white;
-    padding: 25px;
-    border-radius: 14px;
-    box-shadow: 0 5px 25px rgba(0,0,0,.08);
-}
+        h2 {
+            margin-top: 0;
+            color: #123f3a;
+        }
 
-.box h2 {
-    text-align: center;
-    margin-top: 0;
-}
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 13px;
+            margin: 7px 0 12px;
+            border: 1px solid #d5dddd;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+        }
 
-input {
-    width: 100%;
-    padding: 13px;
-    margin: 8px 0 14px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 15px;
-}
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
 
-.main-btn {
-    width: 100%;
-    background: #164c46;
-    color: white;
-    font-size: 16px;
-}
+        button {
+            border: none;
+            border-radius: 8px;
+            padding: 12px 17px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
 
-.link-btn {
-    background: none;
-    color: #164c46;
-    width: 100%;
-    margin-top: 8px;
-}
+        .main-btn {
+            background: #123f3a;
+            color: white;
+        }
 
-.message {
-    margin-top: 12px;
-    line-height: 1.5;
-}
+        .main-btn:hover {
+            background: #0c302c;
+        }
 
-.error {
-    color: #b42318;
-}
+        .gold-btn {
+            background: #c7a94b;
+            color: white;
+        }
 
-.success {
-    color: #18794e;
-}
+        .danger-btn {
+            background: #b33a3a;
+            color: white;
+        }
 
-.orders {
-    display: grid;
-    gap: 18px;
-}
+        .gray-btn {
+            background: #777;
+            color: white;
+        }
 
-.order {
-    background: white;
-    border-radius: 14px;
-    padding: 20px;
-    box-shadow: 0 4px 18px rgba(0,0,0,.06);
-}
+        .logout-btn {
+            background: white;
+            color: #123f3a;
+            margin-top: 12px;
+        }
 
-.order-top {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    flex-wrap: wrap;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 12px;
-    margin-bottom: 12px;
-}
+        .message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+        }
 
-.order h3 {
-    margin: 0;
-}
+        .success {
+            background: #e5f6ed;
+            color: #17633f;
+        }
 
-.info {
-    line-height: 1.8;
-}
+        .error {
+            background: #fde8e8;
+            color: #9b2222;
+        }
 
-.items {
-    background: #f5f7f6;
-    padding: 12px;
-    border-radius: 8px;
-    margin: 12px 0;
-    line-height: 1.8;
-}
+        .hidden {
+            display: none !important;
+        }
 
-.total {
-    font-size: 19px;
-    font-weight: bold;
-    margin: 12px 0;
-}
+        .product-card,
+        .order-card {
+            border: 1px solid #e1e7e5;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #fcfdfd;
+        }
 
-.status {
-    padding: 9px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    background: white;
-    margin-top: 6px;
-}
+        .product-card {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
 
-.settings-box {
-    max-width: 600px;
-    margin: 20px auto;
-}
+        .product-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: #eef2f1;
+            flex-shrink: 0;
+        }
 
-.hidden {
-    display: none;
-}
+        .product-info {
+            flex: 1;
+        }
 
-.empty {
-    text-align: center;
-    background: white;
-    padding: 30px;
-    border-radius: 14px;
-}
-</style>
+        .product-info h3 {
+            margin: 0 0 8px;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #b28c25;
+            margin: 8px 0;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: #edf3f2;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .actions button {
+            padding: 9px 12px;
+            font-size: 13px;
+        }
+
+        .preview {
+            max-width: 180px;
+            max-height: 180px;
+            border-radius: 10px;
+            margin: 8px 0 15px;
+            display: none;
+        }
+
+        .section-title {
+            border-bottom: 1px solid #e1e7e5;
+            padding-bottom: 10px;
+            margin-bottom: 18px;
+        }
+
+        .order-products {
+            background: #f5f8f7;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .total {
+            font-size: 19px;
+            font-weight: bold;
+            color: #b28c25;
+        }
+
+        .top-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        @media (max-width: 650px) {
+            .product-card {
+                flex-direction: column;
+            }
+
+            .product-image {
+                width: 100%;
+                height: 220px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
-
-<header id="adminHeader" class="hidden">
-
-    <h1>Maison Zeraya — Administration</h1>
-
-    <button class="logout" id="logoutBtn">
-        Déconnexion
-    </button>
-
+<header>
+    <h1>Maison Zeraya</h1>
+    <p>Administration — Élégance sans limites</p>
 </header>
 
+<div class="container">
 
-<!-- LOGIN -->
+    <!-- LOGIN -->
+    <div id="loginSection" class="box">
+        <h2>🔐 Connexion administrateur</h2>
 
-<div id="loginSection" class="box">
+        <input
+            type="email"
+            id="loginEmail"
+            placeholder="Adresse email"
+            autocomplete="email"
+        >
 
-    <h2>Administration</h2>
+        <input
+            type="password"
+            id="loginPassword"
+            placeholder="Mot de passe"
+            autocomplete="current-password"
+        >
 
-    <input
-        type="email"
-        id="email"
-        placeholder="Email"
-        autocomplete="email"
-    >
+        <button class="main-btn" id="loginBtn">
+            Se connecter
+        </button>
 
-    <input
-        type="password"
-        id="password"
-        placeholder="Mot de passe"
-        autocomplete="current-password"
-    >
+        <button class="gray-btn" id="showForgotBtn">
+            Mot de passe oublié ?
+        </button>
 
-    <button class="main-btn" id="loginBtn">
-        Se connecter
-    </button>
-
-    <button class="link-btn" id="forgotBtn">
-        Mot de passe oublié ?
-    </button>
-
-    <div id="loginMessage" class="message"></div>
-
-</div>
+        <div id="loginMessage" class="message"></div>
+    </div>
 
 
-<!-- FORGOT PASSWORD -->
+    <!-- FORGOT PASSWORD -->
+    <div id="forgotSection" class="box hidden">
 
-<div id="forgotSection" class="box hidden">
-
-    <h2>Réinitialiser le mot de passe</h2>
-
-    <p>
-        Entrez votre adresse email pour recevoir
-        un lien de réinitialisation.
-    </p>
-
-    <input
-        type="email"
-        id="resetEmail"
-        placeholder="Votre email"
-    >
-
-    <button class="main-btn" id="sendResetBtn">
-        Envoyer le lien
-    </button>
-
-    <button class="link-btn" id="backLoginBtn">
-        Retour à la connexion
-    </button>
-
-    <div id="resetMessage" class="message"></div>
-
-</div>
-
-
-<!-- NEW PASSWORD FROM EMAIL -->
-
-<div id="newPasswordSection" class="box hidden">
-
-    <h2>Nouveau mot de passe</h2>
-
-    <input
-        type="password"
-        id="newPassword"
-        placeholder="Nouveau mot de passe"
-        autocomplete="new-password"
-    >
-
-    <input
-        type="password"
-        id="confirmPassword"
-        placeholder="Confirmer le mot de passe"
-        autocomplete="new-password"
-    >
-
-    <button class="main-btn" id="savePasswordBtn">
-        Enregistrer le nouveau mot de passe
-    </button>
-
-    <div id="passwordMessage" class="message"></div>
-
-</div>
-
-
-<!-- ADMIN CONTENT -->
-
-<div id="adminSection" class="container hidden">
-
-    <!-- CHANGE PASSWORD -->
-
-    <div class="box settings-box">
-
-        <h2>🔐 Modifier le mot de passe</h2>
+        <h2>🔑 Réinitialiser le mot de passe</h2>
 
         <p>
-            Choisissez un nouveau mot de passe pour votre
-            compte administrateur.
+            Entrez votre adresse email pour recevoir un lien de réinitialisation.
         </p>
 
         <input
-            type="password"
-            id="newAdminPassword"
-            placeholder="Nouveau mot de passe"
-            autocomplete="new-password"
+            type="email"
+            id="forgotEmail"
+            placeholder="Adresse email"
         >
 
-        <input
-            type="password"
-            id="confirmAdminPassword"
-            placeholder="Confirmer le nouveau mot de passe"
-            autocomplete="new-password"
-        >
-
-        <button class="main-btn" id="changePasswordBtn">
-            Modifier le mot de passe
+        <button class="main-btn" id="forgotBtn">
+            Envoyer le lien
         </button>
 
-        <div
-            id="passwordChangeMessage"
-            class="message"
-        ></div>
+        <button class="gray-btn" id="backToLoginBtn">
+            Retour
+        </button>
+
+        <div id="forgotMessage" class="message"></div>
 
     </div>
 
 
-    <!-- ORDERS -->
+    <!-- ADMIN -->
+    <div id="adminSection" class="hidden">
 
-    <h2>Commandes</h2>
+        <div class="box">
 
-    <div id="orders" class="orders"></div>
+            <div class="top-actions">
+                <button class="logout-btn" id="logoutBtn">
+                    Déconnexion
+                </button>
+            </div>
+
+            <h2>👑 Tableau de bord</h2>
+
+            <p>
+                Bienvenue dans l'administration de Maison Zeraya.
+            </p>
+
+        </div>
+
+
+        <!-- CHANGE PASSWORD -->
+        <div class="box">
+
+            <h2>🔐 Modifier le mot de passe</h2>
+
+            <p>
+                Choisissez un nouveau mot de passe pour votre compte administrateur.
+            </p>
+
+            <input
+                type="password"
+                id="newAdminPassword"
+                placeholder="Nouveau mot de passe"
+            >
+
+            <input
+                type="password"
+                id="confirmAdminPassword"
+                placeholder="Confirmer le nouveau mot de passe"
+            >
+
+            <button class="main-btn" id="changePasswordBtn">
+                Modifier le mot de passe
+            </button>
+
+            <div id="passwordChangeMessage" class="message"></div>
+
+        </div>
+
+
+        <!-- PRODUCTS -->
+        <div class="box">
+
+            <h2 class="section-title">
+                🛍️ Gestion des produits
+            </h2>
+
+            <button class="gold-btn" id="newProductBtn">
+                ➕ Ajouter un produit
+            </button>
+
+        </div>
+
+
+        <!-- PRODUCT FORM -->
+        <div id="productFormBox" class="box hidden">
+
+            <h2 id="productFormTitle">
+                ➕ Ajouter un produit
+            </h2>
+
+            <input
+                type="text"
+                id="productName"
+                placeholder="Nom du produit"
+            >
+
+            <textarea
+                id="productDescription"
+                placeholder="Description du produit"
+            ></textarea>
+
+            <input
+                type="number"
+                id="productPrice"
+                placeholder="Prix en DA"
+                min="0"
+            >
+
+            <label>
+                <strong>Image du produit</strong>
+            </label>
+
+            <input
+                type="file"
+                id="productImage"
+                accept="image/*"
+            >
+
+            <img
+                id="imagePreview"
+                class="preview"
+                alt="Aperçu"
+            >
+
+            <input
+                type="hidden"
+                id="editingProductId"
+            >
+
+            <input
+                type="hidden"
+                id="existingImageUrl"
+            >
+
+            <div class="actions">
+
+                <button class="main-btn" id="saveProductBtn">
+                    💾 Enregistrer
+                </button>
+
+                <button class="gray-btn" id="cancelProductBtn">
+                    Annuler
+                </button>
+
+            </div>
+
+            <div id="productMessage" class="message"></div>
+
+        </div>
+
+
+        <!-- PRODUCTS LIST -->
+        <div class="box">
+
+            <h2 class="section-title">
+                📦 Mes produits
+            </h2>
+
+            <div id="productsList">
+                Chargement des produits...
+            </div>
+
+        </div>
+
+
+        <!-- ORDERS -->
+        <div class="box">
+
+            <h2 class="section-title">
+                🧾 Commandes
+            </h2>
+
+            <div id="ordersList">
+                Chargement des commandes...
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 
 
 <script>
-
-/* =========================
-   SUPABASE
-========================= */
 
 const SUPABASE_URL =
     "https://wicjgmiqevbhxuebhdyv.supabase.co";
@@ -359,76 +493,120 @@ const loginSection =
 const forgotSection =
     document.getElementById("forgotSection");
 
-const newPasswordSection =
-    document.getElementById("newPasswordSection");
-
 const adminSection =
     document.getElementById("adminSection");
 
-const adminHeader =
-    document.getElementById("adminHeader");
+const loginMessage =
+    document.getElementById("loginMessage");
 
-const ordersContainer =
-    document.getElementById("orders");
+const forgotMessage =
+    document.getElementById("forgotMessage");
+
+const passwordChangeMessage =
+    document.getElementById("passwordChangeMessage");
+
+const productMessage =
+    document.getElementById("productMessage");
+
+const productsList =
+    document.getElementById("productsList");
+
+const ordersList =
+    document.getElementById("ordersList");
+
+const productFormBox =
+    document.getElementById("productFormBox");
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+function showMessage(element, message, type) {
+
+    element.textContent = message;
+
+    element.className =
+        "message " + type;
+
+    element.style.display = "block";
+}
 
 
 /* =========================
    LOGIN
 ========================= */
 
-document
-    .getElementById("loginBtn")
-    .addEventListener("click", login);
-
-
 async function login() {
 
     const email =
-        document
-            .getElementById("email")
-            .value
-            .trim();
+        document.getElementById("loginEmail").value.trim();
 
     const password =
-        document
-            .getElementById("password")
-            .value;
-
-    const message =
-        document.getElementById("loginMessage");
-
-    message.textContent = "";
-    message.className = "message";
+        document.getElementById("loginPassword").value;
 
     if (!email || !password) {
 
-        message.textContent =
-            "Veuillez entrer votre email et votre mot de passe.";
-
-        message.classList.add("error");
+        showMessage(
+            loginMessage,
+            "Veuillez remplir tous les champs.",
+            "error"
+        );
 
         return;
     }
 
     const { error } =
         await supabaseClient.auth.signInWithPassword({
-            email: email,
-            password: password
+            email,
+            password
         });
 
     if (error) {
 
-        message.textContent =
-            "Erreur : " + error.message;
-
-        message.classList.add("error");
+        showMessage(
+            loginMessage,
+            "Erreur : " + error.message,
+            "error"
+        );
 
         return;
     }
 
     showAdmin();
 
-    loadOrders();
+}
+
+
+/* =========================
+   SHOW ADMIN
+========================= */
+
+async function showAdmin() {
+
+    loginSection.classList.add("hidden");
+    forgotSection.classList.add("hidden");
+    adminSection.classList.remove("hidden");
+
+    await loadProducts();
+    await loadOrders();
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+async function logout() {
+
+    await supabaseClient.auth.signOut();
+
+    adminSection.classList.add("hidden");
+    loginSection.classList.remove("hidden");
+
+    document.getElementById("loginPassword").value = "";
+
 }
 
 
@@ -436,228 +614,94 @@ async function login() {
    FORGOT PASSWORD
 ========================= */
 
-document
-    .getElementById("forgotBtn")
-    .addEventListener("click", () => {
-
-        loginSection.classList.add("hidden");
-
-        forgotSection.classList.remove("hidden");
-
-    });
-
-
-document
-    .getElementById("backLoginBtn")
-    .addEventListener("click", () => {
-
-        forgotSection.classList.add("hidden");
-
-        loginSection.classList.remove("hidden");
-
-    });
-
-
-document
-    .getElementById("sendResetBtn")
-    .addEventListener("click", sendReset);
-
-
-async function sendReset() {
+async function sendPasswordReset() {
 
     const email =
-        document
-            .getElementById("resetEmail")
-            .value
-            .trim();
-
-    const message =
-        document.getElementById("resetMessage");
-
-    message.textContent = "";
-    message.className = "message";
+        document.getElementById("forgotEmail").value.trim();
 
     if (!email) {
 
-        message.textContent =
-            "Veuillez entrer votre email.";
-
-        message.classList.add("error");
+        showMessage(
+            forgotMessage,
+            "Entrez votre adresse email.",
+            "error"
+        );
 
         return;
     }
 
-    const redirectTo =
-        window.location.origin +
-        window.location.pathname;
+    const redirectUrl =
+        "https://aidamedgh2-lgtm.github.io/Maison-Zeraya/admin.html";
 
     const { error } =
         await supabaseClient.auth.resetPasswordForEmail(
             email,
             {
-                redirectTo: redirectTo
+                redirectTo: redirectUrl
             }
         );
 
     if (error) {
 
-        message.textContent =
-            "Erreur : " + error.message;
-
-        message.classList.add("error");
+        showMessage(
+            forgotMessage,
+            "Erreur : " + error.message,
+            "error"
+        );
 
         return;
     }
 
-    message.textContent =
-        "Un lien de réinitialisation a été envoyé à votre email.";
-
-    message.classList.add("success");
-}
-
-
-/* =========================
-   PASSWORD FROM EMAIL
-========================= */
-
-document
-    .getElementById("savePasswordBtn")
-    .addEventListener(
-        "click",
-        saveNewPassword
+    showMessage(
+        forgotMessage,
+        "Le lien de réinitialisation a été envoyé.",
+        "success"
     );
-
-
-async function saveNewPassword() {
-
-    const password =
-        document
-            .getElementById("newPassword")
-            .value;
-
-    const confirmPassword =
-        document
-            .getElementById("confirmPassword")
-            .value;
-
-    const message =
-        document.getElementById("passwordMessage");
-
-    message.textContent = "";
-    message.className = "message";
-
-    if (!password || !confirmPassword) {
-
-        message.textContent =
-            "Veuillez remplir les deux champs.";
-
-        message.classList.add("error");
-
-        return;
-    }
-
-    if (password.length < 6) {
-
-        message.textContent =
-            "Le mot de passe doit contenir au moins 6 caractères.";
-
-        message.classList.add("error");
-
-        return;
-    }
-
-    if (password !== confirmPassword) {
-
-        message.textContent =
-            "Les mots de passe ne correspondent pas.";
-
-        message.classList.add("error");
-
-        return;
-    }
-
-    const { error } =
-        await supabaseClient.auth.updateUser({
-            password: password
-        });
-
-    if (error) {
-
-        message.textContent =
-            "Erreur : " + error.message;
-
-        message.classList.add("error");
-
-        return;
-    }
-
-    message.textContent =
-        "Mot de passe modifié avec succès.";
-
-    message.classList.add("success");
 
 }
 
 
 /* =========================
    CHANGE PASSWORD
-   WHILE LOGGED IN
 ========================= */
-
-document
-    .getElementById("changePasswordBtn")
-    .addEventListener(
-        "click",
-        changeAdminPassword
-    );
-
 
 async function changeAdminPassword() {
 
     const newPassword =
-        document
-            .getElementById("newAdminPassword")
-            .value;
+        document.getElementById("newAdminPassword").value;
 
     const confirmPassword =
-        document
-            .getElementById("confirmAdminPassword")
-            .value;
-
-    const message =
-        document.getElementById(
-            "passwordChangeMessage"
-        );
-
-    message.textContent = "";
-    message.className = "message";
+        document.getElementById("confirmAdminPassword").value;
 
     if (!newPassword || !confirmPassword) {
 
-        message.textContent =
-            "Veuillez remplir les deux champs.";
-
-        message.classList.add("error");
+        showMessage(
+            passwordChangeMessage,
+            "Veuillez remplir les deux champs.",
+            "error"
+        );
 
         return;
     }
 
     if (newPassword.length < 6) {
 
-        message.textContent =
-            "Le mot de passe doit contenir au moins 6 caractères.";
-
-        message.classList.add("error");
+        showMessage(
+            passwordChangeMessage,
+            "Le mot de passe doit contenir au moins 6 caractères.",
+            "error"
+        );
 
         return;
     }
 
     if (newPassword !== confirmPassword) {
 
-        message.textContent =
-            "Les mots de passe ne correspondent pas.";
-
-        message.classList.add("error");
+        showMessage(
+            passwordChangeMessage,
+            "Les mots de passe ne correspondent pas.",
+            "error"
+        );
 
         return;
     }
@@ -669,44 +713,542 @@ async function changeAdminPassword() {
 
     if (error) {
 
-        message.textContent =
-            "Erreur : " + error.message;
-
-        message.classList.add("error");
+        showMessage(
+            passwordChangeMessage,
+            "Erreur : " + error.message,
+            "error"
+        );
 
         return;
     }
 
-    message.textContent =
-        "Mot de passe modifié avec succès.";
+    document.getElementById("newAdminPassword").value = "";
+    document.getElementById("confirmAdminPassword").value = "";
 
-    message.classList.add("success");
+    showMessage(
+        passwordChangeMessage,
+        "Mot de passe modifié avec succès.",
+        "success"
+    );
 
-    document
-        .getElementById("newAdminPassword")
-        .value = "";
-
-    document
-        .getElementById("confirmAdminPassword")
-        .value = "";
 }
 
 
 /* =========================
-   SHOW ADMIN
+   PRODUCT FORM
 ========================= */
 
-function showAdmin() {
+function openNewProductForm() {
 
-    loginSection.classList.add("hidden");
+    document.getElementById("productFormTitle").textContent =
+        "➕ Ajouter un produit";
 
-    forgotSection.classList.add("hidden");
+    document.getElementById("editingProductId").value = "";
 
-    newPasswordSection.classList.add("hidden");
+    document.getElementById("existingImageUrl").value = "";
 
-    adminSection.classList.remove("hidden");
+    document.getElementById("productName").value = "";
 
-    adminHeader.classList.remove("hidden");
+    document.getElementById("productDescription").value = "";
+
+    document.getElementById("productPrice").value = "";
+
+    document.getElementById("productImage").value = "";
+
+    document.getElementById("imagePreview").src = "";
+
+    document.getElementById("imagePreview").style.display = "none";
+
+    productMessage.style.display = "none";
+
+    productFormBox.classList.remove("hidden");
+
+    window.scrollTo({
+        top: productFormBox.offsetTop - 20,
+        behavior: "smooth"
+    });
+
+}
+
+
+/* =========================
+   IMAGE PREVIEW
+========================= */
+
+document
+    .getElementById("productImage")
+    .addEventListener("change", function() {
+
+        const file = this.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        const url =
+            URL.createObjectURL(file);
+
+        const preview =
+            document.getElementById("imagePreview");
+
+        preview.src = url;
+
+        preview.style.display = "block";
+
+    });
+
+
+/* =========================
+   UPLOAD IMAGE
+========================= */
+
+async function uploadProductImage(file) {
+
+    const extension =
+        file.name.split(".").pop();
+
+    const fileName =
+        "product-" +
+        Date.now() +
+        "-" +
+        Math.random()
+            .toString(36)
+            .substring(2) +
+        "." +
+        extension;
+
+    const filePath =
+        fileName;
+
+    const { error } =
+        await supabaseClient.storage
+            .from("products")
+            .upload(
+                filePath,
+                file,
+                {
+                    cacheControl: "3600",
+                    upsert: false
+                }
+            );
+
+    if (error) {
+        throw error;
+    }
+
+    const { data } =
+        supabaseClient.storage
+            .from("products")
+            .getPublicUrl(filePath);
+
+    return data.publicUrl;
+
+}
+
+
+/* =========================
+   SAVE PRODUCT
+========================= */
+
+async function saveProduct() {
+
+    const name =
+        document.getElementById("productName").value.trim();
+
+    const description =
+        document.getElementById("productDescription").value.trim();
+
+    const price =
+        Number(
+            document.getElementById("productPrice").value
+        );
+
+    const productId =
+        document.getElementById("editingProductId").value;
+
+    const existingImage =
+        document.getElementById("existingImageUrl").value;
+
+    const imageFile =
+        document.getElementById("productImage").files[0];
+
+    if (!name) {
+
+        showMessage(
+            productMessage,
+            "Veuillez entrer le nom du produit.",
+            "error"
+        );
+
+        return;
+    }
+
+    if (!price || price <= 0) {
+
+        showMessage(
+            productMessage,
+            "Veuillez entrer un prix valide.",
+            "error"
+        );
+
+        return;
+    }
+
+    try {
+
+        showMessage(
+            productMessage,
+            "Enregistrement en cours...",
+            "success"
+        );
+
+        let imageUrl = existingImage;
+
+        if (imageFile) {
+
+            imageUrl =
+                await uploadProductImage(imageFile);
+
+        }
+
+        if (productId) {
+
+            const { error } =
+                await supabaseClient
+                    .from("products")
+                    .update({
+                        name: name,
+                        description: description,
+                        price: price,
+                        image_url: imageUrl
+                    })
+                    .eq("id", productId);
+
+            if (error) {
+                throw error;
+            }
+
+            showMessage(
+                productMessage,
+                "Produit modifié avec succès.",
+                "success"
+            );
+
+        } else {
+
+            const { error } =
+                await supabaseClient
+                    .from("products")
+                    .insert({
+                        name: name,
+                        description: description,
+                        price: price,
+                        image_url: imageUrl,
+                        active: true
+                    });
+
+            if (error) {
+                throw error;
+            }
+
+            showMessage(
+                productMessage,
+                "Produit ajouté avec succès.",
+                "success"
+            );
+
+        }
+
+        await loadProducts();
+
+        setTimeout(() => {
+            closeProductForm();
+        }, 800);
+
+    } catch (error) {
+
+        showMessage(
+            productMessage,
+            "Erreur : " + error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =========================
+   CLOSE PRODUCT FORM
+========================= */
+
+function closeProductForm() {
+
+    productFormBox.classList.add("hidden");
+
+}
+
+
+/* =========================
+   LOAD PRODUCTS
+========================= */
+
+async function loadProducts() {
+
+    productsList.innerHTML =
+        "Chargement des produits...";
+
+    const { data, error } =
+        await supabaseClient
+            .from("products")
+            .select("*")
+            .order("created_at", {
+                ascending: false
+            });
+
+    if (error) {
+
+        productsList.innerHTML =
+            "<p>Erreur : " +
+            error.message +
+            "</p>";
+
+        return;
+    }
+
+    if (!data || data.length === 0) {
+
+        productsList.innerHTML =
+            "<p>Aucun produit pour le moment.</p>";
+
+        return;
+    }
+
+    productsList.innerHTML = "";
+
+    data.forEach(product => {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "product-card";
+
+        const image =
+            product.image_url
+                ? product.image_url
+                : "";
+
+        const imageHtml =
+            image
+                ? `<img class="product-image" src="${image}" alt="">`
+                : `<div class="product-image"></div>`;
+
+        const status =
+            product.active
+                ? "Visible"
+                : "Masqué";
+
+        card.innerHTML = `
+            ${imageHtml}
+
+            <div class="product-info">
+
+                <h3>${escapeHtml(product.name)}</h3>
+
+                <div class="price">
+                    ${Number(product.price).toLocaleString("fr-DZ")} DA
+                </div>
+
+                <p>
+                    ${escapeHtml(product.description || "")}
+                </p>
+
+                <div class="status">
+                    ${status}
+                </div>
+
+                <div class="actions">
+
+                    <button
+                        class="main-btn"
+                        onclick="editProduct(${product.id})">
+                        ✏️ Modifier
+                    </button>
+
+                    <button
+                        class="gold-btn"
+                        onclick="toggleProduct(${product.id}, ${product.active})">
+                        ${product.active ? "🙈 Masquer" : "👁️ Afficher"}
+                    </button>
+
+                    <button
+                        class="danger-btn"
+                        onclick="deleteProduct(${product.id})">
+                        🗑️ Supprimer
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+
+        productsList.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================
+   EDIT PRODUCT
+========================= */
+
+async function editProduct(id) {
+
+    const { data, error } =
+        await supabaseClient
+            .from("products")
+            .select("*")
+            .eq("id", id)
+            .single();
+
+    if (error) {
+
+        alert("Erreur : " + error.message);
+
+        return;
+    }
+
+    document.getElementById("productFormTitle").textContent =
+        "✏️ Modifier le produit";
+
+    document.getElementById("editingProductId").value =
+        data.id;
+
+    document.getElementById("existingImageUrl").value =
+        data.image_url || "";
+
+    document.getElementById("productName").value =
+        data.name || "";
+
+    document.getElementById("productDescription").value =
+        data.description || "";
+
+    document.getElementById("productPrice").value =
+        data.price || "";
+
+    document.getElementById("productImage").value =
+        "";
+
+    const preview =
+        document.getElementById("imagePreview");
+
+    if (data.image_url) {
+
+        preview.src =
+            data.image_url;
+
+        preview.style.display =
+            "block";
+
+    } else {
+
+        preview.src = "";
+
+        preview.style.display =
+            "none";
+
+    }
+
+    productFormBox.classList.remove("hidden");
+
+    window.scrollTo({
+        top: productFormBox.offsetTop - 20,
+        behavior: "smooth"
+    });
+
+}
+
+
+/* =========================
+   TOGGLE PRODUCT
+========================= */
+
+async function toggleProduct(id, currentStatus) {
+
+    const { error } =
+        await supabaseClient
+            .from("products")
+            .update({
+                active: !currentStatus
+            })
+            .eq("id", id);
+
+    if (error) {
+
+        alert(
+            "Erreur : " +
+            error.message
+        );
+
+        return;
+    }
+
+    await loadProducts();
+
+}
+
+
+/* =========================
+   DELETE PRODUCT
+========================= */
+
+async function deleteProduct(id) {
+
+    const confirmed =
+        confirm(
+            "Voulez-vous vraiment supprimer ce produit ?"
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const { error } =
+        await supabaseClient
+            .from("products")
+            .delete()
+            .eq("id", id);
+
+    if (error) {
+
+        alert(
+            "Erreur : " +
+            error.message
+        );
+
+        return;
+    }
+
+    await loadProducts();
+
 }
 
 
@@ -716,8 +1258,8 @@ function showAdmin() {
 
 async function loadOrders() {
 
-    ordersContainer.innerHTML =
-        "<p>Chargement des commandes...</p>";
+    ordersList.innerHTML =
+        "Chargement des commandes...";
 
     const { data, error } =
         await supabaseClient
@@ -729,9 +1271,9 @@ async function loadOrders() {
 
     if (error) {
 
-        ordersContainer.innerHTML =
-            "<p class='error'>Erreur : " +
-            escapeHTML(error.message) +
+        ordersList.innerHTML =
+            "<p>Erreur : " +
+            error.message +
             "</p>";
 
         return;
@@ -739,102 +1281,103 @@ async function loadOrders() {
 
     if (!data || data.length === 0) {
 
-        ordersContainer.innerHTML =
-            "<div class='empty'>Aucune commande pour le moment.</div>";
+        ordersList.innerHTML =
+            "<p>Aucune commande.</p>";
 
         return;
     }
 
-    ordersContainer.innerHTML = "";
+    ordersList.innerHTML = "";
 
     data.forEach(order => {
 
-        const orderElement =
+        const card =
             document.createElement("div");
 
-        orderElement.className = "order";
+        card.className =
+            "order-card";
 
-        let itemsHTML = "";
+        let itemsHtml = "";
 
-        if (Array.isArray(order.items)) {
+        try {
 
-            order.items.forEach(item => {
+            const items =
+                typeof order.items === "string"
+                    ? JSON.parse(order.items)
+                    : order.items;
 
-                itemsHTML += `
-                    <div>
-                        ${escapeHTML(item.name || "Produit")}
-                        × ${item.quantity || 1}
-                    </div>
-                `;
+            if (Array.isArray(items)) {
 
-            });
+                items.forEach(item => {
+
+                    itemsHtml += `
+                        <div>
+                            ${escapeHtml(item.name || "Produit")}
+                            × ${item.quantity || 1}
+                        </div>
+                    `;
+
+                });
+
+            }
+
+        } catch (e) {
+
+            itemsHtml =
+                "<div>Produits indisponibles</div>";
 
         }
 
-        const date =
-            new Date(order.created_at)
-                .toLocaleString("fr-FR");
+        card.innerHTML = `
 
-        orderElement.innerHTML = `
+            <h3>
+                Commande #${order.id}
+            </h3>
 
-            <div class="order-top">
+            <p>
+                <strong>Date :</strong>
+                ${new Date(order.created_at).toLocaleString("fr-DZ")}
+            </p>
 
-                <h3>
-                    Commande #${order.id}
-                </h3>
-
-                <span>
-                    ${date}
-                </span>
-
-            </div>
-
-            <div class="info">
-
+            <p>
                 <strong>Client :</strong>
-                ${escapeHTML(order.customer_name)}
+                ${escapeHtml(order.customer_name)}
+            </p>
 
-                <br>
-
+            <p>
                 <strong>Téléphone :</strong>
-                ${escapeHTML(order.customer_phone)}
+                ${escapeHtml(order.customer_phone)}
+            </p>
 
-                <br>
-
+            <p>
                 <strong>Wilaya :</strong>
-                ${escapeHTML(order.customer_wilaya)}
+                ${escapeHtml(order.customer_wilaya)}
+            </p>
 
-                <br>
-
+            <p>
                 <strong>Adresse :</strong>
-                ${escapeHTML(order.customer_address)}
+                ${escapeHtml(order.customer_address)}
+            </p>
 
-            </div>
-
-            <div class="items">
-
+            <div class="order-products">
                 <strong>Produits :</strong>
-
-                ${itemsHTML}
-
+                ${itemsHtml}
             </div>
 
             <div class="total">
                 Total :
-                ${Number(order.total).toLocaleString("fr-FR")}
+                ${Number(order.total).toLocaleString("fr-DZ")}
                 DA
             </div>
+
+            <br>
 
             <label>
                 <strong>Statut :</strong>
             </label>
 
-            <br>
-
             <select
-                class="status"
-                data-id="${order.id}"
-            >
+                onchange="updateOrderStatus(${order.id}, this.value)">
 
                 <option value="new"
                     ${order.status === "new" ? "selected" : ""}>
@@ -862,23 +1405,12 @@ async function loadOrders() {
                 </option>
 
             </select>
-
         `;
 
-        ordersContainer.appendChild(orderElement);
+        ordersList.appendChild(card);
 
     });
 
-    document
-        .querySelectorAll(".status")
-        .forEach(select => {
-
-            select.addEventListener(
-                "change",
-                updateStatus
-            );
-
-        });
 }
 
 
@@ -886,13 +1418,7 @@ async function loadOrders() {
    UPDATE ORDER STATUS
 ========================= */
 
-async function updateStatus(event) {
-
-    const id =
-        event.target.dataset.id;
-
-    const status =
-        event.target.value;
+async function updateOrderStatus(id, status) {
 
     const { error } =
         await supabaseClient
@@ -905,53 +1431,67 @@ async function updateStatus(event) {
     if (error) {
 
         alert(
-            "Erreur lors de la mise à jour :\n" +
+            "Erreur : " +
             error.message
         );
 
         return;
     }
 
-    alert("Statut mis à jour.");
+    alert("Statut de la commande mis à jour.");
+
 }
 
 
 /* =========================
-   LOGOUT
+   EVENTS
 ========================= */
 
 document
+    .getElementById("loginBtn")
+    .addEventListener("click", login);
+
+document
     .getElementById("logoutBtn")
-    .addEventListener(
-        "click",
-        async () => {
+    .addEventListener("click", logout);
 
-            await supabaseClient.auth.signOut();
+document
+    .getElementById("showForgotBtn")
+    .addEventListener("click", () => {
 
-            adminSection.classList.add("hidden");
+        loginSection.classList.add("hidden");
+        forgotSection.classList.remove("hidden");
 
-            adminHeader.classList.add("hidden");
+    });
 
-            loginSection.classList.remove("hidden");
+document
+    .getElementById("backToLoginBtn")
+    .addEventListener("click", () => {
 
-        }
-    );
+        forgotSection.classList.add("hidden");
+        loginSection.classList.remove("hidden");
 
+    });
 
-/* =========================
-   ESCAPE HTML
-========================= */
+document
+    .getElementById("forgotBtn")
+    .addEventListener("click", sendPasswordReset);
 
-function escapeHTML(value) {
+document
+    .getElementById("changePasswordBtn")
+    .addEventListener("click", changeAdminPassword);
 
-    return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+document
+    .getElementById("newProductBtn")
+    .addEventListener("click", openNewProductForm);
 
-}
+document
+    .getElementById("cancelProductBtn")
+    .addEventListener("click", closeProductForm);
+
+document
+    .getElementById("saveProductBtn")
+    .addEventListener("click", saveProduct);
 
 
 /* =========================
@@ -960,39 +1500,57 @@ function escapeHTML(value) {
 
 async function checkSession() {
 
-    const { data } =
+    const {
+        data: { session }
+    } =
         await supabaseClient.auth.getSession();
 
-    if (data.session) {
+    if (session) {
 
         showAdmin();
 
-        loadOrders();
+    } else {
+
+        loginSection.classList.remove("hidden");
+        adminSection.classList.add("hidden");
 
     }
+
 }
 
 
 /* =========================
-   PASSWORD RECOVERY EVENT
+   AUTH STATE
 ========================= */
 
 supabaseClient.auth.onAuthStateChange(
     async (event, session) => {
 
-        if (event === "PASSWORD_RECOVERY") {
+        if (
+            event === "SIGNED_IN" ||
+            event === "PASSWORD_RECOVERY"
+        ) {
 
-            loginSection.classList.add("hidden");
+            if (session) {
+                await showAdmin();
+            }
 
-            forgotSection.classList.add("hidden");
+        }
 
-            newPasswordSection.classList.remove("hidden");
+        if (event === "SIGNED_OUT") {
+
+            adminSection.classList.add("hidden");
+            loginSection.classList.remove("hidden");
 
         }
 
     }
 );
 
+
+/* =========================
+   START
+========================= */
 
 checkSession();
 
