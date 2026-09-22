@@ -87,10 +87,6 @@
             color: white;
         }
 
-        .main-btn:hover {
-            background: #0c302c;
-        }
-
         .gold-btn {
             background: #c7a94b;
             color: white;
@@ -109,7 +105,10 @@
         .logout-btn {
             background: white;
             color: #123f3a;
-            margin-top: 12px;
+        }
+
+        .hidden {
+            display: none !important;
         }
 
         .message {
@@ -129,12 +128,13 @@
             color: #9b2222;
         }
 
-        .hidden {
-            display: none !important;
+        .section-title {
+            border-bottom: 1px solid #e1e7e5;
+            padding-bottom: 10px;
+            margin-bottom: 18px;
         }
 
-        .product-card,
-        .order-card {
+        .product-card {
             border: 1px solid #e1e7e5;
             border-radius: 12px;
             padding: 15px;
@@ -142,32 +142,32 @@
             background: #fcfdfd;
         }
 
-        .product-card {
-            display: flex;
-            gap: 15px;
-            align-items: flex-start;
-        }
-
-        .product-image {
-            width: 120px;
-            height: 120px;
+        .main-image {
+            width: 180px;
+            height: 180px;
             object-fit: cover;
             border-radius: 10px;
             background: #eef2f1;
-            flex-shrink: 0;
         }
 
-        .product-info {
-            flex: 1;
+        .product-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
         }
 
-        .product-info h3 {
-            margin: 0 0 8px;
+        .gallery-image {
+            width: 85px;
+            height: 85px;
+            object-fit: cover;
+            border-radius: 8px;
         }
 
         .price {
             font-weight: bold;
             color: #b28c25;
+            font-size: 18px;
             margin: 8px 0;
         }
 
@@ -177,7 +177,7 @@
             border-radius: 20px;
             background: #edf3f2;
             font-size: 13px;
-            margin-bottom: 8px;
+            margin: 5px 0;
         }
 
         .actions {
@@ -192,18 +192,82 @@
             font-size: 13px;
         }
 
-        .preview {
-            max-width: 180px;
-            max-height: 180px;
-            border-radius: 10px;
-            margin: 8px 0 15px;
-            display: none;
+        .selected-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0 15px;
         }
 
-        .section-title {
-            border-bottom: 1px solid #e1e7e5;
-            padding-bottom: 10px;
-            margin-bottom: 18px;
+        .selected-image {
+            position: relative;
+        }
+
+        .selected-image img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .image-number {
+            position: absolute;
+            left: 5px;
+            top: 5px;
+            background: #123f3a;
+            color: white;
+            padding: 4px 7px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .remove-new-image {
+            position: absolute;
+            right: 4px;
+            top: 4px;
+            background: #b33a3a;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            padding: 0;
+        }
+
+        .existing-image-box {
+            position: relative;
+        }
+
+        .existing-image-box img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .delete-existing-image {
+            position: absolute;
+            right: 3px;
+            top: 3px;
+            background: #b33a3a;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            padding: 0;
+        }
+
+        .total {
+            font-size: 19px;
+            font-weight: bold;
+            color: #b28c25;
+        }
+
+        .order-card {
+            border: 1px solid #e1e7e5;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #fcfdfd;
         }
 
         .order-products {
@@ -213,25 +277,20 @@
             margin: 10px 0;
         }
 
-        .total {
-            font-size: 19px;
-            font-weight: bold;
-            color: #b28c25;
-        }
-
         .top-actions {
             display: flex;
             justify-content: flex-end;
         }
 
-        @media (max-width: 650px) {
-            .product-card {
-                flex-direction: column;
-            }
+        .small-note {
+            font-size: 13px;
+            color: #666;
+        }
 
-            .product-image {
+        @media (max-width: 650px) {
+            .main-image {
                 width: 100%;
-                height: 220px;
+                height: 260px;
             }
         }
     </style>
@@ -248,20 +307,19 @@
 
     <!-- LOGIN -->
     <div id="loginSection" class="box">
+
         <h2>🔐 Connexion administrateur</h2>
 
         <input
             type="email"
             id="loginEmail"
             placeholder="Adresse email"
-            autocomplete="email"
         >
 
         <input
             type="password"
             id="loginPassword"
             placeholder="Mot de passe"
-            autocomplete="current-password"
         >
 
         <button class="main-btn" id="loginBtn">
@@ -273,17 +331,14 @@
         </button>
 
         <div id="loginMessage" class="message"></div>
+
     </div>
 
 
-    <!-- FORGOT PASSWORD -->
+    <!-- FORGOT -->
     <div id="forgotSection" class="box hidden">
 
         <h2>🔑 Réinitialiser le mot de passe</h2>
-
-        <p>
-            Entrez votre adresse email pour recevoir un lien de réinitialisation.
-        </p>
 
         <input
             type="email"
@@ -310,9 +365,13 @@
         <div class="box">
 
             <div class="top-actions">
-                <button class="logout-btn" id="logoutBtn">
+
+                <button
+                    class="logout-btn"
+                    id="logoutBtn">
                     Déconnexion
                 </button>
+
             </div>
 
             <h2>👑 Tableau de bord</h2>
@@ -324,14 +383,10 @@
         </div>
 
 
-        <!-- CHANGE PASSWORD -->
+        <!-- PASSWORD -->
         <div class="box">
 
             <h2>🔐 Modifier le mot de passe</h2>
-
-            <p>
-                Choisissez un nouveau mot de passe pour votre compte administrateur.
-            </p>
 
             <input
                 type="password"
@@ -345,11 +400,16 @@
                 placeholder="Confirmer le nouveau mot de passe"
             >
 
-            <button class="main-btn" id="changePasswordBtn">
+            <button
+                class="main-btn"
+                id="changePasswordBtn">
                 Modifier le mot de passe
             </button>
 
-            <div id="passwordChangeMessage" class="message"></div>
+            <div
+                id="passwordChangeMessage"
+                class="message">
+            </div>
 
         </div>
 
@@ -361,7 +421,9 @@
                 🛍️ Gestion des produits
             </h2>
 
-            <button class="gold-btn" id="newProductBtn">
+            <button
+                class="gold-btn"
+                id="newProductBtn">
                 ➕ Ajouter un produit
             </button>
 
@@ -369,7 +431,9 @@
 
 
         <!-- PRODUCT FORM -->
-        <div id="productFormBox" class="box hidden">
+        <div
+            id="productFormBox"
+            class="box hidden">
 
             <h2 id="productFormTitle">
                 ➕ Ajouter un produit
@@ -383,8 +447,8 @@
 
             <textarea
                 id="productDescription"
-                placeholder="Description du produit"
-            ></textarea>
+                placeholder="Description du produit">
+            </textarea>
 
             <input
                 type="number"
@@ -393,45 +457,61 @@
                 min="0"
             >
 
-            <label>
-                <strong>Image du produit</strong>
-            </label>
+            <h3>
+                📷 Photos du produit
+            </h3>
+
+            <p class="small-note">
+                Vous pouvez sélectionner plusieurs photos
+                depuis votre téléphone.
+                La première photo sera l'image principale.
+            </p>
 
             <input
                 type="file"
-                id="productImage"
+                id="productImages"
                 accept="image/*"
+                multiple
             >
 
-            <img
-                id="imagePreview"
-                class="preview"
-                alt="Aperçu"
-            >
+            <div id="selectedImages"
+                 class="selected-images">
+            </div>
+
+            <h3 id="existingImagesTitle"
+                class="hidden">
+                Photos déjà enregistrées
+            </h3>
+
+            <div id="existingImages"
+                 class="selected-images">
+            </div>
 
             <input
                 type="hidden"
                 id="editingProductId"
             >
 
-            <input
-                type="hidden"
-                id="existingImageUrl"
-            >
-
             <div class="actions">
 
-                <button class="main-btn" id="saveProductBtn">
+                <button
+                    class="main-btn"
+                    id="saveProductBtn">
                     💾 Enregistrer
                 </button>
 
-                <button class="gray-btn" id="cancelProductBtn">
+                <button
+                    class="gray-btn"
+                    id="cancelProductBtn">
                     Annuler
                 </button>
 
             </div>
 
-            <div id="productMessage" class="message"></div>
+            <div
+                id="productMessage"
+                class="message">
+            </div>
 
         </div>
 
@@ -483,6 +563,10 @@ const supabaseClient =
     );
 
 
+let selectedFiles = [];
+let existingImages = [];
+
+
 /* =========================
    ELEMENTS
 ========================= */
@@ -496,14 +580,8 @@ const forgotSection =
 const adminSection =
     document.getElementById("adminSection");
 
-const loginMessage =
-    document.getElementById("loginMessage");
-
-const forgotMessage =
-    document.getElementById("forgotMessage");
-
-const passwordChangeMessage =
-    document.getElementById("passwordChangeMessage");
+const productFormBox =
+    document.getElementById("productFormBox");
 
 const productMessage =
     document.getElementById("productMessage");
@@ -514,22 +592,36 @@ const productsList =
 const ordersList =
     document.getElementById("ordersList");
 
-const productFormBox =
-    document.getElementById("productFormBox");
-
 
 /* =========================
    MESSAGE
 ========================= */
 
-function showMessage(element, message, type) {
+function showMessage(element, text, type) {
 
-    element.textContent = message;
+    element.textContent = text;
 
     element.className =
         "message " + type;
 
-    element.style.display = "block";
+    element.style.display =
+        "block";
+}
+
+
+/* =========================
+   ESCAPE
+========================= */
+
+function escapeHtml(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
 }
 
 
@@ -540,15 +632,18 @@ function showMessage(element, message, type) {
 async function login() {
 
     const email =
-        document.getElementById("loginEmail").value.trim();
+        document.getElementById("loginEmail")
+            .value
+            .trim();
 
     const password =
-        document.getElementById("loginPassword").value;
+        document.getElementById("loginPassword")
+            .value;
 
     if (!email || !password) {
 
         showMessage(
-            loginMessage,
+            document.getElementById("loginMessage"),
             "Veuillez remplir tous les champs.",
             "error"
         );
@@ -565,7 +660,7 @@ async function login() {
     if (error) {
 
         showMessage(
-            loginMessage,
+            document.getElementById("loginMessage"),
             "Erreur : " + error.message,
             "error"
         );
@@ -573,7 +668,7 @@ async function login() {
         return;
     }
 
-    showAdmin();
+    await showAdmin();
 
 }
 
@@ -605,8 +700,6 @@ async function logout() {
     adminSection.classList.add("hidden");
     loginSection.classList.remove("hidden");
 
-    document.getElementById("loginPassword").value = "";
-
 }
 
 
@@ -617,12 +710,14 @@ async function logout() {
 async function sendPasswordReset() {
 
     const email =
-        document.getElementById("forgotEmail").value.trim();
+        document.getElementById("forgotEmail")
+            .value
+            .trim();
 
     if (!email) {
 
         showMessage(
-            forgotMessage,
+            document.getElementById("forgotMessage"),
             "Entrez votre adresse email.",
             "error"
         );
@@ -634,17 +729,18 @@ async function sendPasswordReset() {
         "https://aidamedgh2-lgtm.github.io/Maison-Zeraya/admin.html";
 
     const { error } =
-        await supabaseClient.auth.resetPasswordForEmail(
-            email,
-            {
-                redirectTo: redirectUrl
-            }
-        );
+        await supabaseClient.auth
+            .resetPasswordForEmail(
+                email,
+                {
+                    redirectTo: redirectUrl
+                }
+            );
 
     if (error) {
 
         showMessage(
-            forgotMessage,
+            document.getElementById("forgotMessage"),
             "Erreur : " + error.message,
             "error"
         );
@@ -653,7 +749,7 @@ async function sendPasswordReset() {
     }
 
     showMessage(
-        forgotMessage,
+        document.getElementById("forgotMessage"),
         "Le lien de réinitialisation a été envoyé.",
         "success"
     );
@@ -667,16 +763,23 @@ async function sendPasswordReset() {
 
 async function changeAdminPassword() {
 
-    const newPassword =
-        document.getElementById("newAdminPassword").value;
+    const password =
+        document.getElementById("newAdminPassword")
+            .value;
 
-    const confirmPassword =
-        document.getElementById("confirmAdminPassword").value;
+    const confirmation =
+        document.getElementById("confirmAdminPassword")
+            .value;
 
-    if (!newPassword || !confirmPassword) {
+    const message =
+        document.getElementById(
+            "passwordChangeMessage"
+        );
+
+    if (!password || !confirmation) {
 
         showMessage(
-            passwordChangeMessage,
+            message,
             "Veuillez remplir les deux champs.",
             "error"
         );
@@ -684,10 +787,10 @@ async function changeAdminPassword() {
         return;
     }
 
-    if (newPassword.length < 6) {
+    if (password.length < 6) {
 
         showMessage(
-            passwordChangeMessage,
+            message,
             "Le mot de passe doit contenir au moins 6 caractères.",
             "error"
         );
@@ -695,10 +798,10 @@ async function changeAdminPassword() {
         return;
     }
 
-    if (newPassword !== confirmPassword) {
+    if (password !== confirmation) {
 
         showMessage(
-            passwordChangeMessage,
+            message,
             "Les mots de passe ne correspondent pas.",
             "error"
         );
@@ -708,13 +811,13 @@ async function changeAdminPassword() {
 
     const { error } =
         await supabaseClient.auth.updateUser({
-            password: newPassword
+            password
         });
 
     if (error) {
 
         showMessage(
-            passwordChangeMessage,
+            message,
             "Erreur : " + error.message,
             "error"
         );
@@ -722,11 +825,16 @@ async function changeAdminPassword() {
         return;
     }
 
-    document.getElementById("newAdminPassword").value = "";
-    document.getElementById("confirmAdminPassword").value = "";
+    document.getElementById(
+        "newAdminPassword"
+    ).value = "";
+
+    document.getElementById(
+        "confirmAdminPassword"
+    ).value = "";
 
     showMessage(
-        passwordChangeMessage,
+        message,
         "Mot de passe modifié avec succès.",
         "success"
     );
@@ -735,33 +843,57 @@ async function changeAdminPassword() {
 
 
 /* =========================
-   PRODUCT FORM
+   OPEN NEW PRODUCT
 ========================= */
 
 function openNewProductForm() {
 
-    document.getElementById("productFormTitle").textContent =
+    document.getElementById(
+        "productFormTitle"
+    ).textContent =
         "➕ Ajouter un produit";
 
-    document.getElementById("editingProductId").value = "";
+    document.getElementById(
+        "editingProductId"
+    ).value = "";
 
-    document.getElementById("existingImageUrl").value = "";
+    document.getElementById(
+        "productName"
+    ).value = "";
 
-    document.getElementById("productName").value = "";
+    document.getElementById(
+        "productDescription"
+    ).value = "";
 
-    document.getElementById("productDescription").value = "";
+    document.getElementById(
+        "productPrice"
+    ).value = "";
 
-    document.getElementById("productPrice").value = "";
+    document.getElementById(
+        "productImages"
+    ).value = "";
 
-    document.getElementById("productImage").value = "";
+    selectedFiles = [];
+    existingImages = [];
 
-    document.getElementById("imagePreview").src = "";
+    document.getElementById(
+        "existingImages"
+    ).innerHTML = "";
 
-    document.getElementById("imagePreview").style.display = "none";
+    document.getElementById(
+        "existingImagesTitle"
+    ).classList.add("hidden");
 
-    productMessage.style.display = "none";
+    document.getElementById(
+        "selectedImages"
+    ).innerHTML = "";
 
-    productFormBox.classList.remove("hidden");
+    productMessage.style.display =
+        "none";
+
+    productFormBox.classList.remove(
+        "hidden"
+    );
 
     window.scrollTo({
         top: productFormBox.offsetTop - 20,
@@ -772,40 +904,115 @@ function openNewProductForm() {
 
 
 /* =========================
-   IMAGE PREVIEW
+   SELECT MULTIPLE IMAGES
 ========================= */
 
 document
-    .getElementById("productImage")
-    .addEventListener("change", function() {
+    .getElementById("productImages")
+    .addEventListener(
+        "change",
+        function() {
 
-        const file = this.files[0];
+            const files =
+                Array.from(this.files);
 
-        if (!file) {
-            return;
+            selectedFiles =
+                selectedFiles.concat(files);
+
+            renderSelectedImages();
+
+            this.value = "";
+
         }
+    );
 
-        const url =
-            URL.createObjectURL(file);
 
-        const preview =
-            document.getElementById("imagePreview");
+/* =========================
+   RENDER NEW IMAGES
+========================= */
 
-        preview.src = url;
+function renderSelectedImages() {
 
-        preview.style.display = "block";
+    const container =
+        document.getElementById(
+            "selectedImages"
+        );
 
-    });
+    container.innerHTML = "";
+
+    selectedFiles.forEach(
+        (file, index) => {
+
+            const wrapper =
+                document.createElement("div");
+
+            wrapper.className =
+                "selected-image";
+
+            const img =
+                document.createElement("img");
+
+            img.src =
+                URL.createObjectURL(file);
+
+            const number =
+                document.createElement("div");
+
+            number.className =
+                "image-number";
+
+            number.textContent =
+                index === 0
+                    ? "Principale"
+                    : index + 1;
+
+            const remove =
+                document.createElement("button");
+
+            remove.className =
+                "remove-new-image";
+
+            remove.textContent =
+                "×";
+
+            remove.type =
+                "button";
+
+            remove.onclick =
+                function() {
+
+                    selectedFiles.splice(
+                        index,
+                        1
+                    );
+
+                    renderSelectedImages();
+
+                };
+
+            wrapper.appendChild(img);
+            wrapper.appendChild(number);
+            wrapper.appendChild(remove);
+
+            container.appendChild(wrapper);
+
+        }
+    );
+
+}
 
 
 /* =========================
    UPLOAD IMAGE
 ========================= */
 
-async function uploadProductImage(file) {
+async function uploadImage(file) {
 
     const extension =
-        file.name.split(".").pop();
+        file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
 
     const fileName =
         "product-" +
@@ -817,14 +1024,11 @@ async function uploadProductImage(file) {
         "." +
         extension;
 
-    const filePath =
-        fileName;
-
     const { error } =
         await supabaseClient.storage
             .from("products")
             .upload(
-                filePath,
+                fileName,
                 file,
                 {
                     cacheControl: "3600",
@@ -839,7 +1043,7 @@ async function uploadProductImage(file) {
     const { data } =
         supabaseClient.storage
             .from("products")
-            .getPublicUrl(filePath);
+            .getPublicUrl(fileName);
 
     return data.publicUrl;
 
@@ -853,24 +1057,26 @@ async function uploadProductImage(file) {
 async function saveProduct() {
 
     const name =
-        document.getElementById("productName").value.trim();
+        document.getElementById(
+            "productName"
+        ).value.trim();
 
     const description =
-        document.getElementById("productDescription").value.trim();
+        document.getElementById(
+            "productDescription"
+        ).value.trim();
 
     const price =
         Number(
-            document.getElementById("productPrice").value
+            document.getElementById(
+                "productPrice"
+            ).value
         );
 
     const productId =
-        document.getElementById("editingProductId").value;
-
-    const existingImage =
-        document.getElementById("existingImageUrl").value;
-
-    const imageFile =
-        document.getElementById("productImage").files[0];
+        document.getElementById(
+            "editingProductId"
+        ).value;
 
     if (!name) {
 
@@ -894,6 +1100,20 @@ async function saveProduct() {
         return;
     }
 
+    if (
+        !productId &&
+        selectedFiles.length === 0
+    ) {
+
+        showMessage(
+            productMessage,
+            "Veuillez choisir au moins une image.",
+            "error"
+        );
+
+        return;
+    }
+
     try {
 
         showMessage(
@@ -902,53 +1122,59 @@ async function saveProduct() {
             "success"
         );
 
-        let imageUrl = existingImage;
 
-        if (imageFile) {
+        /* CREATE */
 
-            imageUrl =
-                await uploadProductImage(imageFile);
+        if (!productId) {
 
-        }
-
-        if (productId) {
-
-            const { error } =
+            const { data: product, error } =
                 await supabaseClient
                     .from("products")
-                    .update({
-                        name: name,
-                        description: description,
-                        price: price,
-                        image_url: imageUrl
+                    .insert({
+                        name,
+                        description,
+                        price,
+                        active: true
                     })
-                    .eq("id", productId);
+                    .select()
+                    .single();
 
             if (error) {
                 throw error;
             }
 
-            showMessage(
-                productMessage,
-                "Produit modifié avec succès.",
-                "success"
-            );
 
-        } else {
+            /* UPLOAD ALL IMAGES */
 
-            const { error } =
-                await supabaseClient
-                    .from("products")
-                    .insert({
-                        name: name,
-                        description: description,
-                        price: price,
-                        image_url: imageUrl,
-                        active: true
-                    });
+            for (
+                let i = 0;
+                i < selectedFiles.length;
+                i++
+            ) {
 
-            if (error) {
-                throw error;
+                const url =
+                    await uploadImage(
+                        selectedFiles[i]
+                    );
+
+                const { error: imageError } =
+                    await supabaseClient
+                        .from("product_images")
+                        .insert({
+                            product_id:
+                                product.id,
+
+                            image_url:
+                                url,
+
+                            sort_order:
+                                i
+                        });
+
+                if (imageError) {
+                    throw imageError;
+                }
+
             }
 
             showMessage(
@@ -959,13 +1185,84 @@ async function saveProduct() {
 
         }
 
+
+        /* UPDATE */
+
+        else {
+
+            const { error } =
+                await supabaseClient
+                    .from("products")
+                    .update({
+                        name,
+                        description,
+                        price
+                    })
+                    .eq(
+                        "id",
+                        productId
+                    );
+
+            if (error) {
+                throw error;
+            }
+
+
+            /* ADD NEW IMAGES */
+
+            const startOrder =
+                existingImages.length;
+
+            for (
+                let i = 0;
+                i < selectedFiles.length;
+                i++
+            ) {
+
+                const url =
+                    await uploadImage(
+                        selectedFiles[i]
+                    );
+
+                const { error: imageError } =
+                    await supabaseClient
+                        .from("product_images")
+                        .insert({
+                            product_id:
+                                Number(productId),
+
+                            image_url:
+                                url,
+
+                            sort_order:
+                                startOrder + i
+                        });
+
+                if (imageError) {
+                    throw imageError;
+                }
+
+            }
+
+            showMessage(
+                productMessage,
+                "Produit modifié avec succès.",
+                "success"
+            );
+
+        }
+
+
         await loadProducts();
 
-        setTimeout(() => {
-            closeProductForm();
-        }, 800);
+        setTimeout(
+            closeProductForm,
+            800
+        );
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         showMessage(
             productMessage,
@@ -979,12 +1276,17 @@ async function saveProduct() {
 
 
 /* =========================
-   CLOSE PRODUCT FORM
+   CLOSE FORM
 ========================= */
 
 function closeProductForm() {
 
-    productFormBox.classList.add("hidden");
+    productFormBox.classList.add(
+        "hidden"
+    );
+
+    selectedFiles = [];
+    existingImages = [];
 
 }
 
@@ -1002,15 +1304,18 @@ async function loadProducts() {
         await supabaseClient
             .from("products")
             .select("*")
-            .order("created_at", {
-                ascending: false
-            });
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
 
     if (error) {
 
         productsList.innerHTML =
             "<p>Erreur : " +
-            error.message +
+            escapeHtml(error.message) +
             "</p>";
 
         return;
@@ -1026,92 +1331,121 @@ async function loadProducts() {
 
     productsList.innerHTML = "";
 
-    data.forEach(product => {
+    for (const product of data) {
+
+        const { data: images } =
+            await supabaseClient
+                .from("product_images")
+                .select("*")
+                .eq(
+                    "product_id",
+                    product.id
+                )
+                .order(
+                    "sort_order",
+                    {
+                        ascending: true
+                    }
+                );
 
         const card =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         card.className =
             "product-card";
 
-        const image =
-            product.image_url
-                ? product.image_url
-                : "";
 
-        const imageHtml =
-            image
-                ? `<img class="product-image" src="${image}" alt="">`
-                : `<div class="product-image"></div>`;
+        let imagesHtml = "";
 
-        const status =
-            product.active
-                ? "Visible"
-                : "Masqué";
+        if (
+            images &&
+            images.length > 0
+        ) {
+
+            imagesHtml =
+                `<div class="product-gallery">`;
+
+            images.forEach(
+                image => {
+
+                    imagesHtml += `
+                        <img
+                            class="gallery-image"
+                            src="${escapeHtml(image.image_url)}"
+                            alt="">
+                    `;
+
+                }
+            );
+
+            imagesHtml +=
+                "</div>";
+
+        }
+
 
         card.innerHTML = `
-            ${imageHtml}
 
-            <div class="product-info">
+            ${imagesHtml}
 
-                <h3>${escapeHtml(product.name)}</h3>
+            <h3>
+                ${escapeHtml(product.name)}
+            </h3>
 
-                <div class="price">
-                    ${Number(product.price).toLocaleString("fr-DZ")} DA
-                </div>
+            <div class="price">
+                ${Number(product.price)
+                    .toLocaleString("fr-DZ")} DA
+            </div>
 
-                <p>
-                    ${escapeHtml(product.description || "")}
-                </p>
+            <p>
+                ${escapeHtml(
+                    product.description || ""
+                )}
+            </p>
 
-                <div class="status">
-                    ${status}
-                </div>
+            <div class="status">
+                ${
+                    product.active
+                        ? "Visible"
+                        : "Masqué"
+                }
+            </div>
 
-                <div class="actions">
+            <div class="actions">
 
-                    <button
-                        class="main-btn"
-                        onclick="editProduct(${product.id})">
-                        ✏️ Modifier
-                    </button>
+                <button
+                    class="main-btn"
+                    onclick="editProduct(${product.id})">
+                    ✏️ Modifier
+                </button>
 
-                    <button
-                        class="gold-btn"
-                        onclick="toggleProduct(${product.id}, ${product.active})">
-                        ${product.active ? "🙈 Masquer" : "👁️ Afficher"}
-                    </button>
+                <button
+                    class="gold-btn"
+                    onclick="toggleProduct(
+                        ${product.id},
+                        ${product.active}
+                    )">
+                    ${
+                        product.active
+                            ? "🙈 Masquer"
+                            : "👁️ Afficher"
+                    }
+                </button>
 
-                    <button
-                        class="danger-btn"
-                        onclick="deleteProduct(${product.id})">
-                        🗑️ Supprimer
-                    </button>
-
-                </div>
+                <button
+                    class="danger-btn"
+                    onclick="deleteProduct(${product.id})">
+                    🗑️ Supprimer
+                </button>
 
             </div>
         `;
 
         productsList.appendChild(card);
 
-    });
-
-}
-
-
-/* =========================
-   ESCAPE HTML
-========================= */
-
-function escapeHtml(value) {
-
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    }
 
 }
 
@@ -1122,7 +1456,7 @@ function escapeHtml(value) {
 
 async function editProduct(id) {
 
-    const { data, error } =
+    const { data: product, error } =
         await supabaseClient
             .from("products")
             .select("*")
@@ -1131,58 +1465,238 @@ async function editProduct(id) {
 
     if (error) {
 
-        alert("Erreur : " + error.message);
+        alert(
+            "Erreur : " +
+            error.message
+        );
 
         return;
     }
 
-    document.getElementById("productFormTitle").textContent =
+
+    const { data: images } =
+        await supabaseClient
+            .from("product_images")
+            .select("*")
+            .eq("product_id", id)
+            .order(
+                "sort_order",
+                {
+                    ascending: true
+                }
+            );
+
+
+    document.getElementById(
+        "productFormTitle"
+    ).textContent =
         "✏️ Modifier le produit";
 
-    document.getElementById("editingProductId").value =
-        data.id;
+    document.getElementById(
+        "editingProductId"
+    ).value =
+        product.id;
 
-    document.getElementById("existingImageUrl").value =
-        data.image_url || "";
+    document.getElementById(
+        "productName"
+    ).value =
+        product.name || "";
 
-    document.getElementById("productName").value =
-        data.name || "";
+    document.getElementById(
+        "productDescription"
+    ).value =
+        product.description || "";
 
-    document.getElementById("productDescription").value =
-        data.description || "";
+    document.getElementById(
+        "productPrice"
+    ).value =
+        product.price || "";
 
-    document.getElementById("productPrice").value =
-        data.price || "";
 
-    document.getElementById("productImage").value =
-        "";
+    selectedFiles = [];
 
-    const preview =
-        document.getElementById("imagePreview");
+    existingImages =
+        images || [];
 
-    if (data.image_url) {
 
-        preview.src =
-            data.image_url;
+    renderExistingImages();
 
-        preview.style.display =
-            "block";
 
-    } else {
+    document.getElementById(
+        "selectedImages"
+    ).innerHTML = "";
 
-        preview.src = "";
 
-        preview.style.display =
-            "none";
+    productMessage.style.display =
+        "none";
 
-    }
 
-    productFormBox.classList.remove("hidden");
+    productFormBox.classList.remove(
+        "hidden"
+    );
 
     window.scrollTo({
-        top: productFormBox.offsetTop - 20,
+        top:
+            productFormBox.offsetTop - 20,
         behavior: "smooth"
     });
+
+}
+
+
+/* =========================
+   EXISTING IMAGES
+========================= */
+
+function renderExistingImages() {
+
+    const title =
+        document.getElementById(
+            "existingImagesTitle"
+        );
+
+    const container =
+        document.getElementById(
+            "existingImages"
+        );
+
+    container.innerHTML = "";
+
+    if (
+        !existingImages ||
+        existingImages.length === 0
+    ) {
+
+        title.classList.add(
+            "hidden"
+        );
+
+        return;
+    }
+
+    title.classList.remove(
+        "hidden"
+    );
+
+
+    existingImages.forEach(
+        (image, index) => {
+
+            const wrapper =
+                document.createElement(
+                    "div"
+                );
+
+            wrapper.className =
+                "existing-image-box";
+
+            const img =
+                document.createElement(
+                    "img"
+                );
+
+            img.src =
+                image.image_url;
+
+            const number =
+                document.createElement(
+                    "div"
+                );
+
+            number.className =
+                "image-number";
+
+            number.textContent =
+                index === 0
+                    ? "Principale"
+                    : index + 1;
+
+            const remove =
+                document.createElement(
+                    "button"
+                );
+
+            remove.className =
+                "delete-existing-image";
+
+            remove.textContent =
+                "×";
+
+            remove.type =
+                "button";
+
+            remove.onclick =
+                function() {
+
+                    deleteProductImage(
+                        image.id,
+                        image.image_url
+                    );
+
+                };
+
+
+            wrapper.appendChild(img);
+            wrapper.appendChild(number);
+            wrapper.appendChild(remove);
+
+            container.appendChild(
+                wrapper
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================
+   DELETE PRODUCT IMAGE
+========================= */
+
+async function deleteProductImage(
+    imageId,
+    imageUrl
+) {
+
+    const confirmed =
+        confirm(
+            "Supprimer cette image ?"
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    const { error } =
+        await supabaseClient
+            .from("product_images")
+            .delete()
+            .eq(
+                "id",
+                imageId
+            );
+
+    if (error) {
+
+        alert(
+            "Erreur : " +
+            error.message
+        );
+
+        return;
+    }
+
+
+    existingImages =
+        existingImages.filter(
+            image =>
+                image.id !== imageId
+        );
+
+
+    renderExistingImages();
 
 }
 
@@ -1191,15 +1705,22 @@ async function editProduct(id) {
    TOGGLE PRODUCT
 ========================= */
 
-async function toggleProduct(id, currentStatus) {
+async function toggleProduct(
+    id,
+    currentStatus
+) {
 
     const { error } =
         await supabaseClient
             .from("products")
             .update({
-                active: !currentStatus
+                active:
+                    !currentStatus
             })
-            .eq("id", id);
+            .eq(
+                "id",
+                id
+            );
 
     if (error) {
 
@@ -1231,11 +1752,15 @@ async function deleteProduct(id) {
         return;
     }
 
+
     const { error } =
         await supabaseClient
             .from("products")
             .delete()
-            .eq("id", id);
+            .eq(
+                "id",
+                id
+            );
 
     if (error) {
 
@@ -1247,13 +1772,14 @@ async function deleteProduct(id) {
         return;
     }
 
+
     await loadProducts();
 
 }
 
 
 /* =========================
-   LOAD ORDERS
+   ORDERS
 ========================= */
 
 async function loadOrders() {
@@ -1265,15 +1791,18 @@ async function loadOrders() {
         await supabaseClient
             .from("orders")
             .select("*")
-            .order("created_at", {
-                ascending: false
-            });
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
 
     if (error) {
 
         ordersList.innerHTML =
             "<p>Erreur : " +
-            error.message +
+            escapeHtml(error.message) +
             "</p>";
 
         return;
@@ -1289,13 +1818,17 @@ async function loadOrders() {
 
     ordersList.innerHTML = "";
 
+
     data.forEach(order => {
 
         const card =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         card.className =
             "order-card";
+
 
         let itemsHtml = "";
 
@@ -1312,8 +1845,12 @@ async function loadOrders() {
 
                     itemsHtml += `
                         <div>
-                            ${escapeHtml(item.name || "Produit")}
-                            × ${item.quantity || 1}
+                            ${escapeHtml(
+                                item.name ||
+                                "Produit"
+                            )}
+                            ×
+                            ${item.quantity || 1}
                         </div>
                     `;
 
@@ -1321,12 +1858,15 @@ async function loadOrders() {
 
             }
 
-        } catch (e) {
+        }
+
+        catch (e) {
 
             itemsHtml =
                 "<div>Produits indisponibles</div>";
 
         }
+
 
         card.innerHTML = `
 
@@ -1336,38 +1876,54 @@ async function loadOrders() {
 
             <p>
                 <strong>Date :</strong>
-                ${new Date(order.created_at).toLocaleString("fr-DZ")}
+                ${new Date(
+                    order.created_at
+                ).toLocaleString("fr-DZ")}
             </p>
 
             <p>
                 <strong>Client :</strong>
-                ${escapeHtml(order.customer_name)}
+                ${escapeHtml(
+                    order.customer_name
+                )}
             </p>
 
             <p>
                 <strong>Téléphone :</strong>
-                ${escapeHtml(order.customer_phone)}
+                ${escapeHtml(
+                    order.customer_phone
+                )}
             </p>
 
             <p>
                 <strong>Wilaya :</strong>
-                ${escapeHtml(order.customer_wilaya)}
+                ${escapeHtml(
+                    order.customer_wilaya
+                )}
             </p>
 
             <p>
                 <strong>Adresse :</strong>
-                ${escapeHtml(order.customer_address)}
+                ${escapeHtml(
+                    order.customer_address
+                )}
             </p>
 
             <div class="order-products">
+
                 <strong>Produits :</strong>
+
                 ${itemsHtml}
+
             </div>
 
             <div class="total">
+
                 Total :
-                ${Number(order.total).toLocaleString("fr-DZ")}
+                ${Number(order.total)
+                    .toLocaleString("fr-DZ")}
                 DA
+
             </div>
 
             <br>
@@ -1377,34 +1933,66 @@ async function loadOrders() {
             </label>
 
             <select
-                onchange="updateOrderStatus(${order.id}, this.value)">
+                onchange="
+                    updateOrderStatus(
+                        ${order.id},
+                        this.value
+                    )
+                ">
 
-                <option value="new"
-                    ${order.status === "new" ? "selected" : ""}>
+                <option
+                    value="new"
+                    ${
+                        order.status === "new"
+                            ? "selected"
+                            : ""
+                    }>
                     Nouvelle
                 </option>
 
-                <option value="confirmed"
-                    ${order.status === "confirmed" ? "selected" : ""}>
+                <option
+                    value="confirmed"
+                    ${
+                        order.status === "confirmed"
+                            ? "selected"
+                            : ""
+                    }>
                     Confirmée
                 </option>
 
-                <option value="out_for_delivery"
-                    ${order.status === "out_for_delivery" ? "selected" : ""}>
+                <option
+                    value="out_for_delivery"
+                    ${
+                        order.status ===
+                        "out_for_delivery"
+                            ? "selected"
+                            : ""
+                    }>
                     En livraison
                 </option>
 
-                <option value="completed"
-                    ${order.status === "completed" ? "selected" : ""}>
+                <option
+                    value="completed"
+                    ${
+                        order.status === "completed"
+                            ? "selected"
+                            : ""
+                    }>
                     Terminée
                 </option>
 
-                <option value="cancelled"
-                    ${order.status === "cancelled" ? "selected" : ""}>
+                <option
+                    value="cancelled"
+                    ${
+                        order.status === "cancelled"
+                            ? "selected"
+                            : ""
+                    }>
                     Annulée
                 </option>
 
             </select>
+
         `;
 
         ordersList.appendChild(card);
@@ -1415,18 +2003,24 @@ async function loadOrders() {
 
 
 /* =========================
-   UPDATE ORDER STATUS
+   UPDATE ORDER
 ========================= */
 
-async function updateOrderStatus(id, status) {
+async function updateOrderStatus(
+    id,
+    status
+) {
 
     const { error } =
         await supabaseClient
             .from("orders")
             .update({
-                status: status
+                status
             })
-            .eq("id", id);
+            .eq(
+                "id",
+                id
+            );
 
     if (error) {
 
@@ -1438,60 +2032,99 @@ async function updateOrderStatus(id, status) {
         return;
     }
 
-    alert("Statut de la commande mis à jour.");
+    alert(
+        "Statut de la commande mis à jour."
+    );
 
 }
 
 
 /* =========================
-   EVENTS
+   BUTTONS
 ========================= */
 
 document
     .getElementById("loginBtn")
-    .addEventListener("click", login);
+    .addEventListener(
+        "click",
+        login
+    );
 
 document
     .getElementById("logoutBtn")
-    .addEventListener("click", logout);
+    .addEventListener(
+        "click",
+        logout
+    );
 
 document
     .getElementById("showForgotBtn")
-    .addEventListener("click", () => {
+    .addEventListener(
+        "click",
+        () => {
 
-        loginSection.classList.add("hidden");
-        forgotSection.classList.remove("hidden");
+            loginSection
+                .classList
+                .add("hidden");
 
-    });
+            forgotSection
+                .classList
+                .remove("hidden");
+
+        }
+    );
 
 document
     .getElementById("backToLoginBtn")
-    .addEventListener("click", () => {
+    .addEventListener(
+        "click",
+        () => {
 
-        forgotSection.classList.add("hidden");
-        loginSection.classList.remove("hidden");
+            forgotSection
+                .classList
+                .add("hidden");
 
-    });
+            loginSection
+                .classList
+                .remove("hidden");
+
+        }
+    );
 
 document
     .getElementById("forgotBtn")
-    .addEventListener("click", sendPasswordReset);
+    .addEventListener(
+        "click",
+        sendPasswordReset
+    );
 
 document
     .getElementById("changePasswordBtn")
-    .addEventListener("click", changeAdminPassword);
+    .addEventListener(
+        "click",
+        changeAdminPassword
+    );
 
 document
     .getElementById("newProductBtn")
-    .addEventListener("click", openNewProductForm);
+    .addEventListener(
+        "click",
+        openNewProductForm
+    );
 
 document
     .getElementById("cancelProductBtn")
-    .addEventListener("click", closeProductForm);
+    .addEventListener(
+        "click",
+        closeProductForm
+    );
 
 document
     .getElementById("saveProductBtn")
-    .addEventListener("click", saveProduct);
+    .addEventListener(
+        "click",
+        saveProduct
+    );
 
 
 /* =========================
@@ -1501,18 +2134,16 @@ document
 async function checkSession() {
 
     const {
-        data: { session }
+        data: {
+            session
+        }
     } =
-        await supabaseClient.auth.getSession();
+        await supabaseClient.auth
+            .getSession();
 
     if (session) {
 
-        showAdmin();
-
-    } else {
-
-        loginSection.classList.remove("hidden");
-        adminSection.classList.add("hidden");
+        await showAdmin();
 
     }
 
@@ -1524,23 +2155,40 @@ async function checkSession() {
 ========================= */
 
 supabaseClient.auth.onAuthStateChange(
-    async (event, session) => {
+    async (
+        event,
+        session
+    ) => {
 
         if (
-            event === "SIGNED_IN" ||
-            event === "PASSWORD_RECOVERY"
+            event === "SIGNED_IN" &&
+            session
         ) {
 
-            if (session) {
-                await showAdmin();
-            }
+            await showAdmin();
 
         }
 
-        if (event === "SIGNED_OUT") {
+        if (
+            event === "PASSWORD_RECOVERY" &&
+            session
+        ) {
 
-            adminSection.classList.add("hidden");
-            loginSection.classList.remove("hidden");
+            await showAdmin();
+
+        }
+
+        if (
+            event === "SIGNED_OUT"
+        ) {
+
+            adminSection
+                .classList
+                .add("hidden");
+
+            loginSection
+                .classList
+                .remove("hidden");
 
         }
 
