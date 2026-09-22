@@ -31,13 +31,13 @@ header {
 
 header h1 {
     margin: 0;
-    font-size: 21px;
+    font-size: 20px;
 }
 
 button {
     border: none;
     border-radius: 8px;
-    padding: 10px 14px;
+    padding: 11px 15px;
     cursor: pointer;
 }
 
@@ -52,16 +52,16 @@ button {
     padding: 20px;
 }
 
-.login-box {
-    max-width: 400px;
-    margin: 70px auto;
+.box {
+    max-width: 420px;
+    margin: 60px auto;
     background: white;
     padding: 25px;
     border-radius: 14px;
     box-shadow: 0 5px 25px rgba(0,0,0,.08);
 }
 
-.login-box h2 {
+.box h2 {
     text-align: center;
     margin-top: 0;
 }
@@ -75,16 +75,31 @@ input {
     font-size: 15px;
 }
 
-.login-btn {
+.main-btn {
     width: 100%;
     background: #164c46;
     color: white;
     font-size: 16px;
 }
 
+.link-btn {
+    background: none;
+    color: #164c46;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.message {
+    margin-top: 12px;
+    line-height: 1.5;
+}
+
 .error {
     color: #b42318;
-    margin-top: 12px;
+}
+
+.success {
+    color: #18794e;
 }
 
 .orders {
@@ -122,6 +137,7 @@ input {
     padding: 12px;
     border-radius: 8px;
     margin: 12px 0;
+    line-height: 1.8;
 }
 
 .total {
@@ -137,15 +153,15 @@ input {
     background: white;
 }
 
+.hidden {
+    display: none;
+}
+
 .empty {
     text-align: center;
     background: white;
     padding: 30px;
     border-radius: 14px;
-}
-
-.hidden {
-    display: none;
 }
 </style>
 </head>
@@ -154,10 +170,15 @@ input {
 
 <header id="adminHeader" class="hidden">
     <h1>Maison Zeraya — Administration</h1>
-    <button class="logout" id="logoutBtn">Déconnexion</button>
+    <button class="logout" id="logoutBtn">
+        Déconnexion
+    </button>
 </header>
 
-<div id="loginSection" class="login-box">
+
+<!-- LOGIN -->
+
+<div id="loginSection" class="box">
 
     <h2>Administration</h2>
 
@@ -175,13 +196,77 @@ input {
         autocomplete="current-password"
     >
 
-    <button class="login-btn" id="loginBtn">
+    <button class="main-btn" id="loginBtn">
         Se connecter
     </button>
 
-    <div id="loginError" class="error"></div>
+    <button class="link-btn" id="forgotBtn">
+        Mot de passe oublié ?
+    </button>
+
+    <div id="loginMessage" class="message"></div>
 
 </div>
+
+
+<!-- FORGOT PASSWORD -->
+
+<div id="forgotSection" class="box hidden">
+
+    <h2>Réinitialiser le mot de passe</h2>
+
+    <p>
+        Entrez votre adresse email pour recevoir
+        un lien de réinitialisation.
+    </p>
+
+    <input
+        type="email"
+        id="resetEmail"
+        placeholder="Votre email"
+    >
+
+    <button class="main-btn" id="sendResetBtn">
+        Envoyer le lien
+    </button>
+
+    <button class="link-btn" id="backLoginBtn">
+        Retour à la connexion
+    </button>
+
+    <div id="resetMessage" class="message"></div>
+
+</div>
+
+
+<!-- NEW PASSWORD -->
+
+<div id="newPasswordSection" class="box hidden">
+
+    <h2>Nouveau mot de passe</h2>
+
+    <input
+        type="password"
+        id="newPassword"
+        placeholder="Nouveau mot de passe"
+    >
+
+    <input
+        type="password"
+        id="confirmPassword"
+        placeholder="Confirmer le mot de passe"
+    >
+
+    <button class="main-btn" id="savePasswordBtn">
+        Enregistrer le nouveau mot de passe
+    </button>
+
+    <div id="passwordMessage" class="message"></div>
+
+</div>
+
+
+<!-- ADMIN -->
 
 <div id="adminSection" class="container hidden">
 
@@ -190,6 +275,7 @@ input {
     <div id="orders" class="orders"></div>
 
 </div>
+
 
 <script>
 
@@ -205,8 +291,15 @@ const supabaseClient =
         SUPABASE_PUBLISHABLE_KEY
     );
 
+
 const loginSection =
     document.getElementById("loginSection");
+
+const forgotSection =
+    document.getElementById("forgotSection");
+
+const newPasswordSection =
+    document.getElementById("newPasswordSection");
 
 const adminSection =
     document.getElementById("adminSection");
@@ -214,21 +307,12 @@ const adminSection =
 const adminHeader =
     document.getElementById("adminHeader");
 
-const loginError =
-    document.getElementById("loginError");
 
-const ordersContainer =
-    document.getElementById("orders");
-
+/* LOGIN */
 
 document
     .getElementById("loginBtn")
     .addEventListener("click", login);
-
-
-document
-    .getElementById("logoutBtn")
-    .addEventListener("click", logout);
 
 
 async function login() {
@@ -239,12 +323,18 @@ async function login() {
     const password =
         document.getElementById("password").value;
 
-    loginError.textContent = "";
+    const message =
+        document.getElementById("loginMessage");
+
+    message.textContent = "";
+    message.className = "message";
 
     if (!email || !password) {
 
-        loginError.textContent =
+        message.textContent =
             "Veuillez entrer votre email et votre mot de passe.";
+
+        message.classList.add("error");
 
         return;
     }
@@ -257,8 +347,10 @@ async function login() {
 
     if (error) {
 
-        loginError.textContent =
+        message.textContent =
             "Erreur : " + error.message;
+
+        message.classList.add("error");
 
         return;
     }
@@ -269,9 +361,187 @@ async function login() {
 }
 
 
-async function showAdmin() {
+/* FORGOT PASSWORD */
+
+document
+    .getElementById("forgotBtn")
+    .addEventListener("click", () => {
+
+        loginSection.classList.add("hidden");
+
+        forgotSection.classList.remove("hidden");
+
+    });
+
+
+document
+    .getElementById("backLoginBtn")
+    .addEventListener("click", () => {
+
+        forgotSection.classList.add("hidden");
+
+        loginSection.classList.remove("hidden");
+
+    });
+
+
+document
+    .getElementById("sendResetBtn")
+    .addEventListener("click", sendReset);
+
+
+async function sendReset() {
+
+    const email =
+        document
+            .getElementById("resetEmail")
+            .value
+            .trim();
+
+    const message =
+        document.getElementById("resetMessage");
+
+    message.textContent = "";
+    message.className = "message";
+
+    if (!email) {
+
+        message.textContent =
+            "Veuillez entrer votre email.";
+
+        message.classList.add("error");
+
+        return;
+    }
+
+    /*
+       On indique à Supabase de revenir
+       sur la page admin après le clic
+       dans l'email.
+    */
+
+    const redirectTo =
+        window.location.origin +
+        window.location.pathname;
+
+    const { error } =
+        await supabaseClient.auth.resetPasswordForEmail(
+            email,
+            {
+                redirectTo: redirectTo
+            }
+        );
+
+    if (error) {
+
+        message.textContent =
+            "Erreur : " + error.message;
+
+        message.classList.add("error");
+
+        return;
+    }
+
+    message.textContent =
+        "Un lien de réinitialisation a été envoyé à votre email.";
+
+    message.classList.add("success");
+}
+
+
+/* NEW PASSWORD */
+
+document
+    .getElementById("savePasswordBtn")
+    .addEventListener(
+        "click",
+        saveNewPassword
+    );
+
+
+async function saveNewPassword() {
+
+    const password =
+        document.getElementById("newPassword").value;
+
+    const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+    const message =
+        document.getElementById("passwordMessage");
+
+    message.textContent = "";
+    message.className = "message";
+
+    if (!password || !confirmPassword) {
+
+        message.textContent =
+            "Veuillez remplir les deux champs.";
+
+        message.classList.add("error");
+
+        return;
+    }
+
+    if (password !== confirmPassword) {
+
+        message.textContent =
+            "Les mots de passe ne correspondent pas.";
+
+        message.classList.add("error");
+
+        return;
+    }
+
+    if (password.length < 6) {
+
+        message.textContent =
+            "Le mot de passe doit contenir au moins 6 caractères.";
+
+        message.classList.add("error");
+
+        return;
+    }
+
+    const { error } =
+        await supabaseClient.auth.updateUser({
+            password: password
+        });
+
+    if (error) {
+
+        message.textContent =
+            "Erreur : " + error.message;
+
+        message.classList.add("error");
+
+        return;
+    }
+
+    message.textContent =
+        "Mot de passe modifié avec succès. Vous pouvez maintenant vous connecter.";
+
+    message.classList.add("success");
+
+    document
+        .getElementById("newPassword")
+        .value = "";
+
+    document
+        .getElementById("confirmPassword")
+        .value = "";
+}
+
+
+/* SHOW ADMIN */
+
+function showAdmin() {
 
     loginSection.classList.add("hidden");
+
+    forgotSection.classList.add("hidden");
+
+    newPasswordSection.classList.add("hidden");
 
     adminSection.classList.remove("hidden");
 
@@ -279,7 +549,12 @@ async function showAdmin() {
 }
 
 
+/* LOAD ORDERS */
+
 async function loadOrders() {
+
+    const ordersContainer =
+        document.getElementById("orders");
 
     ordersContainer.innerHTML =
         "<p>Chargement des commandes...</p>";
@@ -296,7 +571,7 @@ async function loadOrders() {
 
         ordersContainer.innerHTML =
             "<p class='error'>Erreur : " +
-            error.message +
+            escapeHTML(error.message) +
             "</p>";
 
         return;
@@ -445,6 +720,8 @@ async function loadOrders() {
 }
 
 
+/* UPDATE STATUS */
+
 async function updateStatus(event) {
 
     const id =
@@ -472,22 +749,27 @@ async function updateStatus(event) {
     }
 
     alert("Statut mis à jour.");
-
 }
 
 
-async function logout() {
+/* LOGOUT */
 
-    await supabaseClient.auth.signOut();
+document
+    .getElementById("logoutBtn")
+    .addEventListener("click", async () => {
 
-    adminSection.classList.add("hidden");
+        await supabaseClient.auth.signOut();
 
-    adminHeader.classList.add("hidden");
+        adminSection.classList.add("hidden");
 
-    loginSection.classList.remove("hidden");
+        adminHeader.classList.add("hidden");
 
-}
+        loginSection.classList.remove("hidden");
 
+    });
+
+
+/* ESCAPE HTML */
 
 function escapeHTML(value) {
 
@@ -501,6 +783,8 @@ function escapeHTML(value) {
 }
 
 
+/* CHECK SESSION / PASSWORD RECOVERY */
+
 async function checkSession() {
 
     const { data } =
@@ -513,8 +797,24 @@ async function checkSession() {
         loadOrders();
 
     }
-
 }
+
+
+supabaseClient.auth.onAuthStateChange(
+    async (event, session) => {
+
+        if (event === "PASSWORD_RECOVERY") {
+
+            loginSection.classList.add("hidden");
+
+            forgotSection.classList.add("hidden");
+
+            newPasswordSection.classList.remove("hidden");
+
+        }
+
+    }
+);
 
 
 checkSession();
