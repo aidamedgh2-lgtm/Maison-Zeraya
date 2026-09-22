@@ -1,1 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Maison Zeraya — Lingerie & Homewear</title>
+
+    <meta
+        name="description"
+        content="Maison Zeraya — Lingerie & Homewear. Élégance sans limites."
+    >
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --green-dark: #174f4a;
+            --green: #23655f;
+            --gold: #c5a35a;
+            --gold-light: #dfc987;
+            --cream: #faf8f3;
+            --white: #ffffff;
+            --text: #263b39;
+        }
+
+        body {
+            font-family: Georgia, "Times New Roman", serif;
+            background: var(--cream);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+        /* ===== HEADER ===== */
+
+        header {
+            background: var(--green-dark);
+            color: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .top-bar {
+            text-align: center;
+            padding: 8px 15px;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            letter-spacing: 1px;
+            background: #123f3b;
+            color: var(--gold-light);
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: auto;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            text-align: center;
+            flex: 1;
+        }
+
+        .logo-name {
+            display: block;
+            font-size: 27px;
+            letter-spacing: 3px;
+            color: var(--white);
+        }
+
+        .logo-subtitle {
+            display: block;
+            margin-top: 2px;
+            font-family: Arial, sans-serif;
+            font-size: 8px;
+            letter-spacing: 4px;
+            color: var(--gold-light);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+        }
+
+        .nav-links a {
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold-light);
+        }
+
+        .cart-button {
+            border: 1px solid var(--gold);
+            background: transparent;
+            color: var(--white);
+            padding: 9px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        /* ===== HERO ===== */
+
+        .hero {
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 70px 20px;
+            background:
+                linear-gradient(
+                    rgba(23, 79, 74, 0.88),
+                    rgba(23, 79, 74, 0.88)
+                );
+            color: var(--white);
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-small {
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            font-size: 12px;
+            color: var(--gold-light);
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 8vw, 82px);
+            font-weight: normal;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+        }
+
+        .hero-line {
+            width: 80px;
+            height: 1px;
+            background: var(--gold);
+            margin: 25px auto;
+        }
+
+        .hero p {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            letter-spacing: 1px;
+            margin-bottom: 35px;
+        }
+
+       
