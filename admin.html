@@ -1,1 +1,525 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Maison Zeraya — Administration</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7f6;
+    color: #183c38;
+}
+
+header {
+    background: #164c46;
+    color: white;
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 21px;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+}
+
+.logout {
+    background: white;
+    color: #164c46;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+}
+
+.login-box {
+    max-width: 400px;
+    margin: 70px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 5px 25px rgba(0,0,0,.08);
+}
+
+.login-box h2 {
+    text-align: center;
+    margin-top: 0;
+}
+
+input {
+    width: 100%;
+    padding: 13px;
+    margin: 8px 0 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.login-btn {
+    width: 100%;
+    background: #164c46;
+    color: white;
+    font-size: 16px;
+}
+
+.error {
+    color: #b42318;
+    margin-top: 12px;
+}
+
+.orders {
+    display: grid;
+    gap: 18px;
+}
+
+.order {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.06);
+}
+
+.order-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+}
+
+.order h3 {
+    margin: 0;
+}
+
+.info {
+    line-height: 1.8;
+}
+
+.items {
+    background: #f5f7f6;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 12px 0;
+}
+
+.total {
+    font-size: 19px;
+    font-weight: bold;
+    margin: 12px 0;
+}
+
+.status {
+    padding: 9px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: white;
+}
+
+.empty {
+    text-align: center;
+    background: white;
+    padding: 30px;
+    border-radius: 14px;
+}
+
+.hidden {
+    display: none;
+}
+</style>
+</head>
+
+<body>
+
+<header id="adminHeader" class="hidden">
+    <h1>Maison Zeraya — Administration</h1>
+    <button class="logout" id="logoutBtn">Déconnexion</button>
+</header>
+
+<div id="loginSection" class="login-box">
+
+    <h2>Administration</h2>
+
+    <input
+        type="email"
+        id="email"
+        placeholder="Email"
+        autocomplete="email"
+    >
+
+    <input
+        type="password"
+        id="password"
+        placeholder="Mot de passe"
+        autocomplete="current-password"
+    >
+
+    <button class="login-btn" id="loginBtn">
+        Se connecter
+    </button>
+
+    <div id="loginError" class="error"></div>
+
+</div>
+
+<div id="adminSection" class="container hidden">
+
+    <h2>Commandes</h2>
+
+    <div id="orders" class="orders"></div>
+
+</div>
+
+<script>
+
+const SUPABASE_URL =
+    "https://wicjgmiqevbhxuebhdyv.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_TORIACS6heJed6xX3c-o0A_YD2mrY4X";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+const loginSection =
+    document.getElementById("loginSection");
+
+const adminSection =
+    document.getElementById("adminSection");
+
+const adminHeader =
+    document.getElementById("adminHeader");
+
+const loginError =
+    document.getElementById("loginError");
+
+const ordersContainer =
+    document.getElementById("orders");
+
+
+document
+    .getElementById("loginBtn")
+    .addEventListener("click", login);
+
+
+document
+    .getElementById("logoutBtn")
+    .addEventListener("click", logout);
+
+
+async function login() {
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    loginError.textContent = "";
+
+    if (!email || !password) {
+
+        loginError.textContent =
+            "Veuillez entrer votre email et votre mot de passe.";
+
+        return;
+    }
+
+    const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+    if (error) {
+
+        loginError.textContent =
+            "Erreur : " + error.message;
+
+        return;
+    }
+
+    showAdmin();
+
+    loadOrders();
+}
+
+
+async function showAdmin() {
+
+    loginSection.classList.add("hidden");
+
+    adminSection.classList.remove("hidden");
+
+    adminHeader.classList.remove("hidden");
+}
+
+
+async function loadOrders() {
+
+    ordersContainer.innerHTML =
+        "<p>Chargement des commandes...</p>";
+
+    const { data, error } =
+        await supabaseClient
+            .from("orders")
+            .select("*")
+            .order("created_at", {
+                ascending: false
+            });
+
+    if (error) {
+
+        ordersContainer.innerHTML =
+            "<p class='error'>Erreur : " +
+            error.message +
+            "</p>";
+
+        return;
+    }
+
+    if (!data || data.length === 0) {
+
+        ordersContainer.innerHTML =
+            "<div class='empty'>Aucune commande pour le moment.</div>";
+
+        return;
+    }
+
+    ordersContainer.innerHTML = "";
+
+    data.forEach(order => {
+
+        const orderElement =
+            document.createElement("div");
+
+        orderElement.className = "order";
+
+        let itemsHTML = "";
+
+        if (Array.isArray(order.items)) {
+
+            order.items.forEach(item => {
+
+                itemsHTML += `
+                    <div>
+                        ${escapeHTML(item.name || "Produit")}
+                        × ${item.quantity || 1}
+                    </div>
+                `;
+
+            });
+
+        }
+
+        const date =
+            new Date(order.created_at)
+                .toLocaleString("fr-FR");
+
+        orderElement.innerHTML = `
+
+            <div class="order-top">
+
+                <h3>
+                    Commande #${order.id}
+                </h3>
+
+                <span>
+                    ${date}
+                </span>
+
+            </div>
+
+            <div class="info">
+
+                <strong>Client :</strong>
+                ${escapeHTML(order.customer_name)}
+
+                <br>
+
+                <strong>Téléphone :</strong>
+                ${escapeHTML(order.customer_phone)}
+
+                <br>
+
+                <strong>Wilaya :</strong>
+                ${escapeHTML(order.customer_wilaya)}
+
+                <br>
+
+                <strong>Adresse :</strong>
+                ${escapeHTML(order.customer_address)}
+
+            </div>
+
+            <div class="items">
+
+                <strong>Produits :</strong>
+
+                ${itemsHTML}
+
+            </div>
+
+            <div class="total">
+                Total :
+                ${Number(order.total).toLocaleString("fr-FR")}
+                DA
+            </div>
+
+            <label>
+                <strong>Statut :</strong>
+            </label>
+
+            <select
+                class="status"
+                data-id="${order.id}"
+            >
+
+                <option value="new"
+                    ${order.status === "new" ? "selected" : ""}>
+                    Nouvelle
+                </option>
+
+                <option value="confirmed"
+                    ${order.status === "confirmed" ? "selected" : ""}>
+                    Confirmée
+                </option>
+
+                <option value="out_for_delivery"
+                    ${order.status === "out_for_delivery" ? "selected" : ""}>
+                    En livraison
+                </option>
+
+                <option value="completed"
+                    ${order.status === "completed" ? "selected" : ""}>
+                    Terminée
+                </option>
+
+                <option value="cancelled"
+                    ${order.status === "cancelled" ? "selected" : ""}>
+                    Annulée
+                </option>
+
+            </select>
+
+        `;
+
+        ordersContainer.appendChild(orderElement);
+
+    });
+
+    document
+        .querySelectorAll(".status")
+        .forEach(select => {
+
+            select.addEventListener(
+                "change",
+                updateStatus
+            );
+
+        });
+}
+
+
+async function updateStatus(event) {
+
+    const id =
+        event.target.dataset.id;
+
+    const status =
+        event.target.value;
+
+    const { error } =
+        await supabaseClient
+            .from("orders")
+            .update({
+                status: status
+            })
+            .eq("id", id);
+
+    if (error) {
+
+        alert(
+            "Erreur lors de la mise à jour :\n" +
+            error.message
+        );
+
+        return;
+    }
+
+    alert("Statut mis à jour.");
+
+}
+
+
+async function logout() {
+
+    await supabaseClient.auth.signOut();
+
+    adminSection.classList.add("hidden");
+
+    adminHeader.classList.add("hidden");
+
+    loginSection.classList.remove("hidden");
+
+}
+
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+async function checkSession() {
+
+    const { data } =
+        await supabaseClient.auth.getSession();
+
+    if (data.session) {
+
+        showAdmin();
+
+        loadOrders();
+
+    }
+
+}
+
+
+checkSession();
+
+</script>
+
+</body>
+</html>
