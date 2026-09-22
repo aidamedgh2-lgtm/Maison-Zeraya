@@ -27,6 +27,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
 }
 
 header h1 {
@@ -151,6 +152,12 @@ input {
     border-radius: 8px;
     border: 1px solid #ddd;
     background: white;
+    margin-top: 6px;
+}
+
+.settings-box {
+    max-width: 600px;
+    margin: 20px auto;
 }
 
 .hidden {
@@ -168,11 +175,16 @@ input {
 
 <body>
 
+<!-- HEADER -->
+
 <header id="adminHeader" class="hidden">
+
     <h1>Maison Zeraya — Administration</h1>
+
     <button class="logout" id="logoutBtn">
         Déconnexion
     </button>
+
 </header>
 
 
@@ -239,7 +251,7 @@ input {
 </div>
 
 
-<!-- NEW PASSWORD -->
+<!-- NEW PASSWORD FROM EMAIL -->
 
 <div id="newPasswordSection" class="box hidden">
 
@@ -249,12 +261,14 @@ input {
         type="password"
         id="newPassword"
         placeholder="Nouveau mot de passe"
+        autocomplete="new-password"
     >
 
     <input
         type="password"
         id="confirmPassword"
         placeholder="Confirmer le mot de passe"
+        autocomplete="new-password"
     >
 
     <button class="main-btn" id="savePasswordBtn">
@@ -266,9 +280,48 @@ input {
 </div>
 
 
-<!-- ADMIN -->
+<!-- ADMIN CONTENT -->
 
 <div id="adminSection" class="container hidden">
+
+    <!-- CHANGE PASSWORD -->
+
+    <div class="box settings-box">
+
+        <h2>🔐 Modifier le mot de passe</h2>
+
+        <p>
+            Choisissez un nouveau mot de passe pour votre
+            compte administrateur.
+        </p>
+
+        <input
+            type="password"
+            id="newAdminPassword"
+            placeholder="Nouveau mot de passe"
+            autocomplete="new-password"
+        >
+
+        <input
+            type="password"
+            id="confirmAdminPassword"
+            placeholder="Confirmer le nouveau mot de passe"
+            autocomplete="new-password"
+        >
+
+        <button class="main-btn" id="changePasswordBtn">
+            Modifier le mot de passe
+        </button>
+
+        <div
+            id="passwordChangeMessage"
+            class="message"
+        ></div>
+
+    </div>
+
+
+    <!-- ORDERS -->
 
     <h2>Commandes</h2>
 
@@ -278,6 +331,10 @@ input {
 
 
 <script>
+
+/* =========================
+   SUPABASE
+========================= */
 
 const SUPABASE_URL =
     "https://wicjgmiqevbhxuebhdyv.supabase.co";
@@ -291,6 +348,10 @@ const supabaseClient =
         SUPABASE_PUBLISHABLE_KEY
     );
 
+
+/* =========================
+   ELEMENTS
+========================= */
 
 const loginSection =
     document.getElementById("loginSection");
@@ -307,8 +368,13 @@ const adminSection =
 const adminHeader =
     document.getElementById("adminHeader");
 
+const ordersContainer =
+    document.getElementById("orders");
 
-/* LOGIN */
+
+/* =========================
+   LOGIN
+========================= */
 
 document
     .getElementById("loginBtn")
@@ -318,10 +384,15 @@ document
 async function login() {
 
     const email =
-        document.getElementById("email").value.trim();
+        document
+            .getElementById("email")
+            .value
+            .trim();
 
     const password =
-        document.getElementById("password").value;
+        document
+            .getElementById("password")
+            .value;
 
     const message =
         document.getElementById("loginMessage");
@@ -339,7 +410,7 @@ async function login() {
         return;
     }
 
-    const { data, error } =
+    const { error } =
         await supabaseClient.auth.signInWithPassword({
             email: email,
             password: password
@@ -361,7 +432,9 @@ async function login() {
 }
 
 
-/* FORGOT PASSWORD */
+/* =========================
+   FORGOT PASSWORD
+========================= */
 
 document
     .getElementById("forgotBtn")
@@ -414,12 +487,6 @@ async function sendReset() {
         return;
     }
 
-    /*
-       On indique à Supabase de revenir
-       sur la page admin après le clic
-       dans l'email.
-    */
-
     const redirectTo =
         window.location.origin +
         window.location.pathname;
@@ -449,7 +516,9 @@ async function sendReset() {
 }
 
 
-/* NEW PASSWORD */
+/* =========================
+   PASSWORD FROM EMAIL
+========================= */
 
 document
     .getElementById("savePasswordBtn")
@@ -462,10 +531,14 @@ document
 async function saveNewPassword() {
 
     const password =
-        document.getElementById("newPassword").value;
+        document
+            .getElementById("newPassword")
+            .value;
 
     const confirmPassword =
-        document.getElementById("confirmPassword").value;
+        document
+            .getElementById("confirmPassword")
+            .value;
 
     const message =
         document.getElementById("passwordMessage");
@@ -483,20 +556,20 @@ async function saveNewPassword() {
         return;
     }
 
-    if (password !== confirmPassword) {
+    if (password.length < 6) {
 
         message.textContent =
-            "Les mots de passe ne correspondent pas.";
+            "Le mot de passe doit contenir au moins 6 caractères.";
 
         message.classList.add("error");
 
         return;
     }
 
-    if (password.length < 6) {
+    if (password !== confirmPassword) {
 
         message.textContent =
-            "Le mot de passe doit contenir au moins 6 caractères.";
+            "Les mots de passe ne correspondent pas.";
 
         message.classList.add("error");
 
@@ -519,21 +592,109 @@ async function saveNewPassword() {
     }
 
     message.textContent =
-        "Mot de passe modifié avec succès. Vous pouvez maintenant vous connecter.";
+        "Mot de passe modifié avec succès.";
+
+    message.classList.add("success");
+
+}
+
+
+/* =========================
+   CHANGE PASSWORD
+   WHILE LOGGED IN
+========================= */
+
+document
+    .getElementById("changePasswordBtn")
+    .addEventListener(
+        "click",
+        changeAdminPassword
+    );
+
+
+async function changeAdminPassword() {
+
+    const newPassword =
+        document
+            .getElementById("newAdminPassword")
+            .value;
+
+    const confirmPassword =
+        document
+            .getElementById("confirmAdminPassword")
+            .value;
+
+    const message =
+        document.getElementById(
+            "passwordChangeMessage"
+        );
+
+    message.textContent = "";
+    message.className = "message";
+
+    if (!newPassword || !confirmPassword) {
+
+        message.textContent =
+            "Veuillez remplir les deux champs.";
+
+        message.classList.add("error");
+
+        return;
+    }
+
+    if (newPassword.length < 6) {
+
+        message.textContent =
+            "Le mot de passe doit contenir au moins 6 caractères.";
+
+        message.classList.add("error");
+
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+
+        message.textContent =
+            "Les mots de passe ne correspondent pas.";
+
+        message.classList.add("error");
+
+        return;
+    }
+
+    const { error } =
+        await supabaseClient.auth.updateUser({
+            password: newPassword
+        });
+
+    if (error) {
+
+        message.textContent =
+            "Erreur : " + error.message;
+
+        message.classList.add("error");
+
+        return;
+    }
+
+    message.textContent =
+        "Mot de passe modifié avec succès.";
 
     message.classList.add("success");
 
     document
-        .getElementById("newPassword")
+        .getElementById("newAdminPassword")
         .value = "";
 
     document
-        .getElementById("confirmPassword")
+        .getElementById("confirmAdminPassword")
         .value = "";
 }
 
 
-/* SHOW ADMIN */
+/* =========================
+   SHOW ADMIN
+========================= */
 
 function showAdmin() {
 
@@ -549,12 +710,11 @@ function showAdmin() {
 }
 
 
-/* LOAD ORDERS */
+/* =========================
+   LOAD ORDERS
+========================= */
 
 async function loadOrders() {
-
-    const ordersContainer =
-        document.getElementById("orders");
 
     ordersContainer.innerHTML =
         "<p>Chargement des commandes...</p>";
@@ -669,6 +829,8 @@ async function loadOrders() {
                 <strong>Statut :</strong>
             </label>
 
+            <br>
+
             <select
                 class="status"
                 data-id="${order.id}"
@@ -720,7 +882,9 @@ async function loadOrders() {
 }
 
 
-/* UPDATE STATUS */
+/* =========================
+   UPDATE ORDER STATUS
+========================= */
 
 async function updateStatus(event) {
 
@@ -752,24 +916,31 @@ async function updateStatus(event) {
 }
 
 
-/* LOGOUT */
+/* =========================
+   LOGOUT
+========================= */
 
 document
     .getElementById("logoutBtn")
-    .addEventListener("click", async () => {
+    .addEventListener(
+        "click",
+        async () => {
 
-        await supabaseClient.auth.signOut();
+            await supabaseClient.auth.signOut();
 
-        adminSection.classList.add("hidden");
+            adminSection.classList.add("hidden");
 
-        adminHeader.classList.add("hidden");
+            adminHeader.classList.add("hidden");
 
-        loginSection.classList.remove("hidden");
+            loginSection.classList.remove("hidden");
 
-    });
+        }
+    );
 
 
-/* ESCAPE HTML */
+/* =========================
+   ESCAPE HTML
+========================= */
 
 function escapeHTML(value) {
 
@@ -783,7 +954,9 @@ function escapeHTML(value) {
 }
 
 
-/* CHECK SESSION / PASSWORD RECOVERY */
+/* =========================
+   SESSION
+========================= */
 
 async function checkSession() {
 
@@ -799,6 +972,10 @@ async function checkSession() {
     }
 }
 
+
+/* =========================
+   PASSWORD RECOVERY EVENT
+========================= */
 
 supabaseClient.auth.onAuthStateChange(
     async (event, session) => {
@@ -822,4 +999,4 @@ checkSession();
 </script>
 
 </body>
-</html>
+    </html>
