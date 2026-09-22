@@ -38,8 +38,6 @@
             font-family: inherit;
         }
 
-        /* HEADER */
-
         header {
             background: var(--green-dark);
             color: var(--white);
@@ -115,8 +113,6 @@
             white-space: nowrap;
         }
 
-        /* HERO */
-
         .hero {
             min-height: 560px;
             display: flex;
@@ -183,8 +179,6 @@
             background: var(--gold-light);
         }
 
-        /* SECTION */
-
         .section {
             max-width: 1200px;
             margin: auto;
@@ -211,8 +205,6 @@
             font-weight: normal;
             color: var(--green-dark);
         }
-
-        /* PRODUCTS */
 
         .products {
             display: grid;
@@ -289,8 +281,6 @@
             background: var(--green);
         }
 
-        /* ABOUT */
-
         .about {
             background: var(--green-dark);
             color: white;
@@ -315,8 +305,6 @@
             color: #e8eeec;
         }
 
-        /* FOOTER */
-
         footer {
             background: #123f3b;
             color: white;
@@ -329,8 +317,6 @@
         footer strong {
             color: var(--gold-light);
         }
-
-        /* CART */
 
         .cart-overlay {
             position: fixed;
@@ -460,8 +446,6 @@
             font-size: 13px;
         }
 
-        /* CHECKOUT */
-
         .checkout {
             display: none;
             position: fixed;
@@ -539,7 +523,10 @@
             color: white;
         }
 
-        /* RESPONSIVE */
+        .confirm-button:disabled {
+            opacity: .6;
+            cursor: wait;
+        }
 
         @media (max-width: 800px) {
             .nav-links {
@@ -673,9 +660,6 @@
     Lingerie & Homewear — Élégance sans limites
 </footer>
 
-
-<!-- CART -->
-
 <div class="cart-overlay" id="cart-overlay">
 
     <div class="cart">
@@ -706,9 +690,6 @@
     </div>
 
 </div>
-
-
-<!-- CHECKOUT -->
 
 <div class="checkout" id="checkout">
 
@@ -743,7 +724,7 @@
                 ANNULER
             </button>
 
-            <button class="confirm-button" onclick="submitOrder()">
+            <button class="confirm-button" id="confirm-order-button" onclick="submitOrder()">
                 CONFIRMER
             </button>
 
@@ -753,15 +734,33 @@
 
 </div>
 
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
-    /*
-     * PRODUITS DE DÉMONSTRATION
-     *
-     * Nous les remplacerons plus tard par les vrais
-     * produits de Maison Zeraya.
-     */
+    /* =========================================
+       SUPABASE
+       ========================================= */
+
+    const SUPABASE_URL =
+        "https://wicjgmiqevbhxuebhdyv.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+        "sb_publishable_TORIACS6heJed6xX3c-o0A_YD2mrY4X";
+
+    const { createClient } = supabase;
+
+    const supabaseClient =
+        createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
+        );
+
+
+    /* =========================================
+       PRODUITS DE DÉMONSTRATION
+       ========================================= */
 
     const products = [
         {
@@ -846,6 +845,8 @@
 
         const product =
             products.find(p => p.id === productId);
+
+        if (!product) return;
 
         const existing =
             cart.find(item => item.id === productId);
@@ -1048,19 +1049,35 @@
     }
 
 
-    function submitOrder() {
+    /* =========================================
+       ENREGISTREMENT RÉEL DE LA COMMANDE
+       ========================================= */
+
+    async function submitOrder() {
 
         const name =
-            document.getElementById("customer-name").value.trim();
+            document
+                .getElementById("customer-name")
+                .value
+                .trim();
 
         const phone =
-            document.getElementById("customer-phone").value.trim();
+            document
+                .getElementById("customer-phone")
+                .value
+                .trim();
 
         const wilaya =
-            document.getElementById("customer-wilaya").value.trim();
+            document
+                .getElementById("customer-wilaya")
+                .value
+                .trim();
 
         const address =
-            document.getElementById("customer-address").value.trim();
+            document
+                .getElementById("customer-address")
+                .value
+                .trim();
 
 
         if (!name || !phone || !wilaya || !address) {
@@ -1071,24 +1088,109 @@
         }
 
 
-        /*
-         * IMPORTANT:
-         *
-         * Cette fonction est temporaire.
-         *
-         * À l'étape suivante, nous remplacerons
-         * cette partie par l'enregistrement réel
-         * dans Supabase.
-         *
-         * Les commandes apparaîtront alors
-         * dans votre espace ADMIN.
-         */
+        if (cart.length === 0) {
 
-        alert(
-            "Commande prête à être enregistrée.\n\n" +
-            "La connexion à l'espace ADMIN sera ajoutée à l'étape suivante."
-        );
+            alert("Votre panier est vide.");
 
+            return;
+        }
+
+
+        const total =
+            cart.reduce(
+                (sum, item) =>
+                    sum + item.price * item.quantity,
+                0
+            );
+
+
+        const button =
+            document.getElementById("confirm-order-button");
+
+
+        button.disabled = true;
+        button.textContent = "ENVOI...";
+
+
+        try {
+
+            const { data, error } =
+                await supabaseClient
+                    .from("orders")
+                    .insert([
+                        {
+                            customer_name: name,
+                            customer_phone: phone,
+                            customer_wilaya: wilaya,
+                            customer_address: address,
+                            items: cart,
+                            total: total,
+                            status: "new"
+                        }
+                    ])
+                    .select()
+                    .single();
+
+
+            if (error) {
+
+                console.error("Supabase error:", error);
+
+                throw error;
+            }
+
+
+            console.log("Commande enregistrée:", data);
+
+
+            alert(
+                "Merci pour votre commande !\n\n" +
+                "Votre commande a bien été enregistrée.\n" +
+                "Nous vous contacterons prochainement."
+            );
+
+
+            cart = [];
+
+            saveCart();
+
+            renderCart();
+
+            document
+                .getElementById("customer-name")
+                .value = "";
+
+            document
+                .getElementById("customer-phone")
+                .value = "";
+
+            document
+                .getElementById("customer-wilaya")
+                .value = "";
+
+            document
+                .getElementById("customer-address")
+                .value = "";
+
+            closeCheckout();
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Une erreur est survenue lors de l'enregistrement de la commande.\n\n" +
+                "Veuillez réessayer."
+            );
+
+        } finally {
+
+            button.disabled = false;
+
+            button.textContent = "CONFIRMER";
+
+        }
     }
 
 
@@ -1099,4 +1201,4 @@
 </script>
 
 </body>
-</html>
+    </html>
