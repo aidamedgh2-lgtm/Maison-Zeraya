@@ -1,597 +1,545 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Maison Zeraya — Lingerie & Homewear</title>
-
-    <meta name="description"
-          content="Maison Zeraya — Lingerie & Homewear. Élégance sans limites.">
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            --green-dark: #174f4a;
-            --green: #23655f;
-            --gold: #c5a35a;
-            --gold-light: #dfc987;
-            --cream: #faf8f3;
-            --white: #ffffff;
-            --text: #263b39;
-            --border: #e5dfd2;
-        }
-
-        body {
-            font-family: Georgia, "Times New Roman", serif;
-            background: var(--cream);
-            color: var(--text);
-            line-height: 1.6;
-        }
-
-        button {
-            font-family: inherit;
-        }
-
-        header {
-            background: var(--green-dark);
-            color: var(--white);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 15px rgba(0,0,0,.12);
-        }
-
-        .top-bar {
-            text-align: center;
-            padding: 8px 12px;
-            background: #123f3b;
-            color: var(--gold-light);
-            font-family: Arial, sans-serif;
-            font-size: 11px;
-            letter-spacing: 1px;
-        }
-
-        .navbar {
-            max-width: 1200px;
-            margin: auto;
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .logo {
-            text-align: center;
-            flex: 1;
-        }
-
-        .logo-name {
-            display: block;
-            font-size: 26px;
-            letter-spacing: 3px;
-        }
-
-        .logo-subtitle {
-            display: block;
-            margin-top: 2px;
-            font-family: Arial, sans-serif;
-            font-size: 8px;
-            letter-spacing: 4px;
-            color: var(--gold-light);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 22px;
-            font-family: Arial, sans-serif;
-            font-size: 13px;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-        }
-
-        .nav-links a:hover {
-            color: var(--gold-light);
-        }
-
-        .cart-button {
-            border: 1px solid var(--gold);
-            background: transparent;
-            color: white;
-            padding: 9px 14px;
-            border-radius: 22px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .hero {
-            min-height: 560px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 70px 20px;
-            background:
-                linear-gradient(
-                    rgba(23,79,74,.92),
-                    rgba(23,79,74,.92)
-                );
-            color: white;
-        }
-
-        .hero-content {
-            max-width: 800px;
-        }
-
-        .hero-small {
-            font-family: Arial, sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            font-size: 12px;
-            color: var(--gold-light);
-            margin-bottom: 20px;
-        }
-
-        .hero h1 {
-            font-size: clamp(42px, 9vw, 82px);
-            font-weight: normal;
-            letter-spacing: 4px;
-            margin-bottom: 10px;
-        }
-
-        .hero-line {
-            width: 80px;
-            height: 1px;
-            background: var(--gold);
-            margin: 25px auto;
-        }
-
-        .hero p {
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            letter-spacing: 1px;
-            margin-bottom: 32px;
-        }
-
-        .hero-button {
-            display: inline-block;
-            background: var(--gold);
-            color: #183d39;
-            border: none;
-            padding: 13px 28px;
-            font-family: Arial, sans-serif;
-            font-size: 13px;
-            letter-spacing: 1px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .hero-button:hover {
-            background: var(--gold-light);
-        }
-
-        .section {
-            max-width: 1200px;
-            margin: auto;
-            padding: 70px 20px;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 45px;
-        }
-
-        .section-title span {
-            display: block;
-            font-family: Arial, sans-serif;
-            font-size: 11px;
-            letter-spacing: 3px;
-            color: var(--gold);
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        .section-title h2 {
-            font-size: 34px;
-            font-weight: normal;
-            color: var(--green-dark);
-        }
-
-        .products {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-        }
-
-        .product {
-            background: white;
-            border: 1px solid var(--border);
-            overflow: hidden;
-            transition: transform .2s, box-shadow .2s;
-        }
-
-        .product:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0,0,0,.08);
-        }
-
-        .product-image {
-            height: 320px;
-            background:
-                linear-gradient(135deg, #e9e3d7, #f8f5ee);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #8b877e;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            letter-spacing: 1px;
-        }
-
-        .product-info {
-            padding: 20px;
-        }
-
-        .product-name {
-            font-size: 20px;
-            margin-bottom: 6px;
-            color: var(--green-dark);
-        }
-
-        .product-description {
-            font-family: Arial, sans-serif;
-            font-size: 13px;
-            color: #6b7774;
-            margin-bottom: 14px;
-        }
-
-        .product-bottom {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .price {
-            font-family: Arial, sans-serif;
-            font-weight: bold;
-            color: var(--green-dark);
-        }
-
-        .add-button {
-            border: none;
-            background: var(--green-dark);
-            color: white;
-            padding: 10px 14px;
-            cursor: pointer;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-        }
-
-        .add-button:hover {
-            background: var(--green);
-        }
-
-        .about {
-            background: var(--green-dark);
-            color: white;
-            text-align: center;
-        }
-
-        .about-inner {
-            max-width: 750px;
-            margin: auto;
-        }
-
-        .about h2 {
-            font-size: 34px;
-            font-weight: normal;
-            margin-bottom: 20px;
-        }
-
-        .about p {
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            line-height: 1.9;
-            color: #e8eeec;
-        }
-
-        footer {
-            background: #123f3b;
-            color: white;
-            text-align: center;
-            padding: 30px 20px;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-        }
-
-        footer strong {
-            color: var(--gold-light);
-        }
-
-        .cart-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.45);
-            z-index: 2000;
-            display: none;
-        }
-
-        .cart-overlay.active {
-            display: block;
-        }
-
-        .cart {
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            width: min(430px, 100%);
-            background: white;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .cart-header {
-            background: var(--green-dark);
-            color: white;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .cart-header h3 {
-            font-weight: normal;
-        }
-
-        .close-cart {
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .cart-items {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-        }
-
-        .empty-cart {
-            text-align: center;
-            padding: 50px 20px;
-            color: #777;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-        }
-
-        .cart-item {
-            border-bottom: 1px solid var(--border);
-            padding: 15px 0;
-        }
-
-        .cart-item-top {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-        }
-
-        .cart-item-name {
-            font-weight: bold;
-            color: var(--green-dark);
-        }
-
-        .cart-item-price {
-            font-family: Arial, sans-serif;
-            font-size: 13px;
-        }
-
-        .quantity {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .quantity button {
-            width: 28px;
-            height: 28px;
-            border: 1px solid var(--border);
-            background: white;
-            cursor: pointer;
-        }
-
-        .remove-item {
-            margin-left: auto;
-            border: none;
-            background: transparent;
-            color: #9a4d4d;
-            cursor: pointer;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-        }
-
-        .cart-footer {
-            border-top: 1px solid var(--border);
-            padding: 20px;
-        }
-
-        .cart-total {
-            display: flex;
-            justify-content: space-between;
-            font-family: Arial, sans-serif;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .checkout-button {
-            width: 100%;
-            border: none;
-            background: var(--green-dark);
-            color: white;
-            padding: 14px;
-            cursor: pointer;
-            font-family: Arial, sans-serif;
-            font-size: 13px;
-        }
-
-        .checkout {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.5);
-            z-index: 3000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .checkout.active {
-            display: flex;
-        }
-
-        .checkout-box {
-            background: white;
-            width: min(500px, 100%);
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 28px;
-        }
-
-        .checkout-box h2 {
-            color: var(--green-dark);
-            font-weight: normal;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            margin-bottom: 6px;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 11px;
-            border: 1px solid var(--border);
-            font-family: Arial, sans-serif;
-        }
-
-        .form-group textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-
-        .checkout-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .checkout-actions button {
-            flex: 1;
-            padding: 12px;
-            cursor: pointer;
-            font-family: Arial, sans-serif;
-        }
-
-        .cancel-button {
-            border: 1px solid var(--border);
-            background: white;
-        }
-
-        .confirm-button {
-            border: none;
-            background: var(--green-dark);
-            color: white;
-        }
-
-        .confirm-button:disabled {
-            opacity: .6;
-            cursor: wait;
-        }
-
-        @media (max-width: 800px) {
-            .nav-links {
-                display: none;
-            }
-
-            .products {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .product-image {
-                height: 250px;
-            }
-        }
-
-        @media (max-width: 520px) {
-            .navbar {
-                padding: 13px 12px;
-            }
-
-            .logo-name {
-                font-size: 20px;
-                letter-spacing: 2px;
-            }
-
-            .logo-subtitle {
-                font-size: 6px;
-            }
-
-            .cart-button {
-                padding: 8px 10px;
-                font-size: 11px;
-            }
-
-            .hero {
-                min-height: 500px;
-            }
-
-            .hero h1 {
-                letter-spacing: 2px;
-            }
-
-            .products {
-                grid-template-columns: 1fr;
-            }
-
-            .product-image {
-                height: 330px;
-            }
-
-            .section {
-                padding: 50px 15px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Maison Zeraya — Lingerie & Homewear</title>
+
+<meta name="description"
+      content="Maison Zeraya — Lingerie & Homewear. Élégance sans limites.">
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --green-dark: #174f4a;
+    --green: #23655f;
+    --gold: #c5a35a;
+    --gold-light: #dfc987;
+    --cream: #faf8f3;
+    --white: #ffffff;
+    --text: #263b39;
+    --border: #e5dfd2;
+}
+
+body {
+    font-family: Georgia, "Times New Roman", serif;
+    background: var(--cream);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+button {
+    font-family: inherit;
+}
+
+header {
+    background: var(--green-dark);
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.top-bar {
+    text-align: center;
+    padding: 8px;
+    background: #123f3b;
+    color: var(--gold-light);
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.navbar {
+    max-width: 1200px;
+    margin: auto;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.logo {
+    text-align: center;
+    flex: 1;
+}
+
+.logo-name {
+    display: block;
+    font-size: 26px;
+    letter-spacing: 3px;
+}
+
+.logo-subtitle {
+    display: block;
+    margin-top: 2px;
+    font-family: Arial, sans-serif;
+    font-size: 8px;
+    letter-spacing: 4px;
+    color: var(--gold-light);
+}
+
+.nav-links {
+    display: flex;
+    gap: 22px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+}
+
+.cart-button {
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: white;
+    padding: 9px 14px;
+    border-radius: 22px;
+    cursor: pointer;
+}
+
+.hero {
+    min-height: 560px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 70px 20px;
+    background: linear-gradient(
+        rgba(23,79,74,.92),
+        rgba(23,79,74,.92)
+    );
+    color: white;
+}
+
+.hero-content {
+    max-width: 800px;
+}
+
+.hero-small {
+    font-family: Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    font-size: 12px;
+    color: var(--gold-light);
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-size: clamp(42px, 9vw, 82px);
+    font-weight: normal;
+    letter-spacing: 4px;
+}
+
+.hero-line {
+    width: 80px;
+    height: 1px;
+    background: var(--gold);
+    margin: 25px auto;
+}
+
+.hero p {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    margin-bottom: 32px;
+}
+
+.hero-button {
+    display: inline-block;
+    background: var(--gold);
+    color: #183d39;
+    border: none;
+    padding: 13px 28px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.section {
+    max-width: 1200px;
+    margin: auto;
+    padding: 70px 20px;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.section-title span {
+    display: block;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.section-title h2 {
+    font-size: 34px;
+    font-weight: normal;
+    color: var(--green-dark);
+}
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.product {
+    background: white;
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.product-image {
+    height: 320px;
+    background: linear-gradient(135deg, #e9e3d7, #f8f5ee);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8b877e;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+}
+
+.product-info {
+    padding: 20px;
+}
+
+.product-name {
+    font-size: 20px;
+    margin-bottom: 6px;
+    color: var(--green-dark);
+}
+
+.product-description {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    color: #6b7774;
+    margin-bottom: 14px;
+}
+
+.product-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.price {
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    color: var(--green-dark);
+}
+
+.add-button {
+    border: none;
+    background: var(--green-dark);
+    color: white;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+}
+
+.about {
+    background: var(--green-dark);
+    color: white;
+    text-align: center;
+}
+
+.about-inner {
+    max-width: 750px;
+    margin: auto;
+}
+
+.about h2 {
+    font-size: 34px;
+    font-weight: normal;
+    margin-bottom: 20px;
+}
+
+.about p {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.9;
+    color: #e8eeec;
+}
+
+footer {
+    background: #123f3b;
+    color: white;
+    text-align: center;
+    padding: 30px 20px;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+}
+
+footer strong {
+    color: var(--gold-light);
+}
+
+/* CART */
+
+.cart-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    z-index: 2000;
+    display: none;
+}
+
+.cart-overlay.active {
+    display: block;
+}
+
+.cart {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: min(430px,100%);
+    background: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-header {
+    background: var(--green-dark);
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.close-cart {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.cart-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.empty-cart {
+    text-align: center;
+    padding: 50px 20px;
+    color: #777;
+    font-family: Arial, sans-serif;
+}
+
+.cart-item {
+    border-bottom: 1px solid var(--border);
+    padding: 15px 0;
+}
+
+.cart-item-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.cart-item-name {
+    font-weight: bold;
+    color: var(--green-dark);
+}
+
+.cart-item-price {
+    font-family: Arial, sans-serif;
+}
+
+.quantity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.quantity button {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border);
+    background: white;
+    cursor: pointer;
+}
+
+.remove-item {
+    margin-left: auto;
+    border: none;
+    background: transparent;
+    color: #9a4d4d;
+    cursor: pointer;
+}
+
+.cart-footer {
+    border-top: 1px solid var(--border);
+    padding: 20px;
+}
+
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.checkout-button {
+    width: 100%;
+    border: none;
+    background: var(--green-dark);
+    color: white;
+    padding: 14px;
+    cursor: pointer;
+}
+
+/* CHECKOUT */
+
+.checkout {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.checkout.active {
+    display: flex;
+}
+
+.checkout-box {
+    background: white;
+    width: min(500px,100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 28px;
+}
+
+.checkout-box h2 {
+    color: var(--green-dark);
+    font-weight: normal;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid var(--border);
+    font-family: Arial, sans-serif;
+}
+
+.form-group textarea {
+    min-height: 80px;
+}
+
+.checkout-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.checkout-actions button {
+    flex: 1;
+    padding: 12px;
+    cursor: pointer;
+}
+
+.cancel-button {
+    border: 1px solid var(--border);
+    background: white;
+}
+
+.confirm-button {
+    border: none;
+    background: var(--green-dark);
+    color: white;
+}
+
+.confirm-button:disabled {
+    opacity: .6;
+}
+
+@media (max-width: 800px) {
+    .nav-links {
+        display: none;
+    }
+
+    .products {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .product-image {
+        height: 250px;
+    }
+}
+
+@media (max-width: 520px) {
+    .navbar {
+        padding: 13px 12px;
+    }
+
+    .logo-name {
+        font-size: 20px;
+    }
+
+    .products {
+        grid-template-columns: 1fr;
+    }
+
+    .product-image {
+        height: 330px;
+    }
+
+    .section {
+        padding: 50px 15px;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <header>
+
     <div class="top-bar">
         LIVRAISON DISPONIBLE EN ALGÉRIE
     </div>
 
     <nav class="navbar">
+
         <div class="nav-links">
             <a href="#collection">Collection</a>
             <a href="#about">Maison</a>
@@ -599,90 +547,149 @@
 
         <div class="logo">
             <span class="logo-name">Maison Zeraya</span>
-            <span class="logo-subtitle">LINGERIE & HOMEWEAR</span>
+            <span class="logo-subtitle">
+                LINGERIE & HOMEWEAR
+            </span>
         </div>
 
         <button class="cart-button" onclick="openCart()">
             🛍 Panier (<span id="cart-count">0</span>)
         </button>
+
     </nav>
+
 </header>
 
 <main>
 
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-small">Maison Zeraya</div>
+<section class="hero">
 
-            <h1>Élégance<br>sans limites</h1>
+    <div class="hero-content">
 
-            <div class="hero-line"></div>
+        <div class="hero-small">
+            Maison Zeraya
+        </div>
+
+        <h1>
+            Élégance<br>
+            sans limites
+        </h1>
+
+        <div class="hero-line"></div>
+
+        <p>
+            Lingerie & Homewear sélectionnés avec soin.
+        </p>
+
+        <a class="hero-button" href="#collection">
+            DÉCOUVRIR LA COLLECTION
+        </a>
+
+    </div>
+
+</section>
+
+
+<section class="section" id="collection">
+
+    <div class="section-title">
+
+        <span>Notre sélection</span>
+
+        <h2>
+            Collection
+        </h2>
+
+    </div>
+
+    <div class="products" id="products"></div>
+
+</section>
+
+
+<section class="about" id="about">
+
+    <div class="section">
+
+        <div class="about-inner">
+
+            <h2>
+                Maison Zeraya
+            </h2>
 
             <p>
-                Lingerie & Homewear sélectionnés avec soin.
+                Une sélection de lingerie et de homewear pensée
+                pour celles qui recherchent confort, féminité
+                et élégance au quotidien.
             </p>
 
-            <a class="hero-button" href="#collection">
-                DÉCOUVRIR LA COLLECTION
-            </a>
-        </div>
-    </section>
-
-    <section class="section" id="collection">
-
-        <div class="section-title">
-            <span>Notre sélection</span>
-            <h2>Collection</h2>
         </div>
 
-        <div class="products" id="products"></div>
+    </div>
 
-    </section>
-
-    <section class="about" id="about">
-        <div class="section">
-            <div class="about-inner">
-                <h2>Maison Zeraya</h2>
-
-                <p>
-                    Une sélection de lingerie et de homewear pensée
-                    pour celles qui recherchent confort, féminité
-                    et élégance au quotidien.
-                </p>
-            </div>
-        </div>
-    </section>
+</section>
 
 </main>
 
+
 <footer>
-    <strong>Maison Zeraya</strong><br>
+
+    <strong>Maison Zeraya</strong>
+
+    <br>
+
     Lingerie & Homewear — Élégance sans limites
+
 </footer>
+
+
+<!-- CART -->
 
 <div class="cart-overlay" id="cart-overlay">
 
     <div class="cart">
 
         <div class="cart-header">
-            <h3>Votre panier</h3>
 
-            <button class="close-cart" onclick="closeCart()">
+            <h3>
+                Votre panier
+            </h3>
+
+            <button
+                class="close-cart"
+                onclick="closeCart()">
+
                 ×
+
             </button>
+
         </div>
 
-        <div class="cart-items" id="cart-items"></div>
+        <div
+            class="cart-items"
+            id="cart-items">
+        </div>
 
         <div class="cart-footer">
 
             <div class="cart-total">
-                <span>Total</span>
-                <span id="cart-total">0 DA</span>
+
+                <span>
+                    Total
+                </span>
+
+                <span id="cart-total">
+                    0 DA
+                </span>
+
             </div>
 
-            <button class="checkout-button" onclick="openCheckout()">
+            <button
+                class="checkout-button"
+                onclick="openCheckout()">
+
                 PASSER LA COMMANDE
+
             </button>
 
         </div>
@@ -691,41 +698,92 @@
 
 </div>
 
-<div class="checkout" id="checkout">
+
+<!-- CHECKOUT -->
+
+<div
+    class="checkout"
+    id="checkout">
 
     <div class="checkout-box">
 
-        <h2>Finaliser la commande</h2>
+        <h2>
+            Finaliser la commande
+        </h2>
 
         <div class="form-group">
-            <label>Nom complet</label>
-            <input id="customer-name" type="text" placeholder="Votre nom">
+
+            <label>
+                Nom complet
+            </label>
+
+            <input
+                id="customer-name"
+                type="text"
+                placeholder="Votre nom">
+
         </div>
 
-        <div class="form-group">
-            <label>Téléphone</label>
-            <input id="customer-phone" type="tel" placeholder="05 / 06 / 07">
-        </div>
 
         <div class="form-group">
-            <label>Wilaya</label>
-            <input id="customer-wilaya" type="text" placeholder="Votre wilaya">
+
+            <label>
+                Téléphone
+            </label>
+
+            <input
+                id="customer-phone"
+                type="tel"
+                placeholder="05 / 06 / 07">
+
         </div>
 
+
         <div class="form-group">
-            <label>Adresse</label>
-            <textarea id="customer-address"
-                      placeholder="Votre adresse de livraison"></textarea>
+
+            <label>
+                Wilaya
+            </label>
+
+            <input
+                id="customer-wilaya"
+                type="text"
+                placeholder="Votre wilaya">
+
         </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Adresse
+            </label>
+
+            <textarea
+                id="customer-address"
+                placeholder="Votre adresse de livraison">
+            </textarea>
+
+        </div>
+
 
         <div class="checkout-actions">
 
-            <button class="cancel-button" onclick="closeCheckout()">
+            <button
+                class="cancel-button"
+                onclick="closeCheckout()">
+
                 ANNULER
+
             </button>
 
-            <button class="confirm-button" id="confirm-order-button" onclick="submitOrder()">
+            <button
+                class="confirm-button"
+                id="confirm-order-button"
+                onclick="submitOrder()">
+
                 CONFIRMER
+
             </button>
 
         </div>
@@ -734,470 +792,710 @@
 
 </div>
 
-<!-- Supabase -->
+
+<!-- SUPABASE -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
-    /* =========================================
-       SUPABASE
-       ========================================= */
+/* ================================
+   SUPABASE
+================================ */
 
-    const SUPABASE_URL =
-        "https://wicjgmiqevbhxuebhdyv.supabase.co";
+const SUPABASE_URL =
+    "https://wicjgmiqevbhxuebhdyv.supabase.co";
 
-    const SUPABASE_PUBLISHABLE_KEY =
-        "sb_publishable_TORIACS6heJed6xX3c-o0A_YD2mrY4X";
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_TORIACS6heJed6xX3c-o0A_YD2mrY4X";
 
-    const { createClient } = supabase;
-
-    const supabaseClient =
-        createClient(
-            SUPABASE_URL,
-            SUPABASE_PUBLISHABLE_KEY
-        );
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
 
 
-    /* =========================================
-       PRODUITS DE DÉMONSTRATION
-       ========================================= */
+/* ================================
+   PRODUCTS
+================================ */
 
-    const products = [
-        {
-            id: 1,
-            name: "Ensemble Élégance",
-            description: "Lingerie féminine",
-            price: 4500
-        },
-        {
-            id: 2,
-            name: "Homewear Satin",
-            description: "Confort & élégance",
-            price: 5200
-        },
-        {
-            id: 3,
-            name: "Ensemble Douceur",
-            description: "Collection Maison Zeraya",
-            price: 4800
-        }
-    ];
+const products = [
 
+    {
+        id: 1,
+        name: "Ensemble Élégance",
+        description: "Lingerie féminine",
+        price: 4500
+    },
 
-    let cart = JSON.parse(
-        localStorage.getItem("maisonZerayaCart")
-    ) || [];
+    {
+        id: 2,
+        name: "Homewear Satin",
+        description: "Confort & élégance",
+        price: 5200
+    },
 
-
-    function formatPrice(price) {
-        return new Intl.NumberFormat("fr-DZ").format(price) + " DA";
+    {
+        id: 3,
+        name: "Ensemble Douceur",
+        description: "Collection Maison Zeraya",
+        price: 4800
     }
 
-
-    function renderProducts() {
-
-        const container =
-            document.getElementById("products");
-
-        container.innerHTML = products.map(product => {
-
-            return `
-                <article class="product">
-
-                    <div class="product-image">
-                        IMAGE PRODUIT
-                    </div>
-
-                    <div class="product-info">
-
-                        <h3 class="product-name">
-                            ${product.name}
-                        </h3>
-
-                        <p class="product-description">
-                            ${product.description}
-                        </p>
-
-                        <div class="product-bottom">
-
-                            <span class="price">
-                                ${formatPrice(product.price)}
-                            </span>
-
-                            <button
-                                class="add-button"
-                                onclick="addToCart(${product.id})">
-                                AJOUTER
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </article>
-            `;
-
-        }).join("");
-    }
+];
 
 
-    function addToCart(productId) {
+let cart = [];
 
-        const product =
-            products.find(p => p.id === productId);
+try {
 
-        if (!product) return;
+    cart =
+        JSON.parse(
+            localStorage.getItem("maisonZerayaCart")
+        ) || [];
 
-        const existing =
-            cart.find(item => item.id === productId);
+} catch (error) {
 
-        if (existing) {
+    cart = [];
 
-            existing.quantity++;
-
-        } else {
-
-            cart.push({
-                id: product.id,
-                name: product.name,
-                price: product.price,
-                quantity: 1
-            });
-
-        }
-
-        saveCart();
-
-        renderCart();
-
-        openCart();
-    }
+}
 
 
-    function saveCart() {
+/* ================================
+   PRICE
+================================ */
 
-        localStorage.setItem(
-            "maisonZerayaCart",
-            JSON.stringify(cart)
-        );
+function formatPrice(price) {
 
-    }
+    return new Intl.NumberFormat("fr-DZ")
+        .format(price) + " DA";
 
-
-    function renderCart() {
-
-        const container =
-            document.getElementById("cart-items");
-
-        const count =
-            cart.reduce(
-                (sum, item) => sum + item.quantity,
-                0
-            );
-
-        document.getElementById("cart-count").textContent =
-            count;
+}
 
 
-        if (cart.length === 0) {
+/* ================================
+   PRODUCTS DISPLAY
+================================ */
 
-            container.innerHTML = `
-                <div class="empty-cart">
-                    Votre panier est vide.
-                </div>
-            `;
+function renderProducts() {
 
-            document.getElementById("cart-total").textContent =
-                "0 DA";
+    const container =
+        document.getElementById("products");
 
-            return;
-        }
+    if (!container) return;
 
+    container.innerHTML = "";
 
-        container.innerHTML = cart.map(item => {
+    products.forEach(function(product) {
 
-            return `
-                <div class="cart-item">
+        const article =
+            document.createElement("article");
 
-                    <div class="cart-item-top">
+        article.className = "product";
 
-                        <span class="cart-item-name">
-                            ${item.name}
-                        </span>
+        article.innerHTML = `
 
-                        <span class="cart-item-price">
-                            ${formatPrice(item.price * item.quantity)}
-                        </span>
+            <div class="product-image">
+                IMAGE PRODUIT
+            </div>
 
-                    </div>
+            <div class="product-info">
 
-                    <div class="quantity">
+                <h3 class="product-name">
+                    ${product.name}
+                </h3>
 
-                        <button onclick="changeQuantity(${item.id}, -1)">
-                            −
-                        </button>
+                <p class="product-description">
+                    ${product.description}
+                </p>
 
-                        <span>
-                            ${item.quantity}
-                        </span>
+                <div class="product-bottom">
 
-                        <button onclick="changeQuantity(${item.id}, 1)">
-                            +
-                        </button>
+                    <span class="price">
+                        ${formatPrice(product.price)}
+                    </span>
 
-                        <button
-                            class="remove-item"
-                            onclick="removeFromCart(${item.id})">
-                            Supprimer
-                        </button>
+                    <button
+                        class="add-button"
+                        type="button">
 
-                    </div>
+                        AJOUTER
+
+                    </button>
 
                 </div>
-            `;
 
-        }).join("");
+            </div>
 
-
-        const total =
-            cart.reduce(
-                (sum, item) =>
-                    sum + item.price * item.quantity,
-                0
-            );
-
-        document.getElementById("cart-total").textContent =
-            formatPrice(total);
-    }
-
-
-    function changeQuantity(productId, amount) {
-
-        const item =
-            cart.find(item => item.id === productId);
-
-        if (!item) return;
-
-        item.quantity += amount;
-
-        if (item.quantity <= 0) {
-
-            cart =
-                cart.filter(item => item.id !== productId);
-
-        }
-
-        saveCart();
-
-        renderCart();
-    }
-
-
-    function removeFromCart(productId) {
-
-        cart =
-            cart.filter(item => item.id !== productId);
-
-        saveCart();
-
-        renderCart();
-    }
-
-
-    function openCart() {
-
-        document
-            .getElementById("cart-overlay")
-            .classList.add("active");
-
-    }
-
-
-    function closeCart() {
-
-        document
-            .getElementById("cart-overlay")
-            .classList.remove("active");
-
-    }
-
-
-    function openCheckout() {
-
-        if (cart.length === 0) {
-
-            alert("Votre panier est vide.");
-
-            return;
-        }
-
-        closeCart();
-
-        document
-            .getElementById("checkout")
-            .classList.add("active");
-
-    }
-
-
-    function closeCheckout() {
-
-        document
-            .getElementById("checkout")
-            .classList.remove("active");
-
-    }
-
-
-    /* =========================================
-       ENREGISTREMENT RÉEL DE LA COMMANDE
-       ========================================= */
-
-    async function submitOrder() {
-
-        const name =
-            document
-                .getElementById("customer-name")
-                .value
-                .trim();
-
-        const phone =
-            document
-                .getElementById("customer-phone")
-                .value
-                .trim();
-
-        const wilaya =
-            document
-                .getElementById("customer-wilaya")
-                .value
-                .trim();
-
-        const address =
-            document
-                .getElementById("customer-address")
-                .value
-                .trim();
-
-
-        if (!name || !phone || !wilaya || !address) {
-
-            alert("Veuillez remplir tous les champs.");
-
-            return;
-        }
-
-
-        if (cart.length === 0) {
-
-            alert("Votre panier est vide.");
-
-            return;
-        }
-
-
-        const total =
-            cart.reduce(
-                (sum, item) =>
-                    sum + item.price * item.quantity,
-                0
-            );
-
+        `;
 
         const button =
-            document.getElementById("confirm-order-button");
+            article.querySelector(".add-button");
 
+        button.addEventListener(
+            "click",
+            function() {
 
-        button.disabled = true;
-        button.textContent = "ENVOI...";
+                addToCart(product.id);
 
-
-        try {
-
-            const { data, error } =
-                await supabaseClient
-                    .from("orders")
-                    .insert([
-                        {
-                            customer_name: name,
-                            customer_phone: phone,
-                            customer_wilaya: wilaya,
-                            customer_address: address,
-                            items: cart,
-                            total: total,
-                            status: "new"
-                        }
-                    ])
-                    .select()
-                    .single();
-
-
-            if (error) {
-
-                console.error("Supabase error:", error);
-
-                throw error;
             }
+        );
+
+        container.appendChild(article);
+
+    });
+
+}
 
 
-            console.log("Commande enregistrée:", data);
+/* ================================
+   ADD TO CART
+================================ */
+
+function addToCart(productId) {
+
+    const product =
+        products.find(function(product) {
+
+            return product.id === productId;
+
+        });
+
+    if (!product) return;
+
+    const existing =
+        cart.find(function(item) {
+
+            return item.id === productId;
+
+        });
 
 
-            alert(
-                "Merci pour votre commande !\n\n" +
-                "Votre commande a bien été enregistrée.\n" +
-                "Nous vous contacterons prochainement."
-            );
+    if (existing) {
 
+        existing.quantity += 1;
 
-            cart = [];
+    } else {
 
-            saveCart();
+        cart.push({
 
-            renderCart();
+            id: product.id,
 
-            document
-                .getElementById("customer-name")
-                .value = "";
+            name: product.name,
 
-            document
-                .getElementById("customer-phone")
-                .value = "";
+            price: product.price,
 
-            document
-                .getElementById("customer-wilaya")
-                .value = "";
+            quantity: 1
 
-            document
-                .getElementById("customer-address")
-                .value = "";
+        });
 
-            closeCheckout();
-
-
-                } catch (error) {
-
-            console.error("Supabase error:", error);
-
-            alert(
-                "ERREUR SUPABASE : " + error.message
-            );
-
-        } finally {
-
-            button.disabled = false;
-
-            button.textContent = "CONFIRMER";
-
-        }
     }
 
 
-    renderProducts();
+    saveCart();
 
     renderCart();
+
+    openCart();
+
+}
+
+
+/* ================================
+   SAVE CART
+================================ */
+
+function saveCart() {
+
+    localStorage.setItem(
+        "maisonZerayaCart",
+        JSON.stringify(cart)
+    );
+
+}
+
+
+/* ================================
+   RENDER CART
+================================ */
+
+function renderCart() {
+
+    const container =
+        document.getElementById("cart-items");
+
+    const count =
+        cart.reduce(
+            function(total, item) {
+
+                return total + item.quantity;
+
+            },
+            0
+        );
+
+
+    document.getElementById("cart-count")
+        .textContent = count;
+
+
+    if (cart.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty-cart">
+                Votre panier est vide.
+            </div>
+        `;
+
+        document.getElementById("cart-total")
+            .textContent = "0 DA";
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    cart.forEach(function(item) {
+
+        const div =
+            document.createElement("div");
+
+        div.className = "cart-item";
+
+        div.innerHTML = `
+
+            <div class="cart-item-top">
+
+                <span class="cart-item-name">
+                    ${item.name}
+                </span>
+
+                <span class="cart-item-price">
+                    ${formatPrice(
+                        item.price * item.quantity
+                    )}
+                </span>
+
+            </div>
+
+            <div class="quantity">
+
+                <button
+                    type="button"
+                    class="minus">
+
+                    −
+
+                </button>
+
+                <span>
+                    ${item.quantity}
+                </span>
+
+                <button
+                    type="button"
+                    class="plus">
+
+                    +
+
+                </button>
+
+                <button
+                    type="button"
+                    class="remove-item">
+
+                    Supprimer
+
+                </button>
+
+            </div>
+
+        `;
+
+
+        div.querySelector(".minus")
+            .addEventListener(
+                "click",
+                function() {
+
+                    changeQuantity(
+                        item.id,
+                        -1
+                    );
+
+                }
+            );
+
+
+        div.querySelector(".plus")
+            .addEventListener(
+                "click",
+                function() {
+
+                    changeQuantity(
+                        item.id,
+                        1
+                    );
+
+                }
+            );
+
+
+        div.querySelector(".remove-item")
+            .addEventListener(
+                "click",
+                function() {
+
+                    removeFromCart(item.id);
+
+                }
+            );
+
+
+        container.appendChild(div);
+
+    });
+
+
+    const total =
+        cart.reduce(
+            function(sum, item) {
+
+                return sum +
+                    item.price * item.quantity;
+
+            },
+            0
+        );
+
+
+    document.getElementById("cart-total")
+        .textContent = formatPrice(total);
+
+}
+
+
+/* ================================
+   QUANTITY
+================================ */
+
+function changeQuantity(
+    productId,
+    amount
+) {
+
+    const item =
+        cart.find(function(item) {
+
+            return item.id === productId;
+
+        });
+
+
+    if (!item) return;
+
+
+    item.quantity += amount;
+
+
+    if (item.quantity <= 0) {
+
+        cart =
+            cart.filter(function(item) {
+
+                return item.id !== productId;
+
+            });
+
+    }
+
+
+    saveCart();
+
+    renderCart();
+
+}
+
+
+/* ================================
+   REMOVE
+================================ */
+
+function removeFromCart(productId) {
+
+    cart =
+        cart.filter(function(item) {
+
+            return item.id !== productId;
+
+        });
+
+
+    saveCart();
+
+    renderCart();
+
+}
+
+
+/* ================================
+   OPEN / CLOSE CART
+================================ */
+
+function openCart() {
+
+    document
+        .getElementById("cart-overlay")
+        .classList.add("active");
+
+}
+
+
+function closeCart() {
+
+    document
+        .getElementById("cart-overlay")
+        .classList.remove("active");
+
+}
+
+
+/* ================================
+   CHECKOUT
+================================ */
+
+function openCheckout() {
+
+    if (cart.length === 0) {
+
+        alert("Votre panier est vide.");
+
+        return;
+
+    }
+
+
+    closeCart();
+
+
+    document
+        .getElementById("checkout")
+        .classList.add("active");
+
+}
+
+
+function closeCheckout() {
+
+    document
+        .getElementById("checkout")
+        .classList.remove("active");
+
+}
+
+
+/* ================================
+   SUBMIT ORDER
+================================ */
+
+async function submitOrder() {
+
+    const name =
+        document
+            .getElementById("customer-name")
+            .value
+            .trim();
+
+    const phone =
+        document
+            .getElementById("customer-phone")
+            .value
+            .trim();
+
+    const wilaya =
+        document
+            .getElementById("customer-wilaya")
+            .value
+            .trim();
+
+    const address =
+        document
+            .getElementById("customer-address")
+            .value
+            .trim();
+
+
+    if (
+        !name ||
+        !phone ||
+        !wilaya ||
+        !address
+    ) {
+
+        alert(
+            "Veuillez remplir tous les champs."
+        );
+
+        return;
+
+    }
+
+
+    if (cart.length === 0) {
+
+        alert(
+            "Votre panier est vide."
+        );
+
+        return;
+
+    }
+
+
+    const total =
+        cart.reduce(
+            function(sum, item) {
+
+                return sum +
+                    item.price * item.quantity;
+
+            },
+            0
+        );
+
+
+    const button =
+        document.getElementById(
+            "confirm-order-button"
+        );
+
+
+    button.disabled = true;
+
+    button.textContent = "ENVOI...";
+
+
+    try {
+
+        const result =
+            await supabaseClient
+                .from("orders")
+                .insert({
+
+                    customer_name: name,
+
+                    customer_phone: phone,
+
+                    customer_wilaya: wilaya,
+
+                    customer_address: address,
+
+                    items: cart,
+
+                    total: total,
+
+                    status: "new"
+
+                });
+
+
+        if (result.error) {
+
+            console.error(
+                "Supabase error:",
+                result.error
+            );
+
+            alert(
+                "ERREUR SUPABASE :\n" +
+                result.error.message
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "Merci pour votre commande !\n\n" +
+            "Votre commande a bien été enregistrée."
+        );
+
+
+        cart = [];
+
+        saveCart();
+
+        renderCart();
+
+
+        document.getElementById(
+            "customer-name"
+        ).value = "";
+
+
+        document.getElementById(
+            "customer-phone"
+        ).value = "";
+
+
+        document.getElementById(
+            "customer-wilaya"
+        ).value = "";
+
+
+        document.getElementById(
+            "customer-address"
+        ).value = "";
+
+
+        closeCheckout();
+
+
+    } catch (error) {
+
+        console.error(
+            "Erreur:",
+            error
+        );
+
+        alert(
+            "ERREUR : " +
+            error.message
+        );
+
+    } finally {
+
+        button.disabled = false;
+
+        button.textContent = "CONFIRMER";
+
+    }
+
+}
+
+
+/* ================================
+   START
+================================ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        renderProducts();
+
+        renderCart();
+
+    }
+);
 
 </script>
 
 </body>
-    </html>
+</html>
+                
