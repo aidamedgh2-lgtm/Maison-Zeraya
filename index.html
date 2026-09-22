@@ -6,10 +6,8 @@
 
     <title>Maison Zeraya — Lingerie & Homewear</title>
 
-    <meta
-        name="description"
-        content="Maison Zeraya — Lingerie & Homewear. Élégance sans limites."
-    >
+    <meta name="description"
+          content="Maison Zeraya — Lingerie & Homewear. Élégance sans limites.">
 
     <style>
         * {
@@ -26,6 +24,7 @@
             --cream: #faf8f3;
             --white: #ffffff;
             --text: #263b39;
+            --border: #e5dfd2;
         }
 
         body {
@@ -35,16 +34,11 @@
             line-height: 1.6;
         }
 
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
         button {
             font-family: inherit;
         }
 
-        /* ===== HEADER ===== */
+        /* HEADER */
 
         header {
             background: var(--green-dark);
@@ -52,23 +46,23 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 15px rgba(0,0,0,.12);
         }
 
         .top-bar {
             text-align: center;
-            padding: 8px 15px;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            letter-spacing: 1px;
+            padding: 8px 12px;
             background: #123f3b;
             color: var(--gold-light);
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            letter-spacing: 1px;
         }
 
         .navbar {
             max-width: 1200px;
             margin: auto;
-            padding: 18px 20px;
+            padding: 16px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -82,9 +76,8 @@
 
         .logo-name {
             display: block;
-            font-size: 27px;
+            font-size: 26px;
             letter-spacing: 3px;
-            color: var(--white);
         }
 
         .logo-subtitle {
@@ -98,13 +91,14 @@
 
         .nav-links {
             display: flex;
-            gap: 25px;
+            gap: 22px;
             font-family: Arial, sans-serif;
             font-size: 13px;
         }
 
         .nav-links a {
-            transition: color 0.2s;
+            color: white;
+            text-decoration: none;
         }
 
         .nav-links a:hover {
@@ -114,17 +108,17 @@
         .cart-button {
             border: 1px solid var(--gold);
             background: transparent;
-            color: var(--white);
+            color: white;
             padding: 9px 14px;
-            border-radius: 20px;
+            border-radius: 22px;
             cursor: pointer;
-            font-size: 13px;
+            white-space: nowrap;
         }
 
-        /* ===== HERO ===== */
+        /* HERO */
 
         .hero {
-            min-height: 600px;
+            min-height: 560px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -132,10 +126,10 @@
             padding: 70px 20px;
             background:
                 linear-gradient(
-                    rgba(23, 79, 74, 0.88),
-                    rgba(23, 79, 74, 0.88)
+                    rgba(23,79,74,.92),
+                    rgba(23,79,74,.92)
                 );
-            color: var(--white);
+            color: white;
         }
 
         .hero-content {
@@ -152,7 +146,7 @@
         }
 
         .hero h1 {
-            font-size: clamp(42px, 8vw, 82px);
+            font-size: clamp(42px, 9vw, 82px);
             font-weight: normal;
             letter-spacing: 4px;
             margin-bottom: 10px;
@@ -169,7 +163,940 @@
             font-family: Arial, sans-serif;
             font-size: 16px;
             letter-spacing: 1px;
-            margin-bottom: 35px;
+            margin-bottom: 32px;
         }
 
-       
+        .hero-button {
+            display: inline-block;
+            background: var(--gold);
+            color: #183d39;
+            border: none;
+            padding: 13px 28px;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .hero-button:hover {
+            background: var(--gold-light);
+        }
+
+        /* SECTION */
+
+        .section {
+            max-width: 1200px;
+            margin: auto;
+            padding: 70px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+
+        .section-title span {
+            display: block;
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .section-title h2 {
+            font-size: 34px;
+            font-weight: normal;
+            color: var(--green-dark);
+        }
+
+        /* PRODUCTS */
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .product {
+            background: white;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .product:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,.08);
+        }
+
+        .product-image {
+            height: 320px;
+            background:
+                linear-gradient(135deg, #e9e3d7, #f8f5ee);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8b877e;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-name {
+            font-size: 20px;
+            margin-bottom: 6px;
+            color: var(--green-dark);
+        }
+
+        .product-description {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            color: #6b7774;
+            margin-bottom: 14px;
+        }
+
+        .product-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .price {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            color: var(--green-dark);
+        }
+
+        .add-button {
+            border: none;
+            background: var(--green-dark);
+            color: white;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        .add-button:hover {
+            background: var(--green);
+        }
+
+        /* ABOUT */
+
+        .about {
+            background: var(--green-dark);
+            color: white;
+            text-align: center;
+        }
+
+        .about-inner {
+            max-width: 750px;
+            margin: auto;
+        }
+
+        .about h2 {
+            font-size: 34px;
+            font-weight: normal;
+            margin-bottom: 20px;
+        }
+
+        .about p {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.9;
+            color: #e8eeec;
+        }
+
+        /* FOOTER */
+
+        footer {
+            background: #123f3b;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        footer strong {
+            color: var(--gold-light);
+        }
+
+        /* CART */
+
+        .cart-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.45);
+            z-index: 2000;
+            display: none;
+        }
+
+        .cart-overlay.active {
+            display: block;
+        }
+
+        .cart {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: min(430px, 100%);
+            background: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-header {
+            background: var(--green-dark);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cart-header h3 {
+            font-weight: normal;
+        }
+
+        .close-cart {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 50px 20px;
+            color: #777;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        .cart-item {
+            border-bottom: 1px solid var(--border);
+            padding: 15px 0;
+        }
+
+        .cart-item-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            color: var(--green-dark);
+        }
+
+        .cart-item-price {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+        }
+
+        .quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .quantity button {
+            width: 28px;
+            height: 28px;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+        }
+
+        .remove-item {
+            margin-left: auto;
+            border: none;
+            background: transparent;
+            color: #9a4d4d;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        .cart-footer {
+            border-top: 1px solid var(--border);
+            padding: 20px;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .checkout-button {
+            width: 100%;
+            border: none;
+            background: var(--green-dark);
+            color: white;
+            padding: 14px;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+        }
+
+        /* CHECKOUT */
+
+        .checkout {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.5);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .checkout.active {
+            display: flex;
+        }
+
+        .checkout-box {
+            background: white;
+            width: min(500px, 100%);
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px;
+        }
+
+        .checkout-box h2 {
+            color: var(--green-dark);
+            font-weight: normal;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid var(--border);
+            font-family: Arial, sans-serif;
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .checkout-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .checkout-actions button {
+            flex: 1;
+            padding: 12px;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+        }
+
+        .cancel-button {
+            border: 1px solid var(--border);
+            background: white;
+        }
+
+        .confirm-button {
+            border: none;
+            background: var(--green-dark);
+            color: white;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 800px) {
+            .nav-links {
+                display: none;
+            }
+
+            .products {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .product-image {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .navbar {
+                padding: 13px 12px;
+            }
+
+            .logo-name {
+                font-size: 20px;
+                letter-spacing: 2px;
+            }
+
+            .logo-subtitle {
+                font-size: 6px;
+            }
+
+            .cart-button {
+                padding: 8px 10px;
+                font-size: 11px;
+            }
+
+            .hero {
+                min-height: 500px;
+            }
+
+            .hero h1 {
+                letter-spacing: 2px;
+            }
+
+            .products {
+                grid-template-columns: 1fr;
+            }
+
+            .product-image {
+                height: 330px;
+            }
+
+            .section {
+                padding: 50px 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="top-bar">
+        LIVRAISON DISPONIBLE EN ALGÉRIE
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="#collection">Collection</a>
+            <a href="#about">Maison</a>
+        </div>
+
+        <div class="logo">
+            <span class="logo-name">Maison Zeraya</span>
+            <span class="logo-subtitle">LINGERIE & HOMEWEAR</span>
+        </div>
+
+        <button class="cart-button" onclick="openCart()">
+            🛍 Panier (<span id="cart-count">0</span>)
+        </button>
+    </nav>
+</header>
+
+<main>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-small">Maison Zeraya</div>
+
+            <h1>Élégance<br>sans limites</h1>
+
+            <div class="hero-line"></div>
+
+            <p>
+                Lingerie & Homewear sélectionnés avec soin.
+            </p>
+
+            <a class="hero-button" href="#collection">
+                DÉCOUVRIR LA COLLECTION
+            </a>
+        </div>
+    </section>
+
+    <section class="section" id="collection">
+
+        <div class="section-title">
+            <span>Notre sélection</span>
+            <h2>Collection</h2>
+        </div>
+
+        <div class="products" id="products"></div>
+
+    </section>
+
+    <section class="about" id="about">
+        <div class="section">
+            <div class="about-inner">
+                <h2>Maison Zeraya</h2>
+
+                <p>
+                    Une sélection de lingerie et de homewear pensée
+                    pour celles qui recherchent confort, féminité
+                    et élégance au quotidien.
+                </p>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <strong>Maison Zeraya</strong><br>
+    Lingerie & Homewear — Élégance sans limites
+</footer>
+
+
+<!-- CART -->
+
+<div class="cart-overlay" id="cart-overlay">
+
+    <div class="cart">
+
+        <div class="cart-header">
+            <h3>Votre panier</h3>
+
+            <button class="close-cart" onclick="closeCart()">
+                ×
+            </button>
+        </div>
+
+        <div class="cart-items" id="cart-items"></div>
+
+        <div class="cart-footer">
+
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cart-total">0 DA</span>
+            </div>
+
+            <button class="checkout-button" onclick="openCheckout()">
+                PASSER LA COMMANDE
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- CHECKOUT -->
+
+<div class="checkout" id="checkout">
+
+    <div class="checkout-box">
+
+        <h2>Finaliser la commande</h2>
+
+        <div class="form-group">
+            <label>Nom complet</label>
+            <input id="customer-name" type="text" placeholder="Votre nom">
+        </div>
+
+        <div class="form-group">
+            <label>Téléphone</label>
+            <input id="customer-phone" type="tel" placeholder="05 / 06 / 07">
+        </div>
+
+        <div class="form-group">
+            <label>Wilaya</label>
+            <input id="customer-wilaya" type="text" placeholder="Votre wilaya">
+        </div>
+
+        <div class="form-group">
+            <label>Adresse</label>
+            <textarea id="customer-address"
+                      placeholder="Votre adresse de livraison"></textarea>
+        </div>
+
+        <div class="checkout-actions">
+
+            <button class="cancel-button" onclick="closeCheckout()">
+                ANNULER
+            </button>
+
+            <button class="confirm-button" onclick="submitOrder()">
+                CONFIRMER
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /*
+     * PRODUITS DE DÉMONSTRATION
+     *
+     * Nous les remplacerons plus tard par les vrais
+     * produits de Maison Zeraya.
+     */
+
+    const products = [
+        {
+            id: 1,
+            name: "Ensemble Élégance",
+            description: "Lingerie féminine",
+            price: 4500
+        },
+        {
+            id: 2,
+            name: "Homewear Satin",
+            description: "Confort & élégance",
+            price: 5200
+        },
+        {
+            id: 3,
+            name: "Ensemble Douceur",
+            description: "Collection Maison Zeraya",
+            price: 4800
+        }
+    ];
+
+
+    let cart = JSON.parse(
+        localStorage.getItem("maisonZerayaCart")
+    ) || [];
+
+
+    function formatPrice(price) {
+        return new Intl.NumberFormat("fr-DZ").format(price) + " DA";
+    }
+
+
+    function renderProducts() {
+
+        const container =
+            document.getElementById("products");
+
+        container.innerHTML = products.map(product => {
+
+            return `
+                <article class="product">
+
+                    <div class="product-image">
+                        IMAGE PRODUIT
+                    </div>
+
+                    <div class="product-info">
+
+                        <h3 class="product-name">
+                            ${product.name}
+                        </h3>
+
+                        <p class="product-description">
+                            ${product.description}
+                        </p>
+
+                        <div class="product-bottom">
+
+                            <span class="price">
+                                ${formatPrice(product.price)}
+                            </span>
+
+                            <button
+                                class="add-button"
+                                onclick="addToCart(${product.id})">
+                                AJOUTER
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+            `;
+
+        }).join("");
+    }
+
+
+    function addToCart(productId) {
+
+        const product =
+            products.find(p => p.id === productId);
+
+        const existing =
+            cart.find(item => item.id === productId);
+
+        if (existing) {
+
+            existing.quantity++;
+
+        } else {
+
+            cart.push({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                quantity: 1
+            });
+
+        }
+
+        saveCart();
+
+        renderCart();
+
+        openCart();
+    }
+
+
+    function saveCart() {
+
+        localStorage.setItem(
+            "maisonZerayaCart",
+            JSON.stringify(cart)
+        );
+
+    }
+
+
+    function renderCart() {
+
+        const container =
+            document.getElementById("cart-items");
+
+        const count =
+            cart.reduce(
+                (sum, item) => sum + item.quantity,
+                0
+            );
+
+        document.getElementById("cart-count").textContent =
+            count;
+
+
+        if (cart.length === 0) {
+
+            container.innerHTML = `
+                <div class="empty-cart">
+                    Votre panier est vide.
+                </div>
+            `;
+
+            document.getElementById("cart-total").textContent =
+                "0 DA";
+
+            return;
+        }
+
+
+        container.innerHTML = cart.map(item => {
+
+            return `
+                <div class="cart-item">
+
+                    <div class="cart-item-top">
+
+                        <span class="cart-item-name">
+                            ${item.name}
+                        </span>
+
+                        <span class="cart-item-price">
+                            ${formatPrice(item.price * item.quantity)}
+                        </span>
+
+                    </div>
+
+                    <div class="quantity">
+
+                        <button onclick="changeQuantity(${item.id}, -1)">
+                            −
+                        </button>
+
+                        <span>
+                            ${item.quantity}
+                        </span>
+
+                        <button onclick="changeQuantity(${item.id}, 1)">
+                            +
+                        </button>
+
+                        <button
+                            class="remove-item"
+                            onclick="removeFromCart(${item.id})">
+                            Supprimer
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+
+
+        const total =
+            cart.reduce(
+                (sum, item) =>
+                    sum + item.price * item.quantity,
+                0
+            );
+
+        document.getElementById("cart-total").textContent =
+            formatPrice(total);
+    }
+
+
+    function changeQuantity(productId, amount) {
+
+        const item =
+            cart.find(item => item.id === productId);
+
+        if (!item) return;
+
+        item.quantity += amount;
+
+        if (item.quantity <= 0) {
+
+            cart =
+                cart.filter(item => item.id !== productId);
+
+        }
+
+        saveCart();
+
+        renderCart();
+    }
+
+
+    function removeFromCart(productId) {
+
+        cart =
+            cart.filter(item => item.id !== productId);
+
+        saveCart();
+
+        renderCart();
+    }
+
+
+    function openCart() {
+
+        document
+            .getElementById("cart-overlay")
+            .classList.add("active");
+
+    }
+
+
+    function closeCart() {
+
+        document
+            .getElementById("cart-overlay")
+            .classList.remove("active");
+
+    }
+
+
+    function openCheckout() {
+
+        if (cart.length === 0) {
+
+            alert("Votre panier est vide.");
+
+            return;
+        }
+
+        closeCart();
+
+        document
+            .getElementById("checkout")
+            .classList.add("active");
+
+    }
+
+
+    function closeCheckout() {
+
+        document
+            .getElementById("checkout")
+            .classList.remove("active");
+
+    }
+
+
+    function submitOrder() {
+
+        const name =
+            document.getElementById("customer-name").value.trim();
+
+        const phone =
+            document.getElementById("customer-phone").value.trim();
+
+        const wilaya =
+            document.getElementById("customer-wilaya").value.trim();
+
+        const address =
+            document.getElementById("customer-address").value.trim();
+
+
+        if (!name || !phone || !wilaya || !address) {
+
+            alert("Veuillez remplir tous les champs.");
+
+            return;
+        }
+
+
+        /*
+         * IMPORTANT:
+         *
+         * Cette fonction est temporaire.
+         *
+         * À l'étape suivante, nous remplacerons
+         * cette partie par l'enregistrement réel
+         * dans Supabase.
+         *
+         * Les commandes apparaîtront alors
+         * dans votre espace ADMIN.
+         */
+
+        alert(
+            "Commande prête à être enregistrée.\n\n" +
+            "La connexion à l'espace ADMIN sera ajoutée à l'étape suivante."
+        );
+
+    }
+
+
+    renderProducts();
+
+    renderCart();
+
+</script>
+
+</body>
+</html>
