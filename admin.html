@@ -361,9 +361,89 @@ button {
     cursor: pointer;
 }
 
+/* =========================
+   SIZE OPTIONS
+========================= */
+
+.size-section {
+    background: #f5f8f7;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 7px 0 15px;
+}
+
+.size-title {
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #123f3a;
+}
+
+.size-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.size-option {
+    position: relative;
+}
+
+.size-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.size-option label {
+    display: block;
+    text-align: center;
+    padding: 11px 5px;
+    border: 1px solid #d5dddd;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-weight: bold;
+    color: #173f3b;
+    transition: 0.2s;
+}
+
+.size-option input:checked + label {
+    background: #123f3a;
+    color: white;
+    border-color: #123f3a;
+}
+
+.size-option label:hover {
+    border-color: #c7a94b;
+}
+
+.selected-size-list {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #666;
+}
+
 .info-line {
     margin: 7px 0;
     line-height: 1.5;
+}
+
+.product-sizes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 7px 0;
+}
+
+.product-size-badge {
+    display: inline-block;
+    background: #edf3f2;
+    color: #123f3a;
+    border: 1px solid #d5dddd;
+    border-radius: 15px;
+    padding: 4px 9px;
+    font-size: 12px;
+    font-weight: bold;
 }
 
 @media (max-width: 650px) {
@@ -379,6 +459,10 @@ button {
 
     .top-actions button {
         width: 100%;
+    }
+
+    .size-options {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
@@ -416,18 +500,14 @@ button {
         type="button"
         class="main-btn"
         id="loginBtn">
-
         Se connecter
-
     </button>
 
     <button
         type="button"
         class="gray-btn"
         id="showForgotBtn">
-
         Mot de passe oublié ?
-
     </button>
 
     <div id="loginMessage" class="message"></div>
@@ -451,18 +531,14 @@ button {
         type="button"
         class="main-btn"
         id="forgotBtn">
-
         Envoyer le lien
-
     </button>
 
     <button
         type="button"
         class="gray-btn"
         id="backToLoginBtn">
-
         Retour
-
     </button>
 
     <div id="forgotMessage" class="message"></div>
@@ -485,9 +561,7 @@ button {
             type="button"
             class="logout-btn"
             id="logoutBtn">
-
             Déconnexion
-
         </button>
 
     </div>
@@ -523,9 +597,7 @@ button {
         type="button"
         class="main-btn"
         id="changePasswordBtn">
-
         Modifier le mot de passe
-
     </button>
 
     <div
@@ -548,9 +620,7 @@ button {
         type="button"
         class="gold-btn"
         id="newProductBtn">
-
         ➕ Ajouter un produit
-
     </button>
 
 </div>
@@ -693,26 +763,163 @@ button {
     </div>
 
 
-    <!-- SIZE -->
+    <!-- ================= MULTIPLE SIZES ================= -->
 
     <label>
-        <strong>📏 Taille</strong>
+        <strong>📏 Tailles disponibles</strong>
     </label>
 
-    <select id="productSize">
+    <div class="size-section">
 
-        <option value="Standard">
-            Standard
-        </option>
+        <div class="size-title">
+            Sélectionnez les tailles disponibles pour ce modèle :
+        </div>
 
-    </select>
+        <div class="size-options">
+
+            <div class="size-option">
+                <input
+                    type="checkbox"
+                    id="sizeXS"
+                    value="XS"
+                    class="size-checkbox"
+                >
+                <label for="sizeXS">XS</label>
+            </div>
+
+            <div class="size-option">
+                <input
+                    type="checkbox"
+                    id="sizeS"
+                    value="S"
+                    class="size-checkbox"
+                >
+                <label for="sizeS">S</label>
+            </div>
+
+            <div class="size-option">
+                <input
+                    type="checkbox"
+                    id="sizeM"
+                    value="M"
+                    class="size-checkbox"
+                >
+                <label for="sizeM">M</label>
+            </div>
+
+            <div class="size-option">
+                <input
+                    type="checkbox"
+                    id="sizeL"
+                    value="L"
+                    class="size-checkbox"
+                >
+                <label for="sizeL">L</label>
+            </div>
+
+            <div class="size-option">
+                <input
+                    type="checkbox"
+                    id="sizeXL"
+                    value="XL"
+                    class="size-checkbox"
+                >
+                <label for="sizeXL">XL</label>
+            </div>
+
+            <div class="size-option">
+                <input
+                    type="checkbox"
+                    id="sizeXXL"
+                    value="XXL"
+                    class="size-checkbox"
+                >
+                <label for="sizeXXL">XXL</label>
+            </div>
+
+            <div class="size-option">
+                <input
+                    type="checkbox"
+                    id="size36"
+                    value="36"
+                    class="size-checkbox"
+                >
+                <label for="size36">36</label>
+            </div>
+
+            <div class="size-option">
+                <input
+                    type="checkbox"
+                    id="size38"
+                    value="38"
+                    class="size-checkbox"
+                >
+                <label for="size38">38</label>
+            </div>
+
+            <div class="size-option">
+                <input
+                    type="checkbox"
+                    id="size40"
+                    value="40"
+                    class="size-checkbox"
+                >
+                <label for="size40">40</label>
+            </div>
+
+            <div class="size-option">
+                <input
+                    type="checkbox"
+                    id="size42"
+                    value="42"
+                    class="size-checkbox"
+                >
+                <label for="size42">42</label>
+            </div>
+
+            <div class="size-option">
+                <input
+                    type="checkbox"
+                    id="size44"
+                    value="44"
+                    class="size-checkbox"
+                >
+                <label for="size44">44</label>
+            </div>
+
+            <div class="size-option">
+                <input
+                    type="checkbox"
+                    id="sizeStandard"
+                    value="Standard"
+                    class="size-checkbox"
+                >
+                <label for="sizeStandard">
+                    Standard
+                </label>
+            </div>
+
+        </div>
+
+        <div
+            id="selectedSizeList"
+            class="selected-size-list">
+
+            Aucune taille sélectionnée.
+
+        </div>
+
+    </div>
+
 
     <p class="small-note">
-        Pour le moment, les produits sont en taille Standard.
+        Vous pouvez sélectionner plusieurs tailles.
+        Choisissez uniquement les tailles réellement disponibles
+        pour ce modèle.
     </p>
 
 
-    <!-- AVAILABILITY -->
+    <!-- ================= AVAILABILITY ================= -->
 
     <label>
         <strong>📦 Disponibilité</strong>
@@ -731,7 +938,7 @@ button {
     </select>
 
 
-    <!-- STOCK -->
+    <!-- ================= STOCK ================= -->
 
     <label>
         <strong>Stock</strong>
@@ -816,18 +1023,14 @@ button {
             type="button"
             class="main-btn"
             id="saveProductBtn">
-
             💾 Enregistrer
-
         </button>
 
         <button
             type="button"
             class="gray-btn"
             id="cancelProductBtn">
-
             Annuler
-
         </button>
 
     </div>
@@ -951,6 +1154,121 @@ function escapeHtml(value) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+}
+
+
+/* =========================================================
+   GET SELECTED SIZES
+========================================================= */
+
+function getSelectedSizes() {
+
+    const checkboxes =
+        document.querySelectorAll(
+            ".size-checkbox"
+        );
+
+    const sizes = [];
+
+    checkboxes.forEach(
+        checkbox => {
+
+            if (checkbox.checked) {
+
+                sizes.push(
+                    checkbox.value
+                );
+
+            }
+
+        }
+    );
+
+    return sizes;
+}
+
+
+/* =========================================================
+   UPDATE SIZE DISPLAY
+========================================================= */
+
+function updateSelectedSizeDisplay() {
+
+    const sizes =
+        getSelectedSizes();
+
+    const display =
+        document.getElementById(
+            "selectedSizeList"
+        );
+
+    if (!sizes.length) {
+
+        display.textContent =
+            "Aucune taille sélectionnée.";
+
+        return;
+    }
+
+    display.textContent =
+        "Tailles sélectionnées : " +
+        sizes.join(" · ");
+}
+
+
+/* =========================================================
+   SET SELECTED SIZES
+========================================================= */
+
+function setSelectedSizes(sizes) {
+
+    const checkboxes =
+        document.querySelectorAll(
+            ".size-checkbox"
+        );
+
+    const normalizedSizes =
+        Array.isArray(sizes)
+            ? sizes.map(
+                size =>
+                    String(size)
+                      .trim()
+              )
+            : [];
+
+    checkboxes.forEach(
+        checkbox => {
+
+            checkbox.checked =
+                normalizedSizes.includes(
+                    checkbox.value
+                );
+
+        }
+    );
+
+    updateSelectedSizeDisplay();
+}
+
+
+/* =========================================================
+   RESET SIZES
+========================================================= */
+
+function resetSizes() {
+
+    const checkboxes =
+        document.querySelectorAll(
+            ".size-checkbox"
+        );
+
+    checkboxes.forEach(
+        checkbox => {
+            checkbox.checked = false;
+        }
+    );
+
+    updateSelectedSizeDisplay();
 }
 
 
@@ -1200,9 +1518,8 @@ function resetProductForm() {
         "productBadge"
     ).value = "";
 
-    document.getElementById(
-        "productSize"
-    ).value = "Standard";
+    /* Nouveau système de tailles */
+    resetSizes();
 
     document.getElementById(
         "productAvailable"
@@ -1293,6 +1610,24 @@ document
             renderSelectedImages();
 
             this.value = "";
+        }
+    );
+
+
+/* =========================================================
+   SIZE EVENTS
+========================================================= */
+
+document
+    .querySelectorAll(".size-checkbox")
+    .forEach(
+        checkbox => {
+
+            checkbox.addEventListener(
+                "change",
+                updateSelectedSizeDisplay
+            );
+
         }
     );
 
@@ -1459,10 +1794,9 @@ async function saveProduct() {
             "productBadge"
         ).value || null;
 
-    const size =
-        document.getElementById(
-            "productSize"
-        ).value;
+    /* المقاسات الجديدة */
+    const sizes =
+        getSelectedSizes();
 
     const available =
         document.getElementById(
@@ -1507,6 +1841,18 @@ async function saveProduct() {
         showMessage(
             productMessage,
             "Veuillez entrer un prix valide.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (!sizes.length) {
+
+        showMessage(
+            productMessage,
+            "Veuillez sélectionner au moins une taille.",
             "error"
         );
 
@@ -1589,7 +1935,15 @@ async function saveProduct() {
                         old_price,
                         category,
                         badge,
-                        size,
+
+                        /* Nouveau */
+                        sizes,
+
+                        /* Gardé pour compatibilité */
+                        size: sizes.includes("Standard")
+                            ? "Standard"
+                            : null,
+
                         available,
                         stock,
                         featured,
@@ -1664,7 +2018,15 @@ async function saveProduct() {
                         old_price,
                         category,
                         badge,
-                        size,
+
+                        /* Nouveau */
+                        sizes,
+
+                        /* Gardé pour compatibilité */
+                        size: sizes.includes("Standard")
+                            ? "Standard"
+                            : null,
+
                         available,
                         stock,
                         featured
@@ -1908,6 +2270,48 @@ async function loadProducts() {
                   " disponible(s)";
 
 
+        /* ================= SIZES ================= */
+
+        let sizes =
+            Array.isArray(product.sizes)
+                ? product.sizes
+                : [];
+
+
+        /* Compatibilité avec anciens produits */
+        if (
+            !sizes.length &&
+            product.size
+        ) {
+
+            sizes = [
+                product.size
+            ];
+
+        }
+
+
+        if (!sizes.length) {
+
+            sizes = [
+                "Standard"
+            ];
+
+        }
+
+
+        const sizesHtml =
+            sizes
+                .map(
+                    size => `
+                        <span class="product-size-badge">
+                            ${escapeHtml(size)}
+                        </span>
+                    `
+                )
+                .join("");
+
+
         card.innerHTML = `
 
             ${imagesHtml}
@@ -1944,12 +2348,11 @@ async function loadProducts() {
 
             <div class="info-line">
 
-                <strong>Taille :</strong>
+                <strong>Tailles :</strong>
 
-                ${escapeHtml(
-                    product.size ||
-                    "Standard"
-                )}
+                <div class="product-sizes">
+                    ${sizesHtml}
+                </div>
 
             </div>
 
@@ -2153,10 +2556,43 @@ async function editProduct(id) {
             product.badge || "";
 
 
-        document.getElementById(
-            "productSize"
-        ).value =
-            product.size || "Standard";
+        /* ================= SIZES ================= */
+
+        let productSizes =
+            Array.isArray(product.sizes)
+                ? product.sizes
+                : [];
+
+
+        /*
+         * Compatibilité avec les anciens produits
+         * qui possèdent encore seulement "size".
+         */
+
+        if (
+            !productSizes.length &&
+            product.size
+        ) {
+
+            productSizes = [
+                product.size
+            ];
+
+        }
+
+
+        if (!productSizes.length) {
+
+            productSizes = [
+                "Standard"
+            ];
+
+        }
+
+
+        setSelectedSizes(
+            productSizes
+        );
 
 
         document.getElementById(
@@ -2657,7 +3093,8 @@ async function loadOrders() {
             </label>
 
 
-            <select class="order-status-select"
+            <select
+                class="order-status-select"
                 data-id="${order.id}">
 
                 <option
@@ -2665,53 +3102,39 @@ async function loadOrders() {
                     ${order.status === "new"
                         ? "selected"
                         : ""}>
-
                     Nouvelle
-
                 </option>
-
 
                 <option
                     value="confirmed"
                     ${order.status === "confirmed"
                         ? "selected"
                         : ""}>
-
                     Confirmée
-
                 </option>
-
 
                 <option
                     value="out_for_delivery"
                     ${order.status === "out_for_delivery"
                         ? "selected"
                         : ""}>
-
                     En livraison
-
                 </option>
-
 
                 <option
                     value="completed"
                     ${order.status === "completed"
                         ? "selected"
                         : ""}>
-
                     Terminée
-
                 </option>
-
 
                 <option
                     value="cancelled"
                     ${order.status === "cancelled"
                         ? "selected"
                         : ""}>
-
                     Annulée
-
                 </option>
 
             </select>
