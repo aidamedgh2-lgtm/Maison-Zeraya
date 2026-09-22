@@ -211,6 +211,58 @@
             color: #8b6b12;
         }
 
+        .size-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 10px 0 18px;
+        }
+
+        .size-option {
+            border: 1px solid #d5dddd;
+            border-radius: 10px;
+            padding: 10px;
+            background: #f8faf9;
+        }
+
+        .size-option label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .size-option input {
+            width: auto;
+            margin: 0;
+        }
+
+        .size-availability {
+            width: 100%;
+            margin-top: 8px;
+            padding: 8px;
+            font-size: 13px;
+        }
+
+        .size-badge {
+            display: inline-block;
+            padding: 5px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin: 3px;
+        }
+
+        .size-available {
+            background: #e5f6ed;
+            color: #17633f;
+        }
+
+        .size-unavailable {
+            background: #fde8e8;
+            color: #9b2222;
+        }
+
         .actions {
             display: flex;
             flex-wrap: wrap;
@@ -350,7 +402,10 @@
             line-height: 1.5;
         }
 
-        @media (max-width: 650px) {
+        @media (max-width: 700px) {
+            .size-grid {
+                grid-template-columns: 1fr 1fr;
+            }
 
             .form-grid {
                 grid-template-columns: 1fr;
@@ -530,8 +585,7 @@
 
             <textarea
                 id="productDescription"
-                placeholder="Description du produit">
-            </textarea>
+                placeholder="Description du produit"></textarea>
 
 
             <div class="form-grid">
@@ -641,36 +695,237 @@
 
 
             <label>
-                <strong>Stock</strong>
+                <strong>Stock général</strong>
             </label>
 
             <input
                 type="number"
                 id="productStock"
-                placeholder="Quantité disponible"
+                placeholder="Optionnel"
                 min="0"
             >
 
             <p class="small-note">
-                Le stock pourra être utilisé plus tard pour afficher
-                automatiquement « Rupture de stock » lorsque la quantité atteint 0.
+                Le stock général est indépendant des tailles.
+                Pour le moment, la disponibilité des tailles est gérée séparément.
             </p>
 
 
-            <div class="checkbox-box">
+            <!-- SIZES -->
+            <h3>
+                📏 Tailles disponibles
+            </h3>
 
-                <input
-                    type="checkbox"
-                    id="productFeatured"
-                >
+            <p class="small-note">
+                Cochez les tailles que le produit possède.
+                Pour chaque taille, choisissez si elle est disponible ou non.
+            </p>
 
-                <label for="productFeatured">
-                    ⭐ Mettre ce produit en avant
-                </label>
+            <div class="size-grid">
+
+                <div class="size-option">
+                    <label>
+                        <input
+                            type="checkbox"
+                            class="size-checkbox"
+                            data-size="XS">
+                        XS
+                    </label>
+
+                    <select
+                        class="size-availability"
+                        data-size-status="XS">
+
+                        <option value="true">
+                            ✅ Disponible
+                        </option>
+
+                        <option value="false">
+                            ❌ Non disponible
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <div class="size-option">
+                    <label>
+                        <input
+                            type="checkbox"
+                            class="size-checkbox"
+                            data-size="S">
+                        S
+                    </label>
+
+                    <select
+                        class="size-availability"
+                        data-size-status="S">
+
+                        <option value="true">
+                            ✅ Disponible
+                        </option>
+
+                        <option value="false">
+                            ❌ Non disponible
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <div class="size-option">
+                    <label>
+                        <input
+                            type="checkbox"
+                            class="size-checkbox"
+                            data-size="M">
+                        M
+                    </label>
+
+                    <select
+                        class="size-availability"
+                        data-size-status="M">
+
+                        <option value="true">
+                            ✅ Disponible
+                        </option>
+
+                        <option value="false">
+                            ❌ Non disponible
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <div class="size-option">
+                    <label>
+                        <input
+                            type="checkbox"
+                            class="size-checkbox"
+                            data-size="L">
+                        L
+                    </label>
+
+                    <select
+                        class="size-availability"
+                        data-size-status="L">
+
+                        <option value="true">
+                            ✅ Disponible
+                        </option>
+
+                        <option value="false">
+                            ❌ Non disponible
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <div class="size-option">
+                    <label>
+                        <input
+                            type="checkbox"
+                            class="size-checkbox"
+                            data-size="XL">
+                        XL
+                    </label>
+
+                    <select
+                        class="size-availability"
+                        data-size-status="XL">
+
+                        <option value="true">
+                            ✅ Disponible
+                        </option>
+
+                        <option value="false">
+                            ❌ Non disponible
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <div class="size-option">
+                    <label>
+                        <input
+                            type="checkbox"
+                            class="size-checkbox"
+                            data-size="XXL">
+                        XXL
+                    </label>
+
+                    <select
+                        class="size-availability"
+                        data-size-status="XXL">
+
+                        <option value="true">
+                            ✅ Disponible
+                        </option>
+
+                        <option value="false">
+                            ❌ Non disponible
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <div class="size-option">
+                    <label>
+                        <input
+                            type="checkbox"
+                            class="size-checkbox"
+                            data-size="3XL">
+                        3XL
+                    </label>
+
+                    <select
+                        class="size-availability"
+                        data-size-status="3XL">
+
+                        <option value="true">
+                            ✅ Disponible
+                        </option>
+
+                        <option value="false">
+                            ❌ Non disponible
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <div class="size-option">
+                    <label>
+                        <input
+                            type="checkbox"
+                            class="size-checkbox"
+                            data-size="Standard">
+                        Standard
+                    </label>
+
+                    <select
+                        class="size-availability"
+                        data-size-status="Standard">
+
+                        <option value="true">
+                            ✅ Disponible
+                        </option>
+
+                        <option value="false">
+                            ❌ Non disponible
+                        </option>
+
+                    </select>
+                </div>
 
             </div>
 
 
+            <!-- IMAGES -->
             <h3>
                 📷 Photos du produit
             </h3>
@@ -1063,6 +1318,204 @@ async function changeAdminPassword() {
 
 
 /* =========================
+   SIZE FUNCTIONS
+========================= */
+
+const AVAILABLE_SIZES = [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "XXL",
+    "3XL",
+    "Standard"
+];
+
+
+function resetSizes() {
+
+    document
+        .querySelectorAll(".size-checkbox")
+        .forEach(checkbox => {
+
+            checkbox.checked = false;
+
+        });
+
+    document
+        .querySelectorAll(".size-availability")
+        .forEach(select => {
+
+            select.value = "true";
+
+        });
+
+}
+
+
+function getSelectedSizes() {
+
+    const sizes = [];
+
+    document
+        .querySelectorAll(".size-checkbox")
+        .forEach(checkbox => {
+
+            if (checkbox.checked) {
+
+                const size =
+                    checkbox.dataset.size;
+
+                const status =
+                    document.querySelector(
+                        `[data-size-status="${size}"]`
+                    );
+
+                sizes.push({
+                    size,
+                    available:
+                        status
+                            ? status.value === "true"
+                            : true
+                });
+
+            }
+
+        });
+
+    return sizes;
+
+}
+
+
+async function saveProductSizes(productId) {
+
+    const sizes =
+        getSelectedSizes();
+
+
+    const { error: deleteError } =
+        await supabaseClient
+            .from("product_sizes")
+            .delete()
+            .eq(
+                "product_id",
+                productId
+            );
+
+
+    if (deleteError) {
+        throw deleteError;
+    }
+
+
+    if (sizes.length === 0) {
+        return;
+    }
+
+
+    const rows =
+        sizes.map(item => ({
+            product_id:
+                Number(productId),
+
+            size:
+                item.size,
+
+            available:
+                item.available
+        }));
+
+
+    const { error: insertError } =
+        await supabaseClient
+            .from("product_sizes")
+            .insert(rows);
+
+
+    if (insertError) {
+        throw insertError;
+    }
+
+}
+
+
+async function loadProductSizes(productId) {
+
+    const { data, error } =
+        await supabaseClient
+            .from("product_sizes")
+            .select("*")
+            .eq(
+                "product_id",
+                productId
+            )
+            .order(
+                "id",
+                {
+                    ascending: true
+                }
+            );
+
+
+    if (error) {
+        throw error;
+    }
+
+
+    return data || [];
+
+}
+
+
+function displayProductSizes(sizes) {
+
+    if (!sizes || sizes.length === 0) {
+
+        return `
+            <div class="info-line">
+                <strong>Tailles :</strong>
+                Non renseignées
+            </div>
+        `;
+
+    }
+
+
+    let html = `
+        <div class="info-line">
+            <strong>Tailles :</strong>
+        </div>
+    `;
+
+
+    sizes.forEach(item => {
+
+        html += `
+            <span class="size-badge ${
+                item.available
+                    ? "size-available"
+                    : "size-unavailable"
+            }">
+                ${escapeHtml(item.size)}
+                ${
+                    item.available
+                        ? " ✅"
+                        : " ❌"
+                }
+            </span>
+        `;
+
+    });
+
+
+    return html;
+
+}
+
+
+/* =========================
    RESET PRODUCT FORM
 ========================= */
 
@@ -1110,6 +1563,8 @@ function resetProductForm() {
 
     selectedFiles = [];
     existingImages = [];
+
+    resetSizes();
 
     document.getElementById(
         "selectedImages"
@@ -1441,9 +1896,7 @@ async function saveProduct() {
         );
 
 
-        /* =========================
-           CREATE
-        ========================= */
+        /* CREATE */
 
         if (!productId) {
 
@@ -1467,6 +1920,11 @@ async function saveProduct() {
             if (error) {
                 throw error;
             }
+
+
+            await saveProductSizes(
+                product.id
+            );
 
 
             for (
@@ -1510,9 +1968,7 @@ async function saveProduct() {
         }
 
 
-        /* =========================
-           UPDATE
-        ========================= */
+        /* UPDATE */
 
         else {
 
@@ -1537,6 +1993,11 @@ async function saveProduct() {
             if (error) {
                 throw error;
             }
+
+
+            await saveProductSizes(
+                productId
+            );
 
 
             const startOrder =
@@ -1686,6 +2147,22 @@ async function loadProducts() {
                 );
 
 
+        const { data: sizes } =
+            await supabaseClient
+                .from("product_sizes")
+                .select("*")
+                .eq(
+                    "product_id",
+                    product.id
+                )
+                .order(
+                    "id",
+                    {
+                        ascending: true
+                    }
+                );
+
+
         const card =
             document.createElement(
                 "div"
@@ -1811,9 +2288,11 @@ async function loadProducts() {
             </div>
 
             <div class="info-line">
-                <strong>Stock :</strong>
+                <strong>Stock général :</strong>
                 ${escapeHtml(stockText)}
             </div>
+
+            ${displayProductSizes(sizes)}
 
             <p>
                 ${escapeHtml(
@@ -1930,6 +2409,26 @@ async function editProduct(id) {
             );
 
 
+    let sizes = [];
+
+    try {
+
+        sizes =
+            await loadProductSizes(id);
+
+    }
+
+    catch (error) {
+
+        alert(
+            "Erreur lors du chargement des tailles : " +
+            error.message
+        );
+
+        return;
+    }
+
+
     document.getElementById(
         "productFormTitle"
     ).textContent =
@@ -1988,6 +2487,39 @@ async function editProduct(id) {
         "productFeatured"
     ).checked =
         product.featured === true;
+
+
+    resetSizes();
+
+
+    sizes.forEach(item => {
+
+        const checkbox =
+            document.querySelector(
+                `.size-checkbox[data-size="${item.size}"]`
+            );
+
+        const status =
+            document.querySelector(
+                `[data-size-status="${item.size}"]`
+            );
+
+
+        if (checkbox) {
+            checkbox.checked = true;
+        }
+
+
+        if (status) {
+
+            status.value =
+                item.available
+                    ? "true"
+                    : "false";
+
+        }
+
+    });
 
 
     selectedFiles = [];
@@ -2340,13 +2872,31 @@ async function loadOrders() {
 
                     itemsHtml += `
                         <div>
-                            ${escapeHtml(
-                                item.name ||
-                                "Produit"
-                            )}
+                            <strong>
+                                ${escapeHtml(
+                                    item.name ||
+                                    "Produit"
+                                )}
+                            </strong>
+
                             ×
                             ${item.quantity || 1}
+
+                            ${
+                                item.size
+                                    ? `
+                                        <br>
+                                        <small>
+                                            Taille :
+                                            ${escapeHtml(
+                                                item.size
+                                            )}
+                                        </small>
+                                    `
+                                    : ""
+                            }
                         </div>
+                        <hr>
                     `;
 
                 });
