@@ -1,426 +1,388 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Maison Zeraya — Administration</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f7f6;
-            color: #173f3b;
-        }
-
-        header {
-            background: #123f3a;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 25px;
-        }
-
-        header p {
-            margin: 6px 0 0;
-            color: #d8c27a;
-        }
-
-        .container {
-            width: 94%;
-            max-width: 1100px;
-            margin: 25px auto;
-        }
-
-        .box {
-            background: white;
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 22px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.07);
-        }
-
-        h2 {
-            margin-top: 0;
-            color: #123f3a;
-        }
-
-        h3 {
-            color: #173f3b;
-        }
-
-        input,
-        textarea,
-        select {
-            width: 100%;
-            padding: 13px;
-            margin: 7px 0 12px;
-            border: 1px solid #d5dddd;
-            border-radius: 8px;
-            font-size: 15px;
-            font-family: inherit;
-            background: white;
-        }
-
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        button {
-            border: none;
-            border-radius: 8px;
-            padding: 12px 17px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: bold;
-        }
-
-        .main-btn {
-            background: #123f3a;
-            color: white;
-        }
-
-        .gold-btn {
-            background: #c7a94b;
-            color: white;
-        }
-
-        .danger-btn {
-            background: #b33a3a;
-            color: white;
-        }
-
-        .gray-btn {
-            background: #777;
-            color: white;
-        }
-
-        .logout-btn {
-            background: white;
-            color: #123f3a;
-            border: 1px solid #d5dddd;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .message {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 8px;
-            display: none;
-        }
-
-        .success {
-            background: #e5f6ed;
-            color: #17633f;
-        }
-
-        .error {
-            background: #fde8e8;
-            color: #9b2222;
-        }
-
-        .section-title {
-            border-bottom: 1px solid #e1e7e5;
-            padding-bottom: 10px;
-            margin-bottom: 18px;
-        }
-
-        .product-card {
-            border: 1px solid #e1e7e5;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background: #fcfdfd;
-        }
-
-        .product-gallery {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-
-        .gallery-image {
-            width: 85px;
-            height: 85px;
-            object-fit: cover;
-            border-radius: 8px;
-            background: #eef2f1;
-        }
-
-        .price {
-            font-weight: bold;
-            color: #b28c25;
-            font-size: 18px;
-            margin: 8px 0;
-        }
-
-        .old-price {
-            color: #888;
-            text-decoration: line-through;
-            font-size: 14px;
-            margin-right: 8px;
-        }
-
-        .badge {
-            display: inline-block;
-            background: #123f3a;
-            color: white;
-            padding: 5px 9px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin: 5px 0;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 5px 9px;
-            border-radius: 20px;
-            background: #edf3f2;
-            font-size: 13px;
-            margin: 5px 5px 5px 0;
-        }
-
-        .status-visible {
-            background: #e5f6ed;
-            color: #17633f;
-        }
-
-        .status-hidden {
-            background: #fde8e8;
-            color: #9b2222;
-        }
-
-        .status-featured {
-            background: #fff5d6;
-            color: #8b6b12;
-        }
-
-        .size-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin: 10px 0 18px;
-        }
-
-        .size-option {
-            border: 1px solid #d5dddd;
-            border-radius: 10px;
-            padding: 10px;
-            background: #f8faf9;
-        }
-
-        .size-option label {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .size-option input {
-            width: auto;
-            margin: 0;
-        }
-
-        .size-availability {
-            width: 100%;
-            margin-top: 8px;
-            padding: 8px;
-            font-size: 13px;
-        }
-
-        .size-badge {
-            display: inline-block;
-            padding: 5px 8px;
-            border-radius: 15px;
-            font-size: 12px;
-            margin: 3px;
-        }
-
-        .size-available {
-            background: #e5f6ed;
-            color: #17633f;
-        }
-
-        .size-unavailable {
-            background: #fde8e8;
-            color: #9b2222;
-        }
-
-        .actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .actions button {
-            padding: 9px 12px;
-            font-size: 13px;
-        }
-
-        .selected-images {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 10px 0 15px;
-        }
-
-        .selected-image {
-            position: relative;
-        }
-
-        .selected-image img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .image-number {
-            position: absolute;
-            left: 5px;
-            top: 5px;
-            background: #123f3a;
-            color: white;
-            padding: 4px 7px;
-            border-radius: 5px;
-            font-size: 12px;
-        }
-
-        .remove-new-image {
-            position: absolute;
-            right: 4px;
-            top: 4px;
-            background: #b33a3a;
-            color: white;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-            padding: 0;
-        }
-
-        .existing-image-box {
-            position: relative;
-        }
-
-        .existing-image-box img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .delete-existing-image {
-            position: absolute;
-            right: 3px;
-            top: 3px;
-            background: #b33a3a;
-            color: white;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-            padding: 0;
-        }
-
-        .total {
-            font-size: 19px;
-            font-weight: bold;
-            color: #b28c25;
-        }
-
-        .order-card {
-            border: 1px solid #e1e7e5;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background: #fcfdfd;
-        }
-
-        .order-products {
-            background: #f5f8f7;
-            padding: 10px;
-            border-radius: 8px;
-            margin: 10px 0;
-        }
-
-        .top-actions {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .small-note {
-            font-size: 13px;
-            color: #666;
-            line-height: 1.5;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .checkbox-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #f5f8f7;
-            padding: 13px;
-            border-radius: 8px;
-            margin: 7px 0 12px;
-        }
-
-        .checkbox-box input {
-            width: auto;
-            margin: 0;
-        }
-
-        .checkbox-box label {
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .info-line {
-            margin: 7px 0;
-            line-height: 1.5;
-        }
-
-        @media (max-width: 700px) {
-            .size-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-
-            .actions button {
-                width: 100%;
-            }
-
-            .top-actions button {
-                width: 100%;
-            }
-        }
-    </style>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Maison Zeraya — Administration</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7f6;
+    color: #173f3b;
+}
+
+header {
+    background: #123f3a;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 25px;
+}
+
+header p {
+    margin: 6px 0 0;
+    color: #d8c27a;
+}
+
+.container {
+    width: 94%;
+    max-width: 1100px;
+    margin: 25px auto;
+}
+
+.box {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+}
+
+h2 {
+    margin-top: 0;
+    color: #123f3a;
+}
+
+h3 {
+    color: #173f3b;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 13px;
+    margin: 7px 0 12px;
+    border: 1px solid #d5dddd;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    background: white;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 17px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.main-btn {
+    background: #123f3a;
+    color: white;
+}
+
+.gold-btn {
+    background: #c7a94b;
+    color: white;
+}
+
+.danger-btn {
+    background: #b33a3a;
+    color: white;
+}
+
+.gray-btn {
+    background: #777;
+    color: white;
+}
+
+.logout-btn {
+    background: white;
+    color: #123f3a;
+    border: 1px solid #d5dddd;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.message {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    display: none;
+}
+
+.success {
+    background: #e5f6ed;
+    color: #17633f;
+}
+
+.error {
+    background: #fde8e8;
+    color: #9b2222;
+}
+
+.section-title {
+    border-bottom: 1px solid #e1e7e5;
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+}
+
+.product-card {
+    border: 1px solid #e1e7e5;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #fcfdfd;
+}
+
+.product-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.gallery-image {
+    width: 85px;
+    height: 85px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #eef2f1;
+}
+
+.price {
+    font-weight: bold;
+    color: #b28c25;
+    font-size: 18px;
+    margin: 8px 0;
+}
+
+.old-price {
+    color: #888;
+    text-decoration: line-through;
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+.badge {
+    display: inline-block;
+    background: #123f3a;
+    color: white;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin: 5px 0;
+}
+
+.status {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 20px;
+    background: #edf3f2;
+    font-size: 13px;
+    margin: 5px 5px 5px 0;
+}
+
+.status-visible {
+    background: #e5f6ed;
+    color: #17633f;
+}
+
+.status-hidden {
+    background: #fde8e8;
+    color: #9b2222;
+}
+
+.status-featured {
+    background: #fff5d6;
+    color: #8b6b12;
+}
+
+.status-available {
+    background: #e5f6ed;
+    color: #17633f;
+}
+
+.status-unavailable {
+    background: #fde8e8;
+    color: #9b2222;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.actions button {
+    padding: 9px 12px;
+    font-size: 13px;
+}
+
+.selected-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 10px 0 15px;
+}
+
+.selected-image {
+    position: relative;
+}
+
+.selected-image img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.image-number {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    background: #123f3a;
+    color: white;
+    padding: 4px 7px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.remove-new-image {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    background: #b33a3a;
+    color: white;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    padding: 0;
+}
+
+.existing-image-box {
+    position: relative;
+}
+
+.existing-image-box img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.delete-existing-image {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    background: #b33a3a;
+    color: white;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    padding: 0;
+}
+
+.total {
+    font-size: 19px;
+    font-weight: bold;
+    color: #b28c25;
+}
+
+.order-card {
+    border: 1px solid #e1e7e5;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #fcfdfd;
+}
+
+.order-products {
+    background: #f5f8f7;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.top-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.small-note {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.checkbox-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f5f8f7;
+    padding: 13px;
+    border-radius: 8px;
+    margin: 7px 0 12px;
+}
+
+.checkbox-box input {
+    width: auto;
+    margin: 0;
+}
+
+.checkbox-box label {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.info-line {
+    margin: 7px 0;
+    line-height: 1.5;
+}
+
+@media (max-width: 650px) {
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .actions button {
+        width: 100%;
+    }
+
+    .top-actions button {
+        width: 100%;
+    }
+}
+
+</style>
 </head>
 
 <body>
@@ -432,598 +394,492 @@
 
 <div class="container">
 
-    <!-- LOGIN -->
-    <div id="loginSection" class="box">
+<!-- ================= LOGIN ================= -->
 
-        <h2>🔐 Connexion administrateur</h2>
+<div id="loginSection" class="box">
 
-        <input
-            type="email"
-            id="loginEmail"
-            placeholder="Adresse email"
-        >
+    <h2>🔐 Connexion administrateur</h2>
 
-        <input
-            type="password"
-            id="loginPassword"
-            placeholder="Mot de passe"
-        >
+    <input
+        type="email"
+        id="loginEmail"
+        placeholder="Adresse email"
+    >
 
-        <button class="main-btn" id="loginBtn">
-            Se connecter
+    <input
+        type="password"
+        id="loginPassword"
+        placeholder="Mot de passe"
+    >
+
+    <button
+        type="button"
+        class="main-btn"
+        id="loginBtn">
+
+        Se connecter
+
+    </button>
+
+    <button
+        type="button"
+        class="gray-btn"
+        id="showForgotBtn">
+
+        Mot de passe oublié ?
+
+    </button>
+
+    <div id="loginMessage" class="message"></div>
+
+</div>
+
+
+<!-- ================= FORGOT ================= -->
+
+<div id="forgotSection" class="box hidden">
+
+    <h2>🔑 Réinitialiser le mot de passe</h2>
+
+    <input
+        type="email"
+        id="forgotEmail"
+        placeholder="Adresse email"
+    >
+
+    <button
+        type="button"
+        class="main-btn"
+        id="forgotBtn">
+
+        Envoyer le lien
+
+    </button>
+
+    <button
+        type="button"
+        class="gray-btn"
+        id="backToLoginBtn">
+
+        Retour
+
+    </button>
+
+    <div id="forgotMessage" class="message"></div>
+
+</div>
+
+
+<!-- ================= ADMIN ================= -->
+
+<div id="adminSection" class="hidden">
+
+
+<!-- DASHBOARD -->
+
+<div class="box">
+
+    <div class="top-actions">
+
+        <button
+            type="button"
+            class="logout-btn"
+            id="logoutBtn">
+
+            Déconnexion
+
         </button>
-
-        <button class="gray-btn" id="showForgotBtn">
-            Mot de passe oublié ?
-        </button>
-
-        <div id="loginMessage" class="message"></div>
 
     </div>
 
+    <h2>👑 Tableau de bord</h2>
 
-    <!-- FORGOT -->
-    <div id="forgotSection" class="box hidden">
+    <p>
+        Bienvenue dans l'administration de Maison Zeraya.
+    </p>
 
-        <h2>🔑 Réinitialiser le mot de passe</h2>
+</div>
 
-        <input
-            type="email"
-            id="forgotEmail"
-            placeholder="Adresse email"
-        >
 
-        <button class="main-btn" id="forgotBtn">
-            Envoyer le lien
-        </button>
+<!-- PASSWORD -->
 
-        <button class="gray-btn" id="backToLoginBtn">
-            Retour
-        </button>
+<div class="box">
 
-        <div id="forgotMessage" class="message"></div>
+    <h2>🔐 Modifier le mot de passe</h2>
 
-    </div>
+    <input
+        type="password"
+        id="newAdminPassword"
+        placeholder="Nouveau mot de passe"
+    >
 
+    <input
+        type="password"
+        id="confirmAdminPassword"
+        placeholder="Confirmer le nouveau mot de passe"
+    >
 
-    <!-- ADMIN -->
-    <div id="adminSection" class="hidden">
+    <button
+        type="button"
+        class="main-btn"
+        id="changePasswordBtn">
 
-        <!-- DASHBOARD -->
-        <div class="box">
+        Modifier le mot de passe
 
-            <div class="top-actions">
+    </button>
 
-                <button
-                    class="logout-btn"
-                    id="logoutBtn">
-                    Déconnexion
-                </button>
-
-            </div>
-
-            <h2>👑 Tableau de bord</h2>
-
-            <p>
-                Bienvenue dans l'administration de Maison Zeraya.
-            </p>
-
-        </div>
-
-
-        <!-- PASSWORD -->
-        <div class="box">
-
-            <h2>🔐 Modifier le mot de passe</h2>
-
-            <input
-                type="password"
-                id="newAdminPassword"
-                placeholder="Nouveau mot de passe"
-            >
-
-            <input
-                type="password"
-                id="confirmAdminPassword"
-                placeholder="Confirmer le nouveau mot de passe"
-            >
-
-            <button
-                class="main-btn"
-                id="changePasswordBtn">
-                Modifier le mot de passe
-            </button>
-
-            <div
-                id="passwordChangeMessage"
-                class="message">
-            </div>
-
-        </div>
-
-
-        <!-- PRODUCTS -->
-        <div class="box">
-
-            <h2 class="section-title">
-                🛍️ Gestion des produits
-            </h2>
-
-            <button
-                class="gold-btn"
-                id="newProductBtn">
-                ➕ Ajouter un produit
-            </button>
-
-        </div>
-
-
-        <!-- PRODUCT FORM -->
-        <div
-            id="productFormBox"
-            class="box hidden">
-
-            <h2 id="productFormTitle">
-                ➕ Ajouter un produit
-            </h2>
-
-
-            <label>
-                <strong>Nom du produit</strong>
-            </label>
-
-            <input
-                type="text"
-                id="productName"
-                placeholder="Ex : Ensemble Élégance"
-            >
-
-
-            <label>
-                <strong>Description</strong>
-            </label>
-
-            <textarea
-                id="productDescription"
-                placeholder="Description du produit"></textarea>
-
-
-            <div class="form-grid">
-
-                <div>
-
-                    <label>
-                        <strong>Prix actuel — DA</strong>
-                    </label>
-
-                    <input
-                        type="number"
-                        id="productPrice"
-                        placeholder="Ex : 4500"
-                        min="0"
-                    >
-
-                </div>
-
-
-                <div>
-
-                    <label>
-                        <strong>Ancien prix — DA</strong>
-                    </label>
-
-                    <input
-                        type="number"
-                        id="productOldPrice"
-                        placeholder="Optionnel"
-                        min="0"
-                    >
-
-                </div>
-
-            </div>
-
-
-            <div class="form-grid">
-
-                <div>
-
-                    <label>
-                        <strong>Catégorie</strong>
-                    </label>
-
-                    <select id="productCategory">
-
-                        <option value="Lingerie">
-                            Lingerie
-                        </option>
-
-                        <option value="Homewear">
-                            Homewear
-                        </option>
-
-                        <option value="Ensembles">
-                            Ensembles
-                        </option>
-
-                        <option value="Nouveautés">
-                            Nouveautés
-                        </option>
-
-                        <option value="Autres">
-                            Autres
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div>
-
-                    <label>
-                        <strong>Badge</strong>
-                    </label>
-
-                    <select id="productBadge">
-
-                        <option value="">
-                            Aucun
-                        </option>
-
-                        <option value="NOUVEAU">
-                            NOUVEAU
-                        </option>
-
-                        <option value="PROMO">
-                            PROMO
-                        </option>
-
-                        <option value="BEST SELLER">
-                            BEST SELLER
-                        </option>
-
-                        <option value="EXCLUSIVITÉ">
-                            EXCLUSIVITÉ
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-
-            <label>
-                <strong>Stock général</strong>
-            </label>
-
-            <input
-                type="number"
-                id="productStock"
-                placeholder="Optionnel"
-                min="0"
-            >
-
-            <p class="small-note">
-                Le stock général est indépendant des tailles.
-                Pour le moment, la disponibilité des tailles est gérée séparément.
-            </p>
-
-
-            <!-- SIZES -->
-            <h3>
-                📏 Tailles disponibles
-            </h3>
-
-            <p class="small-note">
-                Cochez les tailles que le produit possède.
-                Pour chaque taille, choisissez si elle est disponible ou non.
-            </p>
-
-            <div class="size-grid">
-
-                <div class="size-option">
-                    <label>
-                        <input
-                            type="checkbox"
-                            class="size-checkbox"
-                            data-size="XS">
-                        XS
-                    </label>
-
-                    <select
-                        class="size-availability"
-                        data-size-status="XS">
-
-                        <option value="true">
-                            ✅ Disponible
-                        </option>
-
-                        <option value="false">
-                            ❌ Non disponible
-                        </option>
-
-                    </select>
-                </div>
-
-
-                <div class="size-option">
-                    <label>
-                        <input
-                            type="checkbox"
-                            class="size-checkbox"
-                            data-size="S">
-                        S
-                    </label>
-
-                    <select
-                        class="size-availability"
-                        data-size-status="S">
-
-                        <option value="true">
-                            ✅ Disponible
-                        </option>
-
-                        <option value="false">
-                            ❌ Non disponible
-                        </option>
-
-                    </select>
-                </div>
-
-
-                <div class="size-option">
-                    <label>
-                        <input
-                            type="checkbox"
-                            class="size-checkbox"
-                            data-size="M">
-                        M
-                    </label>
-
-                    <select
-                        class="size-availability"
-                        data-size-status="M">
-
-                        <option value="true">
-                            ✅ Disponible
-                        </option>
-
-                        <option value="false">
-                            ❌ Non disponible
-                        </option>
-
-                    </select>
-                </div>
-
-
-                <div class="size-option">
-                    <label>
-                        <input
-                            type="checkbox"
-                            class="size-checkbox"
-                            data-size="L">
-                        L
-                    </label>
-
-                    <select
-                        class="size-availability"
-                        data-size-status="L">
-
-                        <option value="true">
-                            ✅ Disponible
-                        </option>
-
-                        <option value="false">
-                            ❌ Non disponible
-                        </option>
-
-                    </select>
-                </div>
-
-
-                <div class="size-option">
-                    <label>
-                        <input
-                            type="checkbox"
-                            class="size-checkbox"
-                            data-size="XL">
-                        XL
-                    </label>
-
-                    <select
-                        class="size-availability"
-                        data-size-status="XL">
-
-                        <option value="true">
-                            ✅ Disponible
-                        </option>
-
-                        <option value="false">
-                            ❌ Non disponible
-                        </option>
-
-                    </select>
-                </div>
-
-
-                <div class="size-option">
-                    <label>
-                        <input
-                            type="checkbox"
-                            class="size-checkbox"
-                            data-size="XXL">
-                        XXL
-                    </label>
-
-                    <select
-                        class="size-availability"
-                        data-size-status="XXL">
-
-                        <option value="true">
-                            ✅ Disponible
-                        </option>
-
-                        <option value="false">
-                            ❌ Non disponible
-                        </option>
-
-                    </select>
-                </div>
-
-
-                <div class="size-option">
-                    <label>
-                        <input
-                            type="checkbox"
-                            class="size-checkbox"
-                            data-size="3XL">
-                        3XL
-                    </label>
-
-                    <select
-                        class="size-availability"
-                        data-size-status="3XL">
-
-                        <option value="true">
-                            ✅ Disponible
-                        </option>
-
-                        <option value="false">
-                            ❌ Non disponible
-                        </option>
-
-                    </select>
-                </div>
-
-
-                <div class="size-option">
-                    <label>
-                        <input
-                            type="checkbox"
-                            class="size-checkbox"
-                            data-size="Standard">
-                        Standard
-                    </label>
-
-                    <select
-                        class="size-availability"
-                        data-size-status="Standard">
-
-                        <option value="true">
-                            ✅ Disponible
-                        </option>
-
-                        <option value="false">
-                            ❌ Non disponible
-                        </option>
-
-                    </select>
-                </div>
-
-            </div>
-
-
-            <!-- IMAGES -->
-            <h3>
-                📷 Photos du produit
-            </h3>
-
-            <p class="small-note">
-                Vous pouvez sélectionner plusieurs photos depuis votre téléphone.
-                La première photo sera l'image principale.
-            </p>
-
-            <input
-                type="file"
-                id="productImages"
-                accept="image/*"
-                multiple
-            >
-
-            <div
-                id="selectedImages"
-                class="selected-images">
-            </div>
-
-
-            <h3
-                id="existingImagesTitle"
-                class="hidden">
-                Photos déjà enregistrées
-            </h3>
-
-            <div
-                id="existingImages"
-                class="selected-images">
-            </div>
-
-
-            <input
-                type="hidden"
-                id="editingProductId"
-            >
-
-
-            <div class="actions">
-
-                <button
-                    class="main-btn"
-                    id="saveProductBtn">
-                    💾 Enregistrer
-                </button>
-
-                <button
-                    class="gray-btn"
-                    id="cancelProductBtn">
-                    Annuler
-                </button>
-
-            </div>
-
-
-            <div
-                id="productMessage"
-                class="message">
-            </div>
-
-        </div>
-
-
-        <!-- PRODUCTS LIST -->
-        <div class="box">
-
-            <h2 class="section-title">
-                📦 Mes produits
-            </h2>
-
-            <div id="productsList">
-                Chargement des produits...
-            </div>
-
-        </div>
-
-
-        <!-- ORDERS -->
-        <div class="box">
-
-            <h2 class="section-title">
-                🧾 Commandes
-            </h2>
-
-            <div id="ordersList">
-                Chargement des commandes...
-            </div>
-
-        </div>
-
+    <div
+        id="passwordChangeMessage"
+        class="message">
     </div>
 
 </div>
 
 
+<!-- PRODUCTS HEADER -->
+
+<div class="box">
+
+    <h2 class="section-title">
+        🛍️ Gestion des produits
+    </h2>
+
+    <button
+        type="button"
+        class="gold-btn"
+        id="newProductBtn">
+
+        ➕ Ajouter un produit
+
+    </button>
+
+</div>
+
+
+<!-- PRODUCT FORM -->
+
+<div
+    id="productFormBox"
+    class="box hidden">
+
+    <h2 id="productFormTitle">
+        ➕ Ajouter un produit
+    </h2>
+
+
+    <label>
+        <strong>Nom du produit</strong>
+    </label>
+
+    <input
+        type="text"
+        id="productName"
+        placeholder="Ex : Ensemble Élégance"
+    >
+
+
+    <label>
+        <strong>Description</strong>
+    </label>
+
+    <textarea
+        id="productDescription"
+        placeholder="Description du produit"></textarea>
+
+
+    <div class="form-grid">
+
+        <div>
+
+            <label>
+                <strong>Prix actuel — DA</strong>
+            </label>
+
+            <input
+                type="number"
+                id="productPrice"
+                placeholder="Ex : 4500"
+                min="0"
+            >
+
+        </div>
+
+
+        <div>
+
+            <label>
+                <strong>Ancien prix — DA</strong>
+            </label>
+
+            <input
+                type="number"
+                id="productOldPrice"
+                placeholder="Optionnel"
+                min="0"
+            >
+
+        </div>
+
+    </div>
+
+
+    <div class="form-grid">
+
+        <div>
+
+            <label>
+                <strong>Catégorie</strong>
+            </label>
+
+            <select id="productCategory">
+
+                <option value="Lingerie">
+                    Lingerie
+                </option>
+
+                <option value="Homewear">
+                    Homewear
+                </option>
+
+                <option value="Ensembles">
+                    Ensembles
+                </option>
+
+                <option value="Nouveautés">
+                    Nouveautés
+                </option>
+
+                <option value="Autres">
+                    Autres
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label>
+                <strong>Badge</strong>
+            </label>
+
+            <select id="productBadge">
+
+                <option value="">
+                    Aucun
+                </option>
+
+                <option value="NOUVEAU">
+                    NOUVEAU
+                </option>
+
+                <option value="PROMO">
+                    PROMO
+                </option>
+
+                <option value="BEST SELLER">
+                    BEST SELLER
+                </option>
+
+                <option value="EXCLUSIVITÉ">
+                    EXCLUSIVITÉ
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <!-- SIZE -->
+
+    <label>
+        <strong>📏 Taille</strong>
+    </label>
+
+    <select id="productSize">
+
+        <option value="Standard">
+            Standard
+        </option>
+
+    </select>
+
+    <p class="small-note">
+        Pour le moment, les produits sont en taille Standard.
+    </p>
+
+
+    <!-- AVAILABILITY -->
+
+    <label>
+        <strong>📦 Disponibilité</strong>
+    </label>
+
+    <select id="productAvailable">
+
+        <option value="true">
+            Disponible
+        </option>
+
+        <option value="false">
+            Non disponible
+        </option>
+
+    </select>
+
+
+    <!-- STOCK -->
+
+    <label>
+        <strong>Stock</strong>
+    </label>
+
+    <input
+        type="number"
+        id="productStock"
+        placeholder="Quantité disponible"
+        min="0"
+    >
+
+    <p class="small-note">
+        Le stock est facultatif. La disponibilité ci-dessus permet
+        simplement d'indiquer si le produit peut être commandé.
+    </p>
+
+
+    <!-- FEATURED -->
+
+    <div class="checkbox-box">
+
+        <input
+            type="checkbox"
+            id="productFeatured"
+        >
+
+        <label for="productFeatured">
+            ⭐ Mettre ce produit en avant
+        </label>
+
+    </div>
+
+
+    <!-- IMAGES -->
+
+    <h3>
+        📷 Photos du produit
+    </h3>
+
+    <p class="small-note">
+        Vous pouvez sélectionner plusieurs photos.
+        La première photo sera l'image principale.
+    </p>
+
+    <input
+        type="file"
+        id="productImages"
+        accept="image/*"
+        multiple
+    >
+
+    <div
+        id="selectedImages"
+        class="selected-images">
+    </div>
+
+
+    <h3
+        id="existingImagesTitle"
+        class="hidden">
+
+        Photos déjà enregistrées
+
+    </h3>
+
+    <div
+        id="existingImages"
+        class="selected-images">
+    </div>
+
+
+    <input
+        type="hidden"
+        id="editingProductId"
+    >
+
+
+    <div class="actions">
+
+        <button
+            type="button"
+            class="main-btn"
+            id="saveProductBtn">
+
+            💾 Enregistrer
+
+        </button>
+
+        <button
+            type="button"
+            class="gray-btn"
+            id="cancelProductBtn">
+
+            Annuler
+
+        </button>
+
+    </div>
+
+
+    <div
+        id="productMessage"
+        class="message">
+    </div>
+
+</div>
+
+
+<!-- PRODUCT LIST -->
+
+<div class="box">
+
+    <h2 class="section-title">
+        📦 Mes produits
+    </h2>
+
+    <div id="productsList">
+        Chargement des produits...
+    </div>
+
+</div>
+
+
+<!-- ORDERS -->
+
+<div class="box">
+
+    <h2 class="section-title">
+        🧾 Commandes
+    </h2>
+
+    <div id="ordersList">
+        Chargement des commandes...
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+
 <script>
+
+/* =========================================================
+   SUPABASE
+========================================================= */
 
 const SUPABASE_URL =
     "https://wicjgmiqevbhxuebhdyv.supabase.co";
@@ -1042,9 +898,9 @@ let selectedFiles = [];
 let existingImages = [];
 
 
-/* =========================
+/* =========================================================
    ELEMENTS
-========================= */
+========================================================= */
 
 const loginSection =
     document.getElementById("loginSection");
@@ -1068,9 +924,9 @@ const ordersList =
     document.getElementById("ordersList");
 
 
-/* =========================
+/* =========================================================
    MESSAGE
-========================= */
+========================================================= */
 
 function showMessage(element, text, type) {
 
@@ -1079,14 +935,13 @@ function showMessage(element, text, type) {
     element.className =
         "message " + type;
 
-    element.style.display =
-        "block";
+    element.style.display = "block";
 }
 
 
-/* =========================
-   ESCAPE
-========================= */
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
 function escapeHtml(value) {
 
@@ -1096,13 +951,12 @@ function escapeHtml(value) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-
 }
 
 
-/* =========================
+/* =========================================================
    LOGIN
-========================= */
+========================================================= */
 
 async function login() {
 
@@ -1144,13 +998,12 @@ async function login() {
     }
 
     await showAdmin();
-
 }
 
 
-/* =========================
+/* =========================================================
    SHOW ADMIN
-========================= */
+========================================================= */
 
 async function showAdmin() {
 
@@ -1160,13 +1013,12 @@ async function showAdmin() {
 
     await loadProducts();
     await loadOrders();
-
 }
 
 
-/* =========================
+/* =========================================================
    LOGOUT
-========================= */
+========================================================= */
 
 async function logout() {
 
@@ -1174,13 +1026,12 @@ async function logout() {
 
     adminSection.classList.add("hidden");
     loginSection.classList.remove("hidden");
-
 }
 
 
-/* =========================
+/* =========================================================
    FORGOT PASSWORD
-========================= */
+========================================================= */
 
 async function sendPasswordReset() {
 
@@ -1228,13 +1079,12 @@ async function sendPasswordReset() {
         "Le lien de réinitialisation a été envoyé.",
         "success"
     );
-
 }
 
 
-/* =========================
+/* =========================================================
    CHANGE PASSWORD
-========================= */
+========================================================= */
 
 async function changeAdminPassword() {
 
@@ -1313,211 +1163,12 @@ async function changeAdminPassword() {
         "Mot de passe modifié avec succès.",
         "success"
     );
-
 }
 
 
-/* =========================
-   SIZE FUNCTIONS
-========================= */
-
-const AVAILABLE_SIZES = [
-    "XS",
-    "S",
-    "M",
-    "L",
-    "XL",
-    "XXL",
-    "3XL",
-    "Standard"
-];
-
-
-function resetSizes() {
-
-    document
-        .querySelectorAll(".size-checkbox")
-        .forEach(checkbox => {
-
-            checkbox.checked = false;
-
-        });
-
-    document
-        .querySelectorAll(".size-availability")
-        .forEach(select => {
-
-            select.value = "true";
-
-        });
-
-}
-
-
-function getSelectedSizes() {
-
-    const sizes = [];
-
-    document
-        .querySelectorAll(".size-checkbox")
-        .forEach(checkbox => {
-
-            if (checkbox.checked) {
-
-                const size =
-                    checkbox.dataset.size;
-
-                const status =
-                    document.querySelector(
-                        `[data-size-status="${size}"]`
-                    );
-
-                sizes.push({
-                    size,
-                    available:
-                        status
-                            ? status.value === "true"
-                            : true
-                });
-
-            }
-
-        });
-
-    return sizes;
-
-}
-
-
-async function saveProductSizes(productId) {
-
-    const sizes =
-        getSelectedSizes();
-
-
-    const { error: deleteError } =
-        await supabaseClient
-            .from("product_sizes")
-            .delete()
-            .eq(
-                "product_id",
-                productId
-            );
-
-
-    if (deleteError) {
-        throw deleteError;
-    }
-
-
-    if (sizes.length === 0) {
-        return;
-    }
-
-
-    const rows =
-        sizes.map(item => ({
-            product_id:
-                Number(productId),
-
-            size:
-                item.size,
-
-            available:
-                item.available
-        }));
-
-
-    const { error: insertError } =
-        await supabaseClient
-            .from("product_sizes")
-            .insert(rows);
-
-
-    if (insertError) {
-        throw insertError;
-    }
-
-}
-
-
-async function loadProductSizes(productId) {
-
-    const { data, error } =
-        await supabaseClient
-            .from("product_sizes")
-            .select("*")
-            .eq(
-                "product_id",
-                productId
-            )
-            .order(
-                "id",
-                {
-                    ascending: true
-                }
-            );
-
-
-    if (error) {
-        throw error;
-    }
-
-
-    return data || [];
-
-}
-
-
-function displayProductSizes(sizes) {
-
-    if (!sizes || sizes.length === 0) {
-
-        return `
-            <div class="info-line">
-                <strong>Tailles :</strong>
-                Non renseignées
-            </div>
-        `;
-
-    }
-
-
-    let html = `
-        <div class="info-line">
-            <strong>Tailles :</strong>
-        </div>
-    `;
-
-
-    sizes.forEach(item => {
-
-        html += `
-            <span class="size-badge ${
-                item.available
-                    ? "size-available"
-                    : "size-unavailable"
-            }">
-                ${escapeHtml(item.size)}
-                ${
-                    item.available
-                        ? " ✅"
-                        : " ❌"
-                }
-            </span>
-        `;
-
-    });
-
-
-    return html;
-
-}
-
-
-/* =========================
+/* =========================================================
    RESET PRODUCT FORM
-========================= */
+========================================================= */
 
 function resetProductForm() {
 
@@ -1550,6 +1201,14 @@ function resetProductForm() {
     ).value = "";
 
     document.getElementById(
+        "productSize"
+    ).value = "Standard";
+
+    document.getElementById(
+        "productAvailable"
+    ).value = "true";
+
+    document.getElementById(
         "productStock"
     ).value = "";
 
@@ -1563,8 +1222,6 @@ function resetProductForm() {
 
     selectedFiles = [];
     existingImages = [];
-
-    resetSizes();
 
     document.getElementById(
         "selectedImages"
@@ -1582,9 +1239,9 @@ function resetProductForm() {
 }
 
 
-/* =========================
+/* =========================================================
    OPEN NEW PRODUCT
-========================= */
+========================================================= */
 
 function openNewProductForm() {
 
@@ -1595,21 +1252,31 @@ function openNewProductForm() {
     ).textContent =
         "➕ Ajouter un produit";
 
-    productFormBox.classList.remove(
-        "hidden"
-    );
+    productFormBox.classList.remove("hidden");
 
     window.scrollTo({
         top: productFormBox.offsetTop - 20,
         behavior: "smooth"
     });
-
 }
 
 
-/* =========================
-   SELECT MULTIPLE IMAGES
-========================= */
+/* =========================================================
+   CLOSE PRODUCT FORM
+========================================================= */
+
+function closeProductForm() {
+
+    productFormBox.classList.add("hidden");
+
+    selectedFiles = [];
+    existingImages = [];
+}
+
+
+/* =========================================================
+   IMAGE SELECTION
+========================================================= */
 
 document
     .getElementById("productImages")
@@ -1626,14 +1293,13 @@ document
             renderSelectedImages();
 
             this.value = "";
-
         }
     );
 
 
-/* =========================
+/* =========================================================
    RENDER NEW IMAGES
-========================= */
+========================================================= */
 
 function renderSelectedImages() {
 
@@ -1673,16 +1339,15 @@ function renderSelectedImages() {
             const remove =
                 document.createElement("button");
 
+            remove.type = "button";
+
             remove.className =
                 "remove-new-image";
 
-            remove.textContent =
-                "×";
+            remove.textContent = "×";
 
-            remove.type =
-                "button";
-
-            remove.onclick =
+            remove.addEventListener(
+                "click",
                 function() {
 
                     selectedFiles.splice(
@@ -1691,24 +1356,22 @@ function renderSelectedImages() {
                     );
 
                     renderSelectedImages();
-
-                };
+                }
+            );
 
             wrapper.appendChild(img);
             wrapper.appendChild(number);
             wrapper.appendChild(remove);
 
             container.appendChild(wrapper);
-
         }
     );
-
 }
 
 
-/* =========================
+/* =========================================================
    UPLOAD IMAGE
-========================= */
+========================================================= */
 
 async function uploadImage(file) {
 
@@ -1750,13 +1413,12 @@ async function uploadImage(file) {
             .getPublicUrl(fileName);
 
     return data.publicUrl;
-
 }
 
 
-/* =========================
+/* =========================================================
    SAVE PRODUCT
-========================= */
+========================================================= */
 
 async function saveProduct() {
 
@@ -1796,6 +1458,16 @@ async function saveProduct() {
         document.getElementById(
             "productBadge"
         ).value || null;
+
+    const size =
+        document.getElementById(
+            "productSize"
+        ).value;
+
+    const available =
+        document.getElementById(
+            "productAvailable"
+        ).value === "true";
 
     const stockValue =
         document.getElementById(
@@ -1844,7 +1516,10 @@ async function saveProduct() {
 
     if (
         old_price !== null &&
-        (old_price <= 0 || old_price <= price)
+        (
+            old_price <= 0 ||
+            old_price <= price
+        )
     ) {
 
         showMessage(
@@ -1859,7 +1534,10 @@ async function saveProduct() {
 
     if (
         stock !== null &&
-        (stock < 0 || !Number.isInteger(stock))
+        (
+            stock < 0 ||
+            !Number.isInteger(stock)
+        )
     ) {
 
         showMessage(
@@ -1896,7 +1574,7 @@ async function saveProduct() {
         );
 
 
-        /* CREATE */
+        /* ================= CREATE ================= */
 
         if (!productId) {
 
@@ -1904,27 +1582,27 @@ async function saveProduct() {
                 await supabaseClient
                     .from("products")
                     .insert({
+
                         name,
                         description,
                         price,
                         old_price,
                         category,
                         badge,
+                        size,
+                        available,
                         stock,
                         featured,
                         active: true
+
                     })
                     .select()
                     .single();
 
+
             if (error) {
                 throw error;
             }
-
-
-            await saveProductSizes(
-                product.id
-            );
 
 
             for (
@@ -1938,10 +1616,12 @@ async function saveProduct() {
                         selectedFiles[i]
                     );
 
+
                 const { error: imageError } =
                     await supabaseClient
                         .from("product_images")
                         .insert({
+
                             product_id:
                                 product.id,
 
@@ -1950,12 +1630,13 @@ async function saveProduct() {
 
                             sort_order:
                                 i
+
                         });
+
 
                 if (imageError) {
                     throw imageError;
                 }
-
             }
 
 
@@ -1968,7 +1649,7 @@ async function saveProduct() {
         }
 
 
-        /* UPDATE */
+        /* ================= UPDATE ================= */
 
         else {
 
@@ -1976,28 +1657,28 @@ async function saveProduct() {
                 await supabaseClient
                     .from("products")
                     .update({
+
                         name,
                         description,
                         price,
                         old_price,
                         category,
                         badge,
+                        size,
+                        available,
                         stock,
                         featured
+
                     })
                     .eq(
                         "id",
                         productId
                     );
 
+
             if (error) {
                 throw error;
             }
-
-
-            await saveProductSizes(
-                productId
-            );
 
 
             const startOrder =
@@ -2015,10 +1696,12 @@ async function saveProduct() {
                         selectedFiles[i]
                     );
 
+
                 const { error: imageError } =
                     await supabaseClient
                         .from("product_images")
                         .insert({
+
                             product_id:
                                 Number(productId),
 
@@ -2027,12 +1710,13 @@ async function saveProduct() {
 
                             sort_order:
                                 startOrder + i
+
                         });
+
 
                 if (imageError) {
                     throw imageError;
                 }
-
             }
 
 
@@ -2041,7 +1725,6 @@ async function saveProduct() {
                 "Produit modifié avec succès.",
                 "success"
             );
-
         }
 
 
@@ -2050,43 +1733,27 @@ async function saveProduct() {
 
         setTimeout(
             closeProductForm,
-            800
+            700
         );
 
     }
 
     catch (error) {
 
+        console.error(error);
+
         showMessage(
             productMessage,
             "Erreur : " + error.message,
             "error"
         );
-
     }
-
 }
 
 
-/* =========================
-   CLOSE FORM
-========================= */
-
-function closeProductForm() {
-
-    productFormBox.classList.add(
-        "hidden"
-    );
-
-    selectedFiles = [];
-    existingImages = [];
-
-}
-
-
-/* =========================
+/* =========================================================
    LOAD PRODUCTS
-========================= */
+========================================================= */
 
 async function loadProducts() {
 
@@ -2147,26 +1814,8 @@ async function loadProducts() {
                 );
 
 
-        const { data: sizes } =
-            await supabaseClient
-                .from("product_sizes")
-                .select("*")
-                .eq(
-                    "product_id",
-                    product.id
-                )
-                .order(
-                    "id",
-                    {
-                        ascending: true
-                    }
-                );
-
-
         const card =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
         card.className =
             "product-card";
@@ -2177,28 +1826,27 @@ async function loadProducts() {
 
         if (
             images &&
-            images.length > 0
+            images.length
         ) {
 
             imagesHtml =
                 `<div class="product-gallery">`;
 
-            images.forEach(
-                image => {
+            images.forEach(image => {
 
-                    imagesHtml += `
-                        <img
-                            class="gallery-image"
-                            src="${escapeHtml(image.image_url)}"
-                            alt="">
-                    `;
+                imagesHtml += `
+                    <img
+                        class="gallery-image"
+                        src="${escapeHtml(
+                            image.image_url
+                        )}"
+                        alt="">
+                `;
 
-                }
-            );
+            });
 
             imagesHtml +=
                 "</div>";
-
         }
 
 
@@ -2216,46 +1864,48 @@ async function loadProducts() {
             priceHtml = `
 
                 <span class="old-price">
-                    ${Number(product.old_price)
-                        .toLocaleString("fr-DZ")}
+
+                    ${Number(
+                        product.old_price
+                    ).toLocaleString("fr-DZ")}
+
                     DA
+
                 </span>
 
-                ${Number(product.price)
-                    .toLocaleString("fr-DZ")}
+                ${Number(
+                    product.price
+                ).toLocaleString("fr-DZ")}
+
                 DA
-
             `;
-
         }
 
 
-        let stockText = "Non renseigné";
+        let availabilityHtml =
+            product.available !== false
+
+                ? `
+                    <span class="status status-available">
+                        Disponible
+                    </span>
+                  `
+
+                : `
+                    <span class="status status-unavailable">
+                        Non disponible
+                    </span>
+                  `;
 
 
-        if (
-            product.stock !== null &&
-            product.stock !== undefined &&
-            Number(product.stock) > 0
-        ) {
+        let stockText =
+            product.stock === null ||
+            product.stock === undefined
 
-            stockText =
-                Number(product.stock) +
-                " disponible(s)";
+                ? "Non renseigné"
 
-        }
-
-
-        if (
-            product.stock !== null &&
-            product.stock !== undefined &&
-            Number(product.stock) === 0
-        ) {
-
-            stockText =
-                "0 — à vérifier";
-
-        }
+                : Number(product.stock) +
+                  " disponible(s)";
 
 
         card.innerHTML = `
@@ -2266,82 +1916,125 @@ async function loadProducts() {
                 ${escapeHtml(product.name)}
             </h3>
 
+
             ${
                 product.badge
                     ? `
                         <span class="badge">
-                            ${escapeHtml(product.badge)}
+                            ${escapeHtml(
+                                product.badge
+                            )}
                         </span>
                     `
                     : ""
             }
 
+
             <div class="info-line">
+
                 <strong>Catégorie :</strong>
+
                 ${escapeHtml(
-                    product.category || "Autres"
+                    product.category ||
+                    "Autres"
                 )}
+
             </div>
+
+
+            <div class="info-line">
+
+                <strong>Taille :</strong>
+
+                ${escapeHtml(
+                    product.size ||
+                    "Standard"
+                )}
+
+            </div>
+
 
             <div class="price">
+
                 ${priceHtml}
+
             </div>
+
 
             <div class="info-line">
-                <strong>Stock général :</strong>
-                ${escapeHtml(stockText)}
+
+                <strong>Stock :</strong>
+
+                ${escapeHtml(
+                    stockText
+                )}
+
             </div>
 
-            ${displayProductSizes(sizes)}
 
-            <p>
-                ${escapeHtml(
-                    product.description || ""
-                )}
-            </p>
+            <div>
 
-            <span
-                class="status ${
-                    product.active
-                        ? "status-visible"
-                        : "status-hidden"
-                }">
+                ${availabilityHtml}
 
                 ${
                     product.active
-                        ? "Visible"
-                        : "Masqué"
+
+                        ? `
+                            <span class="status status-visible">
+                                Visible
+                            </span>
+                          `
+
+                        : `
+                            <span class="status status-hidden">
+                                Masqué
+                            </span>
+                          `
                 }
 
-            </span>
+
+                ${
+                    product.featured
+
+                        ? `
+                            <span class="status status-featured">
+                                ⭐ Mis en avant
+                            </span>
+                          `
+
+                        : ""
+                }
+
+            </div>
 
 
-            ${
-                product.featured
-                    ? `
-                        <span class="status status-featured">
-                            ⭐ Mis en avant
-                        </span>
-                    `
-                    : ""
-            }
+            <p>
+
+                ${escapeHtml(
+                    product.description ||
+                    ""
+                )}
+
+            </p>
 
 
             <div class="actions">
 
                 <button
-                    class="main-btn"
-                    onclick="editProduct(${product.id})">
+                    type="button"
+                    class="main-btn edit-product-btn"
+                    data-id="${product.id}">
+
                     ✏️ Modifier
+
                 </button>
 
 
                 <button
-                    class="gold-btn"
-                    onclick="toggleProduct(
-                        ${product.id},
-                        ${product.active}
-                    )">
+                    type="button"
+                    class="gold-btn toggle-product-btn"
+                    data-id="${product.id}"
+                    data-status="${product.active}">
 
                     ${
                         product.active
@@ -2353,8 +2046,9 @@ async function loadProducts() {
 
 
                 <button
-                    class="danger-btn"
-                    onclick="deleteProduct(${product.id})">
+                    type="button"
+                    class="danger-btn delete-product-btn"
+                    data-id="${product.id}">
 
                     🗑️ Supprimer
 
@@ -2365,199 +2059,176 @@ async function loadProducts() {
 
 
         productsList.appendChild(card);
-
     }
-
 }
 
 
-/* =========================
+/* =========================================================
    EDIT PRODUCT
-========================= */
+========================================================= */
 
 async function editProduct(id) {
 
-    const { data: product, error } =
-        await supabaseClient
-            .from("products")
-            .select("*")
-            .eq("id", id)
-            .single();
-
-
-    if (error) {
-
-        alert(
-            "Erreur : " +
-            error.message
-        );
-
-        return;
-    }
-
-
-    const { data: images } =
-        await supabaseClient
-            .from("product_images")
-            .select("*")
-            .eq("product_id", id)
-            .order(
-                "sort_order",
-                {
-                    ascending: true
-                }
-            );
-
-
-    let sizes = [];
-
     try {
 
-        sizes =
-            await loadProductSizes(id);
+        const { data: product, error } =
+            await supabaseClient
+                .from("products")
+                .select("*")
+                .eq("id", id)
+                .single();
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        const { data: images, error: imageError } =
+            await supabaseClient
+                .from("product_images")
+                .select("*")
+                .eq(
+                    "product_id",
+                    id
+                )
+                .order(
+                    "sort_order",
+                    {
+                        ascending: true
+                    }
+                );
+
+
+        if (imageError) {
+            throw imageError;
+        }
+
+
+        document.getElementById(
+            "productFormTitle"
+        ).textContent =
+            "✏️ Modifier le produit";
+
+
+        document.getElementById(
+            "editingProductId"
+        ).value =
+            product.id;
+
+
+        document.getElementById(
+            "productName"
+        ).value =
+            product.name || "";
+
+
+        document.getElementById(
+            "productDescription"
+        ).value =
+            product.description || "";
+
+
+        document.getElementById(
+            "productPrice"
+        ).value =
+            product.price || "";
+
+
+        document.getElementById(
+            "productOldPrice"
+        ).value =
+            product.old_price ?? "";
+
+
+        document.getElementById(
+            "productCategory"
+        ).value =
+            product.category || "Autres";
+
+
+        document.getElementById(
+            "productBadge"
+        ).value =
+            product.badge || "";
+
+
+        document.getElementById(
+            "productSize"
+        ).value =
+            product.size || "Standard";
+
+
+        document.getElementById(
+            "productAvailable"
+        ).value =
+            product.available === false
+                ? "false"
+                : "true";
+
+
+        document.getElementById(
+            "productStock"
+        ).value =
+            product.stock ?? "";
+
+
+        document.getElementById(
+            "productFeatured"
+        ).checked =
+            product.featured === true;
+
+
+        selectedFiles = [];
+
+        existingImages =
+            images || [];
+
+
+        document.getElementById(
+            "selectedImages"
+        ).innerHTML = "";
+
+
+        renderExistingImages();
+
+
+        productMessage.style.display =
+            "none";
+
+
+        productFormBox.classList.remove(
+            "hidden"
+        );
+
+
+        window.scrollTo({
+
+            top:
+                productFormBox.offsetTop - 20,
+
+            behavior:
+                "smooth"
+
+        });
 
     }
 
     catch (error) {
 
+        console.error(error);
+
         alert(
-            "Erreur lors du chargement des tailles : " +
+            "Erreur lors du chargement du produit : " +
             error.message
         );
-
-        return;
     }
-
-
-    document.getElementById(
-        "productFormTitle"
-    ).textContent =
-        "✏️ Modifier le produit";
-
-
-    document.getElementById(
-        "editingProductId"
-    ).value =
-        product.id;
-
-
-    document.getElementById(
-        "productName"
-    ).value =
-        product.name || "";
-
-
-    document.getElementById(
-        "productDescription"
-    ).value =
-        product.description || "";
-
-
-    document.getElementById(
-        "productPrice"
-    ).value =
-        product.price || "";
-
-
-    document.getElementById(
-        "productOldPrice"
-    ).value =
-        product.old_price || "";
-
-
-    document.getElementById(
-        "productCategory"
-    ).value =
-        product.category || "Autres";
-
-
-    document.getElementById(
-        "productBadge"
-    ).value =
-        product.badge || "";
-
-
-    document.getElementById(
-        "productStock"
-    ).value =
-        product.stock ?? "";
-
-
-    document.getElementById(
-        "productFeatured"
-    ).checked =
-        product.featured === true;
-
-
-    resetSizes();
-
-
-    sizes.forEach(item => {
-
-        const checkbox =
-            document.querySelector(
-                `.size-checkbox[data-size="${item.size}"]`
-            );
-
-        const status =
-            document.querySelector(
-                `[data-size-status="${item.size}"]`
-            );
-
-
-        if (checkbox) {
-            checkbox.checked = true;
-        }
-
-
-        if (status) {
-
-            status.value =
-                item.available
-                    ? "true"
-                    : "false";
-
-        }
-
-    });
-
-
-    selectedFiles = [];
-
-
-    existingImages =
-        images || [];
-
-
-    renderExistingImages();
-
-
-    document.getElementById(
-        "selectedImages"
-    ).innerHTML = "";
-
-
-    productMessage.style.display =
-        "none";
-
-
-    productFormBox.classList.remove(
-        "hidden"
-    );
-
-
-    window.scrollTo({
-        top:
-            productFormBox.offsetTop - 20,
-        behavior: "smooth"
-    });
-
 }
 
 
-/* =========================
+/* =========================================================
    EXISTING IMAGES
-========================= */
+========================================================= */
 
 function renderExistingImages() {
 
@@ -2579,44 +2250,34 @@ function renderExistingImages() {
         existingImages.length === 0
     ) {
 
-        title.classList.add(
-            "hidden"
-        );
+        title.classList.add("hidden");
 
         return;
     }
 
 
-    title.classList.remove(
-        "hidden"
-    );
+    title.classList.remove("hidden");
 
 
     existingImages.forEach(
         (image, index) => {
 
             const wrapper =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
             wrapper.className =
                 "existing-image-box";
 
 
             const img =
-                document.createElement(
-                    "img"
-                );
+                document.createElement("img");
 
             img.src =
                 image.image_url;
 
 
             const number =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
             number.className =
                 "image-number";
@@ -2628,9 +2289,9 @@ function renderExistingImages() {
 
 
             const remove =
-                document.createElement(
-                    "button"
-                );
+                document.createElement("button");
+
+            remove.type = "button";
 
             remove.className =
                 "delete-existing-image";
@@ -2638,43 +2299,34 @@ function renderExistingImages() {
             remove.textContent =
                 "×";
 
-            remove.type =
-                "button";
 
-
-            remove.onclick =
+            remove.addEventListener(
+                "click",
                 function() {
 
                     deleteProductImage(
-                        image.id,
-                        image.image_url
+                        image.id
                     );
 
-                };
+                }
+            );
 
 
             wrapper.appendChild(img);
             wrapper.appendChild(number);
             wrapper.appendChild(remove);
 
-            container.appendChild(
-                wrapper
-            );
-
+            container.appendChild(wrapper);
         }
     );
-
 }
 
 
-/* =========================
-   DELETE PRODUCT IMAGE
-========================= */
+/* =========================================================
+   DELETE IMAGE
+========================================================= */
 
-async function deleteProductImage(
-    imageId,
-    imageUrl
-) {
+async function deleteProductImage(imageId) {
 
     const confirmed =
         confirm(
@@ -2715,13 +2367,12 @@ async function deleteProductImage(
 
 
     renderExistingImages();
-
 }
 
 
-/* =========================
+/* =========================================================
    TOGGLE PRODUCT
-========================= */
+========================================================= */
 
 async function toggleProduct(
     id,
@@ -2732,8 +2383,10 @@ async function toggleProduct(
         await supabaseClient
             .from("products")
             .update({
+
                 active:
                     !currentStatus
+
             })
             .eq(
                 "id",
@@ -2753,13 +2406,12 @@ async function toggleProduct(
 
 
     await loadProducts();
-
 }
 
 
-/* =========================
+/* =========================================================
    DELETE PRODUCT
-========================= */
+========================================================= */
 
 async function deleteProduct(id) {
 
@@ -2795,13 +2447,12 @@ async function deleteProduct(id) {
 
 
     await loadProducts();
-
 }
 
 
-/* =========================
+/* =========================================================
    ORDERS
-========================= */
+========================================================= */
 
 async function loadOrders() {
 
@@ -2825,14 +2476,19 @@ async function loadOrders() {
 
         ordersList.innerHTML =
             "<p>Erreur : " +
-            escapeHtml(error.message) +
+            escapeHtml(
+                error.message
+            ) +
             "</p>";
 
         return;
     }
 
 
-    if (!data || data.length === 0) {
+    if (
+        !data ||
+        data.length === 0
+    ) {
 
         ordersList.innerHTML =
             "<p>Aucune commande.</p>";
@@ -2862,7 +2518,11 @@ async function loadOrders() {
 
             const items =
                 typeof order.items === "string"
-                    ? JSON.parse(order.items)
+
+                    ? JSON.parse(
+                        order.items
+                    )
+
                     : order.items;
 
 
@@ -2871,36 +2531,23 @@ async function loadOrders() {
                 items.forEach(item => {
 
                     itemsHtml += `
+
                         <div>
-                            <strong>
-                                ${escapeHtml(
-                                    item.name ||
-                                    "Produit"
-                                )}
-                            </strong>
+
+                            ${escapeHtml(
+                                item.name ||
+                                "Produit"
+                            )}
 
                             ×
+
                             ${item.quantity || 1}
 
-                            ${
-                                item.size
-                                    ? `
-                                        <br>
-                                        <small>
-                                            Taille :
-                                            ${escapeHtml(
-                                                item.size
-                                            )}
-                                        </small>
-                                    `
-                                    : ""
-                            }
                         </div>
-                        <hr>
+
                     `;
 
                 });
-
             }
 
         }
@@ -2909,7 +2556,6 @@ async function loadOrders() {
 
             itemsHtml =
                 "<div>Produits indisponibles</div>";
-
         }
 
 
@@ -2919,40 +2565,63 @@ async function loadOrders() {
                 Commande #${order.id}
             </h3>
 
-            <p>
-                <strong>Date :</strong>
-                ${new Date(
-                    order.created_at
-                ).toLocaleString("fr-DZ")}
-            </p>
 
             <p>
+
+                <strong>Date :</strong>
+
+                ${new Date(
+                    order.created_at
+                ).toLocaleString(
+                    "fr-DZ"
+                )}
+
+            </p>
+
+
+            <p>
+
                 <strong>Client :</strong>
+
                 ${escapeHtml(
                     order.customer_name
                 )}
+
             </p>
 
+
             <p>
+
                 <strong>Téléphone :</strong>
+
                 ${escapeHtml(
                     order.customer_phone
                 )}
+
             </p>
 
+
             <p>
+
                 <strong>Wilaya :</strong>
+
                 ${escapeHtml(
                     order.customer_wilaya
                 )}
+
             </p>
 
+
             <p>
+
                 <strong>Adresse :</strong>
+
                 ${escapeHtml(
                     order.customer_address
                 )}
+
             </p>
+
 
             <div class="order-products">
 
@@ -2962,78 +2631,87 @@ async function loadOrders() {
 
             </div>
 
+
             <div class="total">
 
                 Total :
-                ${Number(order.total)
-                    .toLocaleString("fr-DZ")}
+
+                ${Number(
+                    order.total
+                ).toLocaleString(
+                    "fr-DZ"
+                )}
+
                 DA
 
             </div>
 
+
             <br>
 
+
             <label>
+
                 <strong>Statut :</strong>
+
             </label>
 
-            <select
-                onchange="
-                    updateOrderStatus(
-                        ${order.id},
-                        this.value
-                    )
-                ">
+
+            <select class="order-status-select"
+                data-id="${order.id}">
 
                 <option
                     value="new"
-                    ${
-                        order.status === "new"
-                            ? "selected"
-                            : ""
-                    }>
+                    ${order.status === "new"
+                        ? "selected"
+                        : ""}>
+
                     Nouvelle
+
                 </option>
+
 
                 <option
                     value="confirmed"
-                    ${
-                        order.status === "confirmed"
-                            ? "selected"
-                            : ""
-                    }>
+                    ${order.status === "confirmed"
+                        ? "selected"
+                        : ""}>
+
                     Confirmée
+
                 </option>
+
 
                 <option
                     value="out_for_delivery"
-                    ${
-                        order.status ===
-                        "out_for_delivery"
-                            ? "selected"
-                            : ""
-                    }>
+                    ${order.status === "out_for_delivery"
+                        ? "selected"
+                        : ""}>
+
                     En livraison
+
                 </option>
+
 
                 <option
                     value="completed"
-                    ${
-                        order.status === "completed"
-                            ? "selected"
-                            : ""
-                    }>
+                    ${order.status === "completed"
+                        ? "selected"
+                        : ""}>
+
                     Terminée
+
                 </option>
+
 
                 <option
                     value="cancelled"
-                    ${
-                        order.status === "cancelled"
-                            ? "selected"
-                            : ""
-                    }>
+                    ${order.status === "cancelled"
+                        ? "selected"
+                        : ""}>
+
                     Annulée
+
                 </option>
 
             </select>
@@ -3042,15 +2720,13 @@ async function loadOrders() {
 
 
         ordersList.appendChild(card);
-
     });
-
 }
 
 
-/* =========================
-   UPDATE ORDER
-========================= */
+/* =========================================================
+   UPDATE ORDER STATUS
+========================================================= */
 
 async function updateOrderStatus(
     id,
@@ -3079,17 +2755,15 @@ async function updateOrderStatus(
         return;
     }
 
-
     alert(
         "Statut de la commande mis à jour."
     );
-
 }
 
 
-/* =========================
-   BUTTONS
-========================= */
+/* =========================================================
+   BUTTON EVENTS
+========================================================= */
 
 document
     .getElementById("loginBtn")
@@ -3111,16 +2785,15 @@ document
     .getElementById("showForgotBtn")
     .addEventListener(
         "click",
-        () => {
+        function() {
 
-            loginSection
-                .classList
-                .add("hidden");
+            loginSection.classList.add(
+                "hidden"
+            );
 
-            forgotSection
-                .classList
-                .remove("hidden");
-
+            forgotSection.classList.remove(
+                "hidden"
+            );
         }
     );
 
@@ -3129,16 +2802,15 @@ document
     .getElementById("backToLoginBtn")
     .addEventListener(
         "click",
-        () => {
+        function() {
 
-            forgotSection
-                .classList
-                .add("hidden");
+            forgotSection.classList.add(
+                "hidden"
+            );
 
-            loginSection
-                .classList
-                .remove("hidden");
-
+            loginSection.classList.remove(
+                "hidden"
+            );
         }
     );
 
@@ -3183,9 +2855,120 @@ document
     );
 
 
-/* =========================
+/* =========================================================
+   PRODUCT BUTTONS
+   EVENT DELEGATION
+========================================================= */
+
+productsList.addEventListener(
+    "click",
+    async function(event) {
+
+        const editButton =
+            event.target.closest(
+                ".edit-product-btn"
+            );
+
+
+        if (editButton) {
+
+            const id =
+                Number(
+                    editButton.dataset.id
+                );
+
+            await editProduct(id);
+
+            return;
+        }
+
+
+        const toggleButton =
+            event.target.closest(
+                ".toggle-product-btn"
+            );
+
+
+        if (toggleButton) {
+
+            const id =
+                Number(
+                    toggleButton.dataset.id
+                );
+
+            const status =
+                toggleButton.dataset.status ===
+                "true";
+
+
+            await toggleProduct(
+                id,
+                status
+            );
+
+            return;
+        }
+
+
+        const deleteButton =
+            event.target.closest(
+                ".delete-product-btn"
+            );
+
+
+        if (deleteButton) {
+
+            const id =
+                Number(
+                    deleteButton.dataset.id
+                );
+
+            await deleteProduct(id);
+
+            return;
+        }
+
+    }
+);
+
+
+/* =========================================================
+   ORDER BUTTONS
+========================================================= */
+
+ordersList.addEventListener(
+    "change",
+    async function(event) {
+
+        const select =
+            event.target.closest(
+                ".order-status-select"
+            );
+
+
+        if (!select) {
+            return;
+        }
+
+
+        const id =
+            Number(
+                select.dataset.id
+            );
+
+
+        await updateOrderStatus(
+            id,
+            select.value
+        );
+
+    }
+);
+
+
+/* =========================================================
    SESSION
-========================= */
+========================================================= */
 
 async function checkSession() {
 
@@ -3203,13 +2986,12 @@ async function checkSession() {
         await showAdmin();
 
     }
-
 }
 
 
-/* =========================
+/* =========================================================
    AUTH STATE
-========================= */
+========================================================= */
 
 supabaseClient.auth.onAuthStateChange(
     async (
@@ -3223,7 +3005,6 @@ supabaseClient.auth.onAuthStateChange(
         ) {
 
             await showAdmin();
-
         }
 
 
@@ -3233,7 +3014,6 @@ supabaseClient.auth.onAuthStateChange(
         ) {
 
             await showAdmin();
-
         }
 
 
@@ -3241,23 +3021,22 @@ supabaseClient.auth.onAuthStateChange(
             event === "SIGNED_OUT"
         ) {
 
-            adminSection
-                .classList
-                .add("hidden");
+            adminSection.classList.add(
+                "hidden"
+            );
 
-            loginSection
-                .classList
-                .remove("hidden");
-
+            loginSection.classList.remove(
+                "hidden"
+            );
         }
 
     }
 );
 
 
-/* =========================
+/* =========================================================
    START
-========================= */
+========================================================= */
 
 checkSession();
 
