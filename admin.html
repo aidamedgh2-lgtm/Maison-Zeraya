@@ -1124,6 +1124,12 @@ button {
 <div id="reservationsList">Chargement des réservations...</div>
 </div>
 
+<div class="box">
+<h2 class="section-title">⭐ Avis clients</h2>
+<p class="small-note">Les avis ne sont publiés qu'après votre validation.</p>
+<div id="reviewsList">Chargement des avis...</div>
+</div>
+
 </div>
 
 </div>
@@ -1176,6 +1182,9 @@ const productsList =
 
 const ordersList =
     document.getElementById("ordersList");
+
+const reviewsList =
+    document.getElementById("reviewsList");
 
 
 function renderPackOptions(selectedIds=[]){
@@ -1299,6 +1308,58 @@ async function loadReservationsAdmin(){
     }).join("");
 
     box.innerHTML=rankingHtml+detailsHtml;
+}
+
+async function loadReviewsAdmin(){
+    if(!reviewsList)return;
+
+    const {data,error}=await supabaseClient
+        .from("reviews")
+        .select("*, products(name)")
+        .order("created_at",{ascending:false});
+
+    if(error){
+        reviewsList.textContent="Erreur : "+error.message;
+        return;
+    }
+
+    if(!data?.length){
+        reviewsList.innerHTML="<p>Aucun avis pour le moment.</p>";
+        return;
+    }
+
+    reviewsList.innerHTML=data.map(review=>`
+        <div class="order-card">
+            <strong>${escapeHtml(review.products?.name || "Produit")}</strong>
+            <div class="small-note">
+                Commande #${review.order_id} · ${new Date(review.created_at).toLocaleString("fr-DZ")}
+            </div>
+            <div style="margin-top:8px;font-size:20px;">${"★".repeat(Number(review.rating))}${"☆".repeat(5-Number(review.rating))}</div>
+            <p style="margin-top:8px;">${escapeHtml(review.comment || "")}</p>
+            <div class="small-note">Nom affiché : ${escapeHtml(review.display_name || "Client")}</div>
+            <div style="margin-top:10px;">
+                <span class="status ${review.status==="published"?"status-available":"status-unavailable"}">${escapeHtml(review.status)}</span>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+                ${review.status!=="published" ? `<button type="button" class="main-btn review-status-btn" data-id="${review.id}" data-status="published">✓ Publier</button>` : ""}
+                ${review.status!=="rejected" ? `<button type="button" class="gray-btn review-status-btn" data-id="${review.id}" data-status="rejected">Refuser</button>` : ""}
+            </div>
+        </div>
+    `).join("");
+}
+
+async function updateReviewStatus(id,status){
+    const {error}=await supabaseClient
+        .from("reviews")
+        .update({status})
+        .eq("id",id);
+
+    if(error){
+        alert("Erreur : "+error.message);
+        return;
+    }
+
+    await loadReviewsAdmin();
 }
 
 /* =========================================================
@@ -1500,6 +1561,7 @@ async function login() {
 async function showAdmin() {
     await loadDashboardStats();
     await loadReservationsAdmin();
+    await loadReviewsAdmin();
 
     loginSection.classList.add("hidden");
     forgotSection.classList.add("hidden");
@@ -3369,7 +3431,7 @@ async function loadOrders() {
                     ${order.status === "completed"
                         ? "selected"
                         : ""}>
-                    Terminée
+                    Livrée
                 </option>
 
                 <option
@@ -3382,6 +3444,18 @@ async function loadOrders() {
 
             </select>
 
+            ${order.status === "completed" && order.review_token ? `
+                <div style="margin-top:10px;">
+                    <button
+                        type="button"
+                        class="gray-btn"
+                        onclick="copyReviewLink('${order.review_token}')"
+                    >
+                        🔗 Copier le lien d'avis
+                    </button>
+                </div>
+            ` : ""}
+
         `;
 
 
@@ -3389,6 +3463,16 @@ async function loadOrders() {
     });
 }
 
+
+async function copyReviewLink(token){
+    const url="https://maison-zeraya.pages.dev/?review="+encodeURIComponent(token);
+    try{
+        await navigator.clipboard.writeText(url);
+        alert("Lien d'avis copié. Vous pouvez l'envoyer à la cliente.");
+    }catch(error){
+        window.prompt("Copiez ce lien :",url);
+    }
+}
 
 /* =========================================================
    UPDATE ORDER STATUS
@@ -3422,8 +3506,13 @@ async function updateOrderStatus(
     }
 
     alert(
-        "Statut de la commande mis à jour."
+        status === "completed"
+            ? "Commande marquée comme livrée. Le lien d'avis est maintenant disponible."
+            : "Statut de la commande mis à jour."
     );
+
+    await loadOrders();
+    await loadReviewsAdmin();
 }
 
 
@@ -3633,6 +3722,12 @@ ordersList.addEventListener(
     }
 );
 
+
+reviewsList?.addEventListener("click",async function(event){
+    const button=event.target.closest(".review-status-btn");
+    if(!button)return;
+    await updateReviewStatus(Number(button.dataset.id),button.dataset.status);
+});
 
 /* =========================================================
    SESSION
