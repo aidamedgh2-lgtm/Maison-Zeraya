@@ -1213,7 +1213,7 @@ function updatePackVisibility(){
     document.getElementById("packItemsBox")?.classList.toggle("hidden",!checked);
 }
 async function loadDashboardStats(){
-    const {data:orders,error}=await supabaseClient.from("orders").select("id,total,status,created_at,items");
+    const {data:orders,error}=await supabaseClient.from("orders").select("id,total,status,created_at,items,customer_name");
     if(error){console.error(error);return;}
     const rows=orders||[];
     const isTestOrder=order => String(order?.customer_name||"").trim().toLowerCase()==="test1";
