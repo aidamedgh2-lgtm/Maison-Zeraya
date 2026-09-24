@@ -5150,7 +5150,7 @@ async function submitOrder(){
             error
         } = await supabaseClient
             .from("orders")
-            .insert([orderData], { returning: "minimal" });
+            .insert([orderData]);
 
         if(error){
             throw error;
@@ -5175,8 +5175,15 @@ async function submitOrder(){
             error
         );
 
+        const message =
+            error?.message ||
+            error?.details ||
+            error?.hint ||
+            "Erreur inconnue";
+
         alert(
-            "Une erreur est survenue lors de l'enregistrement de votre commande. Veuillez réessayer."
+            "Erreur lors de l'enregistrement de la commande : " +
+            message
         );
 
         orderSubmitting = false;
