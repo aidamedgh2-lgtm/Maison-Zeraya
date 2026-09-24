@@ -1110,6 +1110,9 @@ button {
         🧾 Commandes
     </h2>
 
+    <p class="small-note">Les commandes dont le nom client est <strong>Test1</strong> (sans tenir compte des majuscules/minuscules ni des espaces autour) sont considérées comme des commandes de test.</p>
+    <button type="button" class="danger-btn" id="deleteTestOrdersBtn">🗑️ Supprimer les commandes Test1</button>
+
     <div id="ordersList">
         Chargement des commandes...
     </div>
@@ -1213,7 +1216,9 @@ async function loadDashboardStats(){
     const {data:orders,error}=await supabaseClient.from("orders").select("id,total,status,created_at,items");
     if(error){console.error(error);return;}
     const rows=orders||[];
-    const valid=rows.filter(o=>o.status!=="cancelled");
+    const isTestOrder=order => String(order?.customer_name||"").trim().toLowerCase()==="test1";
+    const realRows=rows.filter(o=>!isTestOrder(o));
+    const valid=realRows.filter(o=>o.status!=="cancelled");
     const now=new Date();
     const today=now.toLocaleDateString("en-CA");
     const month=now.toISOString().slice(0,7);
@@ -1223,7 +1228,7 @@ async function loadDashboardStats(){
     document.getElementById("statOrdersToday").textContent=todayRows.length;
     document.getElementById("statSalesToday").textContent=sum(todayRows).toLocaleString("fr-DZ")+" DA";
     document.getElementById("statSalesMonth").textContent=sum(monthRows).toLocaleString("fr-DZ")+" DA";
-    document.getElementById("statCancelled").textContent=rows.filter(o=>o.status==="cancelled").length;
+    document.getElementById("statCancelled").textContent=realRows.filter(o=>o.status==="cancelled").length;
     document.getElementById("statRevenue").textContent=sum(valid).toLocaleString("fr-DZ")+" DA";
     const counts={};
     valid.forEach(order=>{
@@ -3224,6 +3229,8 @@ async function loadOrders() {
         card.className =
             "order-card";
 
+        const isTest = String(order.customer_name || "").trim().toLowerCase() === "test1";
+
 
         let itemsHtml = "";
 
@@ -3280,7 +3287,7 @@ async function loadOrders() {
         card.innerHTML = `
 
             <h3>
-                Commande #${order.id}
+                Commande #${order.id} ${isTest ? "🧪 TEST" : ""}
             </h3>
 
 
@@ -3472,6 +3479,50 @@ async function copyReviewLink(token){
     }catch(error){
         window.prompt("Copiez ce lien :",url);
     }
+}
+
+/* =========================================================
+   TEST ORDERS
+========================================================= */
+
+async function deleteTestOrders(){
+    const confirmed = confirm(
+        "Supprimer toutes les commandes dont le nom client est Test1 ?\n\nCette action est définitive. Les produits ne seront pas supprimés."
+    );
+    if(!confirmed) return;
+
+    const {data,error} = await supabaseClient
+        .from("orders")
+        .select("id,customer_name");
+
+    if(error){
+        alert("Erreur lors du chargement des commandes : " + error.message);
+        return;
+    }
+
+    const testIds = (data || [])
+        .filter(order => String(order.customer_name || "").trim().toLowerCase() === "test1")
+        .map(order => order.id);
+
+    if(!testIds.length){
+        alert("Aucune commande Test1 à supprimer.");
+        return;
+    }
+
+    const {error:deleteError} = await supabaseClient
+        .from("orders")
+        .delete()
+        .in("id", testIds);
+
+    if(deleteError){
+        alert("Erreur lors de la suppression : " + deleteError.message);
+        return;
+    }
+
+    alert(testIds.length + " commande(s) de test supprimée(s).");
+    await loadOrders();
+    await loadDashboardStats();
+    await loadReviewsAdmin();
 }
 
 /* =========================================================
@@ -3688,6 +3739,8 @@ productsList.addEventListener(
     }
 );
 
+
+document.getElementById("deleteTestOrdersBtn")?.addEventListener("click", deleteTestOrders);
 
 /* =========================================================
    ORDER BUTTONS
