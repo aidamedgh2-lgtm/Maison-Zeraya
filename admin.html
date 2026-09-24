@@ -2276,6 +2276,9 @@ async function loadProducts() {
     }
 
 
+    window.adminProducts = data || [];
+    renderPackOptions([]);
+
     productsList.innerHTML = "";
 
 
