@@ -5147,21 +5147,17 @@ async function submitOrder(){
     try{
 
         const {
-            data:insertedOrder,
             error
         } = await supabaseClient
             .from("orders")
-            .insert([orderData])
-            .select()
-            .single();
+            .insert([orderData]);
 
         if(error){
             throw error;
         }
 
         console.log(
-            "Commande enregistrée:",
-            insertedOrder
+            "Commande enregistrée."
         );
 
         cart = [];
