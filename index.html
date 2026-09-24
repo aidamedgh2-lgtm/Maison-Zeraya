@@ -5150,7 +5150,7 @@ async function submitOrder(){
             error
         } = await supabaseClient
             .from("orders")
-            .insert([orderData]);
+            .insert([orderData], { returning: "minimal" });
 
         if(error){
             throw error;
