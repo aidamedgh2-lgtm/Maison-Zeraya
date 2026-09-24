@@ -1602,6 +1602,11 @@ function resetProductForm() {
         "editingProductId"
     ).value = "";
 
+    document.getElementById("productColors").value = "";
+    document.getElementById("productIsPack").checked = false;
+    renderPackOptions([]);
+    updatePackVisibility();
+
     document.getElementById(
         "productName"
     ).value = "";
