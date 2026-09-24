@@ -584,6 +584,17 @@ button {
 
 </div>
 
+<div class="box">
+<h2>📊 Statistiques</h2>
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-label">Commandes aujourd'hui</div><div class="stat-value" id="statOrdersToday">—</div></div>
+<div class="stat-card"><div class="stat-label">Ventes aujourd'hui</div><div class="stat-value" id="statSalesToday">—</div></div>
+<div class="stat-card"><div class="stat-label">Ventes ce mois</div><div class="stat-value" id="statSalesMonth">—</div></div>
+<div class="stat-card"><div class="stat-label">Commandes annulées</div><div class="stat-value" id="statCancelled">—</div></div>
+<div class="stat-card"><div class="stat-label">Chiffre d'affaires total</div><div class="stat-value" id="statRevenue">—</div></div>
+<div class="stat-card"><div class="stat-label">Produit le plus demandé</div><div class="stat-value" id="statTopProduct" style="font-size:16px;">—</div></div>
+</div>
+</div>
 
 <!-- PASSWORD -->
 
@@ -1098,6 +1109,14 @@ button {
 
 </div>
 
+<div class="box">
+<h2 class="section-title">🔖 Réservations</h2>
+<p class="small-note">Une notification Telegram est envoyée automatiquement lorsqu'un produit atteint 6 réservations en attente.</p>
+<div id="reservationsList">Chargement des réservations...</div>
+</div>
+
+</div>
+
 </div>
 
 
@@ -1172,6 +1191,48 @@ function updatePackVisibility(){
     const checked=document.getElementById("productIsPack")?.checked;
     document.getElementById("packItemsBox")?.classList.toggle("hidden",!checked);
 }
+async function loadDashboardStats(){
+    const {data:orders,error}=await supabaseClient.from("orders").select("id,total,status,created_at,items");
+    if(error){console.error(error);return;}
+    const rows=orders||[];
+    const valid=rows.filter(o=>o.status!=="cancelled");
+    const now=new Date();
+    const today=now.toLocaleDateString("en-CA");
+    const month=now.toISOString().slice(0,7);
+    const todayRows=valid.filter(o=>new Date(o.created_at).toLocaleDateString("en-CA")===today);
+    const monthRows=valid.filter(o=>String(o.created_at).slice(0,7)===month);
+    const sum=list=>list.reduce((s,o)=>s+Number(o.total||0),0);
+    document.getElementById("statOrdersToday").textContent=todayRows.length;
+    document.getElementById("statSalesToday").textContent=sum(todayRows).toLocaleString("fr-DZ")+" DA";
+    document.getElementById("statSalesMonth").textContent=sum(monthRows).toLocaleString("fr-DZ")+" DA";
+    document.getElementById("statCancelled").textContent=rows.filter(o=>o.status==="cancelled").length;
+    document.getElementById("statRevenue").textContent=sum(valid).toLocaleString("fr-DZ")+" DA";
+    const counts={};
+    valid.forEach(order=>{
+        let items=order.items;
+        if(typeof items==="string"){try{items=JSON.parse(items)}catch(e){items=[]}}
+        if(Array.isArray(items))items.forEach(item=>{
+            const name=String(item?.name||"Produit");
+            counts[name]=(counts[name]||0)+(Number(item?.quantity)||1);
+        });
+    });
+    const top=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];
+    document.getElementById("statTopProduct").textContent=top?top[0]+" ("+top[1]+" unités)":"—";
+}
+async function loadReservationsAdmin(){
+    const box=document.getElementById("reservationsList");
+    if(!box)return;
+    const {data,error}=await supabaseClient.from("reservations").select("*").order("created_at",{ascending:false});
+    if(error){box.textContent="Erreur : "+error.message;return;}
+    if(!data?.length){box.innerHTML="<p>Aucune réservation.</p>";return;}
+    const counts={};
+    data.filter(r=>r.status==="pending").forEach(r=>counts[r.product_id]=(counts[r.product_id]||0)+1);
+    box.innerHTML=data.map(r=>{
+        const count=counts[r.product_id]||0;
+        return '<div class="order-card"><strong>'+escapeHtml(r.product_name)+'</strong><div class="small-note">'+(r.size?"Taille : "+escapeHtml(r.size)+" · ":"")+(r.color?"Couleur : "+escapeHtml(r.color)+" · ":"")+new Date(r.created_at).toLocaleString("fr-DZ")+'</div><div style="margin-top:8px;"><span class="status '+(r.status==="pending"?"status-unavailable":"status-available")+'">'+escapeHtml(r.status)+'</span> <strong>En attente : '+count+'</strong></div></div>';
+    }).join("");
+}
+
 /* =========================================================
    MESSAGE
 ========================================================= */
@@ -1369,6 +1430,8 @@ async function login() {
 ========================================================= */
 
 async function showAdmin() {
+    await loadDashboardStats();
+    await loadReservationsAdmin();
 
     loginSection.classList.add("hidden");
     forgotSection.classList.add("hidden");
