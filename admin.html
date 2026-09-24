@@ -342,6 +342,14 @@ button {
     grid-template-columns: 1fr 1fr;
     gap: 12px;
 }
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.stat-card{background:#f5f8f7;border:1px solid #e1e7e5;border-radius:12px;padding:15px;}
+.stat-label{font-size:12px;color:#666;}
+.stat-value{font-size:24px;font-weight:bold;color:#123f3a;margin-top:5px;}
+.pack-options{background:#f5f8f7;border:1px solid #e1e7e5;border-radius:10px;padding:12px;max-height:240px;overflow:auto;}
+.pack-option{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #e1e7e5;}
+@media(max-width:700px){.stats-grid{grid-template-columns:1fr 1fr;}}
+
 
 .checkbox-box {
     display: flex;
@@ -764,6 +772,9 @@ button {
 
     </div>
 
+    <label><strong>🎨 Couleurs disponibles</strong></label>
+    <input type="text" id="productColors" placeholder="Ex : Noir, Blanc, Rouge">
+    <p class="small-note">Séparez les couleurs par des virgules.</p>
 
     <!-- ================= MULTIPLE SIZES ================= -->
 
@@ -920,6 +931,16 @@ button {
         pour ce modèle.
     </p>
 
+
+    <!-- ================= PACK ================= -->
+    <div class="checkbox-box">
+        <input type="checkbox" id="productIsPack">
+        <label for="productIsPack">🎁 Ce produit est un Pack</label>
+    </div>
+    <div id="packItemsBox" class="hidden">
+        <label><strong>Produits inclus dans le Pack</strong></label>
+        <div id="packItemsOptions" class="pack-options">Aucun produit disponible.</div>
+    </div>
 
     <!-- ================= AVAILABILITY ================= -->
 
@@ -1129,6 +1150,28 @@ const ordersList =
     document.getElementById("ordersList");
 
 
+function renderPackOptions(selectedIds=[]){
+    const box=document.getElementById("packItemsOptions");
+    if(!box)return;
+    const currentId=Number(document.getElementById("editingProductId")?.value||0);
+    const list=(window.adminProducts||[]).filter(p=>Number(p.id)!==currentId);
+    if(!list.length){box.textContent="Aucun autre produit disponible.";return;}
+    box.innerHTML="";
+    list.forEach(product=>{
+        const label=document.createElement("label");
+        label.className="pack-option";
+        label.innerHTML='<input type="checkbox" class="pack-product-checkbox" value="'+product.id+'"> <span>'+escapeHtml(product.name)+' — '+Number(product.price||0).toLocaleString("fr-DZ")+' DA</span>';
+        label.querySelector("input").checked=selectedIds.map(Number).includes(Number(product.id));
+        box.appendChild(label);
+    });
+}
+function getSelectedPackItems(){
+    return Array.from(document.querySelectorAll(".pack-product-checkbox:checked")).map(input=>({product_id:Number(input.value),quantity:1}));
+}
+function updatePackVisibility(){
+    const checked=document.getElementById("productIsPack")?.checked;
+    document.getElementById("packItemsBox")?.classList.toggle("hidden",!checked);
+}
 /* =========================================================
    MESSAGE
 ========================================================= */
@@ -1796,6 +1839,11 @@ async function saveProduct() {
             "productBadge"
         ).value || null;
 
+    const colorsText = document.getElementById("productColors").value.trim();
+    const colors = colorsText ? colorsText.split(",").map(v=>v.trim()).filter(Boolean) : [];
+    const isPack = document.getElementById("productIsPack").checked;
+    const packItems = isPack ? getSelectedPackItems() : [];
+
     /* المقاسات الجديدة */
     const sizes =
         getSelectedSizes();
@@ -1937,6 +1985,9 @@ async function saveProduct() {
                         old_price,
                         category,
                         badge,
+                        colors,
+                        is_pack:isPack,
+                        pack_items:packItems,
 
                         /* Nouveau */
                         sizes,
@@ -2556,6 +2607,12 @@ async function editProduct(id) {
             "productBadge"
         ).value =
             product.badge || "";
+
+        document.getElementById("productColors").value =
+            Array.isArray(product.colors) ? product.colors.join(", ") : "";
+        document.getElementById("productIsPack").checked = product.is_pack === true;
+        updatePackVisibility();
+        renderPackOptions((product.pack_items||[]).map(item=>item.product_id));
 
 
         /* ================= SIZES ================= */
@@ -3216,6 +3273,8 @@ async function updateOrderStatus(
 /* =========================================================
    BUTTON EVENTS
 ========================================================= */
+
+document.getElementById("productIsPack")?.addEventListener("change",updatePackVisibility);
 
 document
     .getElementById("loginBtn")
