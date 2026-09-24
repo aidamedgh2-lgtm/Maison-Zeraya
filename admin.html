@@ -2972,14 +2972,18 @@ async function loadOrders() {
 
                         <div>
 
-                            ${escapeHtml(
-                                item.name ||
-                                "Produit"
-                            )}
+                            <strong>
+                                ${escapeHtml(
+                                    item.name ||
+                                    "Produit"
+                                )}
+                            </strong>
 
-                            ×
+                            × ${item.quantity || 1}
 
-                            ${item.quantity || 1}
+                            ${item.size ? `<div>📏 Taille : ${escapeHtml(item.size)}</div>` : ""}
+
+                            ${item.color ? `<div>🎨 Couleur : ${escapeHtml(item.color)}</div>` : ""}
 
                         </div>
 
@@ -3054,11 +3058,36 @@ async function loadOrders() {
 
                 <strong>Adresse :</strong>
 
-                ${escapeHtml(
+                ${
                     order.customer_address
-                )}
+                        ? escapeHtml(order.customer_address)
+                        : "Non renseignée (Stop-desk)"
+                }
 
             </p>
+
+            <p>
+
+                <strong>Livraison :</strong>
+
+                ${
+                    order.delivery_mode === "stopdesk"
+                        ? "Stop-desk / Bureau"
+                        : "Domicile"
+                }
+
+            </p>
+
+            ${
+                order.special_request
+                    ? `
+                        <p>
+                            <strong>Demande spéciale :</strong>
+                            ${escapeHtml(order.special_request)}
+                        </p>
+                      `
+                    : ""
+            }
 
 
             <div class="order-products">
