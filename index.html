@@ -2029,6 +2029,15 @@
                     AJOUTER AU PANIER
                 </button>
 
+                <button
+                    class="btn-secondary hidden"
+                    id="reserveProductBtn"
+                    style="width:100%;margin-top:9px;"
+                    type="button"
+                >
+                    🔖 RÉSERVER QUAND IL SERA DISPONIBLE
+                </button>
+
             </div>
 
         </div>
@@ -2065,6 +2074,20 @@
 
     </div>
 
+</div>
+
+<!-- =========================
+     RESERVATION MODAL
+========================= -->
+
+<div class="modal-overlay" id="reservationModal">
+    <div class="modal cart-panel">
+        <div class="cart-head">
+            <h2 class="cart-title">Mes réservations</h2>
+            <button class="modal-close" style="position:static;" onclick="closeReservations()">×</button>
+        </div>
+        <div class="cart-body" id="reservationBody"></div>
+    </div>
 </div>
 
 <!-- =========================
@@ -2125,6 +2148,7 @@ const supabaseClient =
 
 const CART_KEY = "maisonZerayaCart";
 const FAVORITES_KEY = "maisonZerayaFavorites";
+const RESERVATIONS_KEY = "maisonZerayaReservations";
 
 /* =========================================================
    STATE
@@ -2135,6 +2159,7 @@ let filteredProducts = [];
 
 let cart = loadCart();
 let favorites = loadFavorites();
+let reservations = loadReservations();
 
 let currentCategory = "all";
 let currentSearch = "";
@@ -2890,6 +2915,116 @@ function getCartTotal(){
 }
 
 /* =========================================================
+   RESERVATIONS
+========================================================= */
+
+function loadReservations(){
+    try{
+        const raw=localStorage.getItem(RESERVATIONS_KEY);
+        const parsed=raw?JSON.parse(raw):[];
+        return Array.isArray(parsed)?parsed:[];
+    }catch(e){return [];}
+}
+function saveReservations(){
+    localStorage.setItem(RESERVATIONS_KEY,JSON.stringify(reservations));
+    updateReservationCount();
+}
+function updateReservationCount(){
+    const badge=document.getElementById("reservationCount");
+    if(!badge)return;
+    badge.textContent=reservations.length;
+    badge.classList.toggle("hidden",reservations.length<=0);
+}
+function isProductOutOfStock(product){
+    return product?.available===false ||
+        (product?.stock!==null && product?.stock!==undefined && Number(product.stock)<=0);
+}
+async function reserveCurrentProduct(){
+    if(!currentProduct)return;
+    if(!isProductOutOfStock(currentProduct)){
+        alert("Ce produit est actuellement disponible.");
+        return;
+    }
+    const reservation={
+        id:"R-"+Date.now()+"-"+Math.random().toString(36).slice(2,8),
+        product_id:currentProduct.id,
+        product_name:currentProduct.name,
+        size:selectedSize||null,
+        color:selectedColor||null,
+        created_at:new Date().toISOString()
+    };
+    const duplicate=reservations.some(item =>
+        String(item.product_id)===String(reservation.product_id) &&
+        String(item.size||"")===String(reservation.size||"") &&
+        String(item.color||"")===String(reservation.color||"")
+    );
+    if(duplicate){
+        alert("Ce produit est déjà dans votre liste de réservation.");
+        return;
+    }
+    const {error}=await supabaseClient.from("reservations").insert([{
+        product_id:reservation.product_id,
+        product_name:reservation.product_name,
+        size:reservation.size,
+        color:reservation.color,
+        status:"pending"
+    }]);
+    if(error){
+        console.error(error);
+        alert("Impossible d'enregistrer la réservation pour le moment.");
+        return;
+    }
+    reservations.push(reservation);
+    saveReservations();
+    try{
+        await fetch(SUPABASE_URL+"/functions/v1/check-reservation-threshold",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({product_id:currentProduct.id})
+        });
+    }catch(e){console.warn("Notification réservation:",e);}
+    alert("Produit ajouté à votre liste de réservation.");
+    closeProductModal();
+    openReservations();
+}
+function removeReservation(index){
+    reservations.splice(index,1);
+    saveReservations();
+    renderReservations();
+}
+function renderReservations(){
+    const body=document.getElementById("reservationBody");
+    if(!body)return;
+    if(!reservations.length){
+        body.innerHTML='<div class="empty-cart"><div class="empty-cart-icon">🔖</div><div style="font-size:14px;font-weight:bold;color:#123f3a;">Aucune réservation</div><div style="font-size:11px;margin-top:8px;">Les produits en rupture peuvent être réservés ici.</div></div>';
+        return;
+    }
+    let html="";
+    reservations.forEach((item,index)=>{
+        const product=products.find(p=>String(p.id)===String(item.product_id));
+        const available=product?!isProductOutOfStock(product):false;
+        html+='<div class="cart-item">';
+        html+='<div class="cart-item-image" style="display:flex;align-items:center;justify-content:center;font-size:24px;">'+(available?"✅":"🔖")+'</div>';
+        html+='<div><div class="cart-item-name">'+escapeHtml(item.product_name)+'</div>';
+        html+='<div class="cart-item-meta">';
+        if(item.color)html+='Couleur : '+escapeHtml(item.color)+'<br>';
+        if(item.size)html+='Taille : '+escapeHtml(item.size)+'<br>';
+        html+=available?'<strong style="color:#17633f;">✅ Ce produit est disponible maintenant.</strong>':'⏳ En attente de disponibilité';
+        html+='</div><button class="remove-item" onclick="removeReservation('+index+')">Supprimer</button></div></div>';
+    });
+    body.innerHTML=html;
+}
+function openReservations(){
+    renderReservations();
+    document.getElementById("reservationModal")?.classList.add("active");
+    document.body.style.overflow="hidden";
+}
+function closeReservations(){
+    document.getElementById("reservationModal")?.classList.remove("active");
+    document.body.style.overflow="";
+}
+
+/* =========================================================
    NAVIGATION
 ========================================================= */
 
@@ -3350,6 +3485,8 @@ function renderProducts(){
                     ${escapeHtml(product.description || "")}
                 </div>
 
+                ${isProductOutOfStock(product) ? '<div style="color:#b83232;font-size:10px;font-weight:bold;margin-top:7px;">RUPTURE DE STOCK — RÉSERVATION POSSIBLE</div>' : ''}
+
                 <div class="product-prices">
 
                     <span class="price">
@@ -3642,6 +3779,14 @@ function openProduct(productId){
 
     renderColorOptions(product);
     renderSizeOptions(product);
+
+    const reserveButton=document.getElementById("reserveProductBtn");
+    if(reserveButton){
+        const outOfStock=isProductOutOfStock(product);
+        reserveButton.classList.toggle("hidden",!outOfStock);
+        reserveButton.onclick=reserveCurrentProduct;
+    }
+
     updateGallery();
 
     document
@@ -5328,6 +5473,8 @@ document
         }
     );
 
+document.getElementById("reservationBtn")?.addEventListener("click",openReservations);
+
 /* =========================================================
    PRODUCT EVENTS
 ========================================================= */
@@ -5462,6 +5609,7 @@ document.addEventListener(
         closeProductModal();
         closeCart();
         closeCheckout();
+        closeReservations();
     }
 );
 
