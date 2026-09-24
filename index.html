@@ -5542,14 +5542,19 @@ function renderReviewPage(data){
             const productId=button.dataset.reviewProduct;
             const rating=Number(button.dataset.reviewRating);
             const container=document.querySelector(`[data-review-stars="${productId}"]`);
-            if(container)container.innerHTML=renderReviewStars(productId,rating);
+            if(container){
+                container.dataset.selectedRating=String(rating);
+                container.innerHTML=renderReviewStars(productId,rating);
+            }
             container?.querySelectorAll("[data-review-rating]").forEach(b=>{
                 b.addEventListener("click",()=>{
                     const next=Number(b.dataset.reviewRating);
+                    container.dataset.selectedRating=String(next);
                     container.innerHTML=renderReviewStars(productId,next);
                     container.querySelectorAll("[data-review-rating]").forEach(nb=>{
                         nb.addEventListener("click",()=>{
                             const v=Number(nb.dataset.reviewRating);
+                            container.dataset.selectedRating=String(v);
                             container.innerHTML=renderReviewStars(productId,v);
                         });
                     });
@@ -5598,17 +5603,8 @@ async function initReviewFromUrl(){
 async function submitProductReview(productId){
     if(!activeReviewToken)return;
 
-    const ratingButton=document.querySelector(`[data-review-stars="${productId}"] button[data-review-rating][style*="c7a15a"]`);
-    let rating=ratingButton ? Number(ratingButton.dataset.reviewRating) : 0;
-
-    /* Fallback: inspect all stars and use the highest highlighted star. */
-    if(!rating){
-        const stars=document.querySelectorAll(`[data-review-stars="${productId}"] button[data-review-rating]`);
-        stars.forEach(s=>{
-            const style=s.getAttribute("style")||"";
-            if(style.includes("c7a15a"))rating=Math.max(rating,Number(s.dataset.reviewRating));
-        });
-    }
+    const container=document.querySelector(`[data-review-stars="${productId}"]`);
+    const rating=Number(container?.dataset.selectedRating || 0);
 
     if(!rating){
         alert("Veuillez choisir une note de 1 à 5 étoiles.");
