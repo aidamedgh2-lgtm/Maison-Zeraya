@@ -2148,6 +2148,8 @@ let selectedColor = null;
 
 let selectedDeliveryMode = "domicile";
 
+let checkoutFormData = null;
+
 let orderSubmitting = false;
 
 /* =========================================================
@@ -4153,6 +4155,8 @@ function openCheckout(){
 
     selectedDeliveryMode = "domicile";
 
+    checkoutFormData = null;
+
     orderSubmitting = false;
 
     renderCheckoutForm();
@@ -4765,6 +4769,8 @@ function showCheckoutReview(){
         return;
     }
 
+    saveCheckoutFormData();
+
     const body =
         document.getElementById("checkoutBody");
 
@@ -4996,57 +5002,64 @@ function showCheckoutReview(){
    RETURN TO FORM WITHOUT LOSING DATA
 ========================================================= */
 
+function saveCheckoutFormData(){
+
+    checkoutFormData = {
+        name:
+            document
+                .getElementById("customer-name")
+                ?.value || "",
+        phone:
+            document
+                .getElementById("customer-phone")
+                ?.value || "",
+        wilaya:
+            document
+                .getElementById("customer-wilaya")
+                ?.value || "",
+        address:
+            document
+                .getElementById("customer-address")
+                ?.value || "",
+        specialRequest:
+            document
+                .getElementById("special-request")
+                ?.value || "",
+        deliveryMode:selectedDeliveryMode
+    };
+}
+
 function renderCheckoutFormWithValues(){
 
-    const oldName =
-        document
-            .getElementById("customer-name")
-            ?.value || "";
-
-    const oldPhone =
-        document
-            .getElementById("customer-phone")
-            ?.value || "";
-
-    const oldWilaya =
-        document
-            .getElementById("customer-wilaya")
-            ?.value || "";
-
-    const oldAddress =
-        document
-            .getElementById("customer-address")
-            ?.value || "";
-
-    const oldRequest =
-        document
-            .getElementById("special-request")
-            ?.value || "";
+    const savedData = checkoutFormData;
 
     renderCheckoutForm();
 
+    if(!savedData){
+        return;
+    }
+
     document
         .getElementById("customer-name")
-        .value = oldName;
+        .value = savedData.name;
 
     document
         .getElementById("customer-phone")
-        .value = oldPhone;
+        .value = savedData.phone;
 
     document
         .getElementById("customer-wilaya")
-        .value = oldWilaya;
+        .value = savedData.wilaya;
 
     document
         .getElementById("customer-address")
-        .value = oldAddress;
+        .value = savedData.address;
 
     document
         .getElementById("special-request")
-        .value = oldRequest;
+        .value = savedData.specialRequest;
 
-    updateAddressRequirement();
-    updateCheckoutDelivery();
+    selectDeliveryMode(savedData.deliveryMode);
 }
 
 /* =========================================================
@@ -5060,7 +5073,18 @@ async function submitOrder(){
     }
 
     const data =
-        validateCheckoutForm();
+        checkoutFormData
+            ? {
+                name:checkoutFormData.name.trim(),
+                phone:normalizeAlgerianPhone(
+                    checkoutFormData.phone
+                ),
+                wilaya:checkoutFormData.wilaya,
+                address:checkoutFormData.address.trim(),
+                specialRequest:
+                    checkoutFormData.specialRequest.trim()
+              }
+            : validateCheckoutForm();
 
     if(!data){
         return;
@@ -5143,6 +5167,8 @@ async function submitOrder(){
         cart = [];
 
         saveCart();
+
+        checkoutFormData = null;
 
         showOrderSuccess();
 
