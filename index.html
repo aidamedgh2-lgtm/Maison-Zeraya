@@ -2939,9 +2939,12 @@ function isProductOutOfStock(product){
     return product?.available===false ||
         (product?.stock!==null && product?.stock!==undefined && Number(product.stock)<=0);
 }
+function isReservationOnly(product){
+    return product?.preorder_only === true || isProductOutOfStock(product);
+}
 async function reserveCurrentProduct(){
     if(!currentProduct)return;
-    if(!isProductOutOfStock(currentProduct)){
+    if(!isReservationOnly(currentProduct)){
         alert("Ce produit est actuellement disponible.");
         return;
     }
@@ -3009,7 +3012,11 @@ function renderReservations(){
         html+='<div class="cart-item-meta">';
         if(item.color)html+='Couleur : '+escapeHtml(item.color)+'<br>';
         if(item.size)html+='Taille : '+escapeHtml(item.size)+'<br>';
-        html+=available?'<strong style="color:#17633f;">✅ Ce produit est disponible maintenant.</strong>':'⏳ En attente de disponibilité';
+        html+=available && !product?.preorder_only
+    ? '<strong style="color:#17633f;">✅ Ce produit est disponible maintenant.</strong>'
+    : product?.preorder_only
+        ? '<strong style="color:#8a6d1d;">📋 Produit en test — réservation de demande</strong>'
+        : '⏳ En attente de disponibilité';
         html+='</div><button class="remove-item" onclick="removeReservation('+index+')">Supprimer</button></div></div>';
     });
     body.innerHTML=html;
@@ -3485,7 +3492,9 @@ function renderProducts(){
                     ${escapeHtml(product.description || "")}
                 </div>
 
-                ${isProductOutOfStock(product) ? '<div style="color:#b83232;font-size:10px;font-weight:bold;margin-top:7px;">RUPTURE DE STOCK — RÉSERVATION POSSIBLE</div>' : ''}
+                ${isReservationOnly(product)
+    ? '<div style="color:#8a6d1d;font-size:10px;font-weight:bold;margin-top:7px;">📋 SUR COMMANDE — RÉSERVEZ POUR TESTER LA DEMANDE</div>'
+    : ''}
 
                 <div class="product-prices">
 
@@ -3782,10 +3791,17 @@ function openProduct(productId){
     renderSizeOptions(product);
 
     const reserveButton=document.getElementById("reserveProductBtn");
+    const addButton=document.getElementById("addProductBtn");
     if(reserveButton){
-        const outOfStock=isProductOutOfStock(product);
-        reserveButton.classList.toggle("hidden",!outOfStock);
+        const reservationOnly=isReservationOnly(product);
+        reserveButton.classList.toggle("hidden",!reservationOnly);
+        reserveButton.textContent=product.preorder_only
+            ? "📋 RÉSERVER — TESTER LA DEMANDE"
+            : "🔖 RÉSERVER QUAND IL SERA DISPONIBLE";
         reserveButton.onclick=reserveCurrentProduct;
+    }
+    if(addButton){
+        addButton.classList.toggle("hidden",product.preorder_only === true || isProductOutOfStock(product));
     }
 
     updateGallery();
