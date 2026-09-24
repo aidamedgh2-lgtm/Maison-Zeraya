@@ -1231,15 +1231,74 @@ async function loadDashboardStats(){
 async function loadReservationsAdmin(){
     const box=document.getElementById("reservationsList");
     if(!box)return;
-    const {data,error}=await supabaseClient.from("reservations").select("*").order("created_at",{ascending:false});
-    if(error){box.textContent="Erreur : "+error.message;return;}
-    if(!data?.length){box.innerHTML="<p>Aucune réservation.</p>";return;}
-    const counts={};
-    data.filter(r=>r.status==="pending").forEach(r=>counts[r.product_id]=(counts[r.product_id]||0)+1);
-    box.innerHTML=data.map(r=>{
-        const count=counts[r.product_id]||0;
-        return '<div class="order-card"><strong>'+escapeHtml(r.product_name)+'</strong><div class="small-note">'+(r.size?"Taille : "+escapeHtml(r.size)+" · ":"")+(r.color?"Couleur : "+escapeHtml(r.color)+" · ":"")+new Date(r.created_at).toLocaleString("fr-DZ")+'</div><div style="margin-top:8px;"><span class="status '+(r.status==="pending"?"status-unavailable":"status-available")+'">'+escapeHtml(r.status)+'</span> <strong>En attente : '+count+'</strong></div></div>';
+
+    const {data,error}=await supabaseClient
+        .from("reservations")
+        .select("*")
+        .order("created_at",{ascending:false});
+
+    if(error){
+        box.textContent="Erreur : "+error.message;
+        return;
+    }
+
+    if(!data?.length){
+        box.innerHTML="<p>Aucune réservation pour le moment.</p>";
+        return;
+    }
+
+    const pending=data.filter(r=>r.status==="pending");
+    const grouped={};
+
+    pending.forEach(r=>{
+        const key=String(r.product_id);
+        if(!grouped[key]){
+            grouped[key]={
+                product_id:r.product_id,
+                product_name:r.product_name,
+                count:0
+            };
+        }
+        grouped[key].count++;
+    });
+
+    const ranking=Object.values(grouped).sort((a,b)=>b.count-a.count);
+
+    const rankingHtml=ranking.length
+        ? `
+            <div style="margin-bottom:18px;padding:14px;background:#faf8f3;border:1px solid #ead7a8;border-radius:10px;">
+                <strong style="color:#123f3a;">📊 Produits les plus demandés</strong>
+                <div style="margin-top:10px;">
+                    ${ranking.map((item,index)=>`
+                        <div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #eee;">
+                            <span>${index+1}. ${escapeHtml(item.product_name)}</span>
+                            <strong>${item.count} réservation${item.count>1?"s":""}</strong>
+                        </div>
+                    `).join("")}
+                </div>
+            </div>
+        `
+        : "";
+
+    const detailsHtml=data.map(r=>{
+        const count=grouped[String(r.product_id)]?.count || 0;
+        return `
+            <div class="order-card">
+                <strong>${escapeHtml(r.product_name)}</strong>
+                <div class="small-note">
+                    ${r.size?"Taille : "+escapeHtml(r.size)+" · ":""}
+                    ${r.color?"Couleur : "+escapeHtml(r.color)+" · ":""}
+                    ${new Date(r.created_at).toLocaleString("fr-DZ")}
+                </div>
+                <div style="margin-top:8px;">
+                    <span class="status ${r.status==="pending"?"status-unavailable":"status-available"}">${escapeHtml(r.status)}</span>
+                    <strong>En attente : ${count}</strong>
+                </div>
+            </div>
+        `;
     }).join("");
+
+    box.innerHTML=rankingHtml+detailsHtml;
 }
 
 /* =========================================================
