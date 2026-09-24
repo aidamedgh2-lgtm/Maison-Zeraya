@@ -971,6 +971,15 @@ button {
 
     </select>
 
+    <div class="checkbox-box">
+        <input type="checkbox" id="productPreorderOnly">
+        <label for="productPreorderOnly">📋 Produit en test / précommande (je ne possède pas encore ce produit)</label>
+    </div>
+    <p class="small-note">
+        Le produit reste visible mais les clientes peuvent seulement le réserver.
+        Utilisez ce mode pour mesurer la demande avant d'acheter le stock.
+    </p>
+
 
     <!-- ================= STOCK ================= -->
 
@@ -1604,6 +1613,7 @@ function resetProductForm() {
 
     document.getElementById("productColors").value = "";
     document.getElementById("productIsPack").checked = false;
+    document.getElementById("productPreorderOnly").checked = false;
     renderPackOptions([]);
     updatePackVisibility();
 
@@ -1921,6 +1931,9 @@ async function saveProduct() {
             "productAvailable"
         ).value === "true";
 
+    const preorderOnly =
+        document.getElementById("productPreorderOnly").checked;
+
     const stockValue =
         document.getElementById(
             "productStock"
@@ -2067,6 +2080,7 @@ async function saveProduct() {
 
                         available,
                         stock,
+                        preorder_only:preorderOnly,
                         featured,
                         active: true
 
@@ -2153,6 +2167,7 @@ async function saveProduct() {
 
                         available,
                         stock,
+                        preorder_only:preorderOnly,
                         featured
 
                     })
@@ -2372,19 +2387,23 @@ async function loadProducts() {
 
 
         let availabilityHtml =
-            product.available !== false
-
+            product.preorder_only
                 ? `
-                    <span class="status status-available">
-                        Disponible
+                    <span class="status status-featured">
+                        📋 Test / Précommande
                     </span>
                   `
-
-                : `
-                    <span class="status status-unavailable">
-                        Non disponible
-                    </span>
-                  `;
+                : product.available !== false
+                    ? `
+                        <span class="status status-available">
+                            Disponible
+                        </span>
+                      `
+                    : `
+                        <span class="status status-unavailable">
+                            Non disponible
+                        </span>
+                      `;
 
 
         let stockText =
@@ -2740,6 +2759,11 @@ async function editProduct(id) {
             "productStock"
         ).value =
             product.stock ?? "";
+
+        document.getElementById(
+            "productPreorderOnly"
+        ).checked =
+            product.preorder_only === true;
 
 
         document.getElementById(
