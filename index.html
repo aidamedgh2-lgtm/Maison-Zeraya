@@ -2123,6 +2123,23 @@
 
 </div>
 
+
+<!-- =========================
+     CUSTOMER REVIEW MODAL
+========================= -->
+
+<div class="modal-overlay" id="reviewModal">
+    <div class="modal checkout-modal" style="max-width:760px;">
+        <div class="checkout-head">
+            <h2 class="checkout-title">⭐ Votre avis</h2>
+            <button class="modal-close" style="position:static;" onclick="closeReviewModal()">×</button>
+        </div>
+        <div class="checkout-body" id="reviewBody">
+            Chargement...
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -5429,6 +5446,213 @@ function finishCheckout(){
     goHome();
 
     renderCart();
+}
+
+
+/* =========================================================
+   CUSTOMER REVIEWS
+========================================================= */
+
+let activeReviewToken = null;
+let activeReviewData = null;
+
+function closeReviewModal(){
+    document.getElementById("reviewModal")?.classList.remove("active");
+    document.body.style.overflow = "";
+    activeReviewToken = null;
+    activeReviewData = null;
+}
+
+function renderReviewStars(productId, selectedRating=0){
+    return [1,2,3,4,5].map(n => `
+        <button
+            type="button"
+            data-review-product="${productId}"
+            data-review-rating="${n}"
+            style="border:0;background:transparent;font-size:28px;cursor:pointer;padding:2px;color:${n <= selectedRating ? "#c7a15a" : "#cfcfcf"};"
+        >★</button>
+    `).join("");
+}
+
+function renderReviewPage(data){
+    const body=document.getElementById("reviewBody");
+    if(!body)return;
+
+    const reviewed=new Map((data.reviews||[]).map(r=>[Number(r.product_id),r]));
+
+    body.innerHTML=`
+        <div style="padding:5px 0 20px;">
+            <p style="color:#707070;font-size:13px;line-height:1.6;">
+                Merci <strong style="color:#123f3a;">${escapeHtml(data.customer_name || "à vous")}</strong>.
+                Cette commande est indiquée comme <strong>Livrée</strong>.
+            </p>
+            <p style="color:#707070;font-size:12px;margin-top:6px;">
+                Vous pouvez laisser un avis sur les produits reçus.
+            </p>
+        </div>
+        <div id="reviewProducts">
+            ${(data.products||[]).map(product=>{
+                const old=reviewed.get(Number(product.product_id));
+                return `
+                    <div class="order-card" style="margin-bottom:14px;">
+                        <strong style="font-size:16px;color:#123f3a;">${escapeHtml(product.name)}</strong>
+                        ${product.size ? `<div class="small-note">Taille : ${escapeHtml(product.size)}</div>` : ""}
+                        ${product.color ? `<div class="small-note">Couleur : ${escapeHtml(product.color)}</div>` : ""}
+                        ${old ? `
+                            <div style="margin-top:12px;padding:10px;background:#faf8f3;border-radius:8px;">
+                                <strong>Votre avis est déjà enregistré.</strong>
+                                <div class="small-note">Statut : ${escapeHtml(old.status)}</div>
+                            </div>
+                        ` : `
+                            <div style="margin-top:12px;">
+                                <div class="review-stars" data-review-stars="${product.product_id}">
+                                    ${renderReviewStars(product.product_id)}
+                                </div>
+                                <textarea
+                                    id="review-comment-${product.product_id}"
+                                    placeholder="Votre avis sur ce produit..."
+                                    maxlength="1000"
+                                    style="width:100%;min-height:90px;margin-top:8px;"
+                                ></textarea>
+                                <input
+                                    id="review-name-${product.product_id}"
+                                    type="text"
+                                    maxlength="80"
+                                    placeholder="Nom affiché (facultatif)"
+                                    style="width:100%;margin-top:8px;"
+                                >
+                                <button
+                                    type="button"
+                                    class="main-btn"
+                                    style="margin-top:10px;"
+                                    onclick="submitProductReview(${product.product_id})"
+                                >
+                                    ENVOYER MON AVIS
+                                </button>
+                            </div>
+                        `}
+                    </div>
+                `;
+            }).join("")}
+        </div>
+    `;
+
+    document.querySelectorAll("[data-review-rating]").forEach(button=>{
+        button.addEventListener("click",()=>{
+            const productId=button.dataset.reviewProduct;
+            const rating=Number(button.dataset.reviewRating);
+            const container=document.querySelector(`[data-review-stars="${productId}"]`);
+            if(container)container.innerHTML=renderReviewStars(productId,rating);
+            container?.querySelectorAll("[data-review-rating]").forEach(b=>{
+                b.addEventListener("click",()=>{
+                    const next=Number(b.dataset.reviewRating);
+                    container.innerHTML=renderReviewStars(productId,next);
+                    container.querySelectorAll("[data-review-rating]").forEach(nb=>{
+                        nb.addEventListener("click",()=>{
+                            const v=Number(nb.dataset.reviewRating);
+                            container.innerHTML=renderReviewStars(productId,v);
+                        });
+                    });
+                });
+            });
+        });
+    });
+}
+
+async function initReviewFromUrl(){
+    const token=new URLSearchParams(window.location.search).get("review");
+    if(!token)return;
+
+    activeReviewToken=token;
+    const body=document.getElementById("reviewBody");
+    document.getElementById("reviewModal")?.classList.add("active");
+    document.body.style.overflow="hidden";
+
+    if(body)body.innerHTML="<p>Chargement de votre commande...</p>";
+
+    try{
+        const {data,error}=await supabaseClient.functions.invoke("customer-review",{
+            body:{action:"load",token}
+        });
+
+        if(error)throw error;
+        if(!data?.products?.length)throw new Error("Aucun produit à évaluer.");
+
+        activeReviewData=data;
+        renderReviewPage(data);
+    }catch(error){
+        console.error(error);
+        if(body){
+            body.innerHTML=`
+                <div class="empty-cart">
+                    <div style="font-size:14px;font-weight:bold;color:#123f3a;">Lien d'avis indisponible</div>
+                    <div style="font-size:11px;margin-top:8px;color:#707070;">
+                        ${escapeHtml(error?.message || "Cette commande n'est pas encore livrée.")}
+                    </div>
+                </div>
+            `;
+        }
+    }
+}
+
+async function submitProductReview(productId){
+    if(!activeReviewToken)return;
+
+    const ratingButton=document.querySelector(`[data-review-stars="${productId}"] button[data-review-rating][style*="c7a15a"]`);
+    let rating=ratingButton ? Number(ratingButton.dataset.reviewRating) : 0;
+
+    /* Fallback: inspect all stars and use the highest highlighted star. */
+    if(!rating){
+        const stars=document.querySelectorAll(`[data-review-stars="${productId}"] button[data-review-rating]`);
+        stars.forEach(s=>{
+            const style=s.getAttribute("style")||"";
+            if(style.includes("c7a15a"))rating=Math.max(rating,Number(s.dataset.reviewRating));
+        });
+    }
+
+    if(!rating){
+        alert("Veuillez choisir une note de 1 à 5 étoiles.");
+        return;
+    }
+
+    const comment=document.getElementById(`review-comment-${productId}`)?.value.trim()||"";
+    const displayName=document.getElementById(`review-name-${productId}`)?.value.trim()||"";
+
+    if(comment.length<2){
+        alert("Veuillez écrire un commentaire.");
+        return;
+    }
+
+    const button=document.querySelector(`button[onclick="submitProductReview(${productId})"]`);
+    if(button){
+        button.disabled=true;
+        button.textContent="ENVOI...";
+    }
+
+    try{
+        const {data,error}=await supabaseClient.functions.invoke("customer-review",{
+            body:{
+                action:"submit",
+                token:activeReviewToken,
+                product_id:productId,
+                rating,
+                comment,
+                display_name:displayName
+            }
+        });
+
+        if(error)throw error;
+
+        alert(data?.message || "Merci pour votre avis.");
+        await initReviewFromUrl();
+    }catch(error){
+        console.error(error);
+        alert(error?.message || "Impossible d'enregistrer votre avis.");
+        if(button){
+            button.disabled=false;
+            button.textContent="ENVOYER MON AVIS";
+        }
+    }
 }
 
 /* =========================================================
