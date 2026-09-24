@@ -3078,16 +3078,14 @@ async function loadOrders() {
 
             </p>
 
-            ${
-                order.special_request
-                    ? `
-                        <p>
-                            <strong>Demande spéciale :</strong>
-                            ${escapeHtml(order.special_request)}
-                        </p>
-                      `
-                    : ""
-            }
+            <p>
+                <strong>Demande spéciale :</strong>
+                ${
+                    order.special_request
+                        ? escapeHtml(order.special_request)
+                        : "Aucune"
+                }
+            </p>
 
 
             <div class="order-products">
