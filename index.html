@@ -3778,6 +3778,7 @@ function openProduct(productId){
             product.description || "";
 
     renderColorOptions(product);
+    renderPackInfo(product);
     renderSizeOptions(product);
 
     const reserveButton=document.getElementById("reserveProductBtn");
@@ -3805,6 +3806,22 @@ function closeProductModal(){
     document.body.style.overflow = "";
 }
 
+function renderPackInfo(product){
+    const old=document.getElementById("modalPackInfo");
+    if(old)old.remove();
+    if(!product?.is_pack || !Array.isArray(product.pack_items) || !product.pack_items.length)return;
+    const box=document.createElement("div");
+    box.id="modalPackInfo";
+    box.style.cssText="margin:14px 0;padding:12px;background:#faf8f3;border:1px solid #ead7a8;border-radius:10px;font-size:11px;line-height:1.7;";
+    let html="<strong style='color:#123f3a;'>🎁 Contenu du Pack</strong><br>";
+    product.pack_items.forEach(item=>{
+        const p=products.find(x=>String(x.id)===String(item.product_id));
+        if(p) html += "• "+escapeHtml(p.name)+" × "+(Number(item.quantity)||1)+"<br>";
+    });
+    box.innerHTML=html;
+    const description=document.getElementById("modalDescription");
+    description?.parentElement?.appendChild(box);
+}
 function renderColorOptions(product){
 
     const colors =
