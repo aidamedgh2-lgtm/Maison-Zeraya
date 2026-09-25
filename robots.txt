@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://maison-zeraya.pages.dev/sitemap.xml
