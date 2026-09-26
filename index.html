@@ -772,6 +772,58 @@
             font-size:9px;
         }
 
+        .footer-socials{
+            display:flex;
+            flex-wrap:wrap;
+            gap:9px;
+            margin-top:18px;
+        }
+
+        .footer-social{
+            display:flex;
+            align-items:center;
+            gap:7px;
+            padding:9px 11px;
+            border:1px solid rgba(255,255,255,.16);
+            border-radius:9px;
+            color:#eef3f1;
+            font-size:10px;
+            transition:.2s;
+        }
+
+        .footer-social:hover{
+            background:rgba(255,255,255,.08);
+            border-color:rgba(234,215,168,.55);
+            transform:translateY(-1px);
+        }
+
+        .footer-contact{
+            display:flex;
+            flex-direction:column;
+            gap:9px;
+            margin-top:3px;
+        }
+
+        .footer-contact .footer-link{
+            margin-bottom:0;
+        }
+
+        @media(max-width:700px){
+            .footer-grid{
+                grid-template-columns:1fr;
+                gap:28px;
+            }
+
+            .footer-socials{
+                gap:8px;
+            }
+
+            .footer-social{
+                flex:1 1 calc(50% - 8px);
+                justify-content:center;
+            }
+        }
+
         /* =========================
            MOBILE NAV
         ========================= */
@@ -1672,9 +1724,9 @@
             Échanges
         </div>
 
-        <div class="drawer-link">
-            Service client
-        </div>
+        <a class="drawer-link" href="#service-client" onclick="closeDrawer()">
+            Service client <span>›</span>
+        </a>
     </div>
 
 </aside>
@@ -1892,13 +1944,55 @@
                 <a class="footer-link" href="#about">À propos</a>
             </div>
 
-            <div>
-                <div class="footer-title">Service</div>
+            <div id="service-client">
+                <div class="footer-title">Service client</div>
 
-                <div class="footer-link">Livraison en Algérie</div>
-                <div class="footer-link">Paiement à la livraison</div>
-                <div class="footer-link">Échanges</div>
-                <div class="footer-link">Service client</div>
+                <div class="footer-contact">
+                    <a class="footer-link" href="tel:+213562933404">
+                        📞 +213 562 933 404
+                    </a>
+
+                    <a
+                        class="footer-link"
+                        href="https://wa.me/213562933404"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        💬 WhatsApp
+                    </a>
+                </div>
+
+                <div class="footer-socials">
+                    <a
+                        class="footer-social"
+                        href="https://www.instagram.com/maisonzeraya_16?stkn=Nng3c3Mzdmk3Y2Jh"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Instagram Maison Zeraya"
+                    >
+                        📸 Instagram
+                    </a>
+
+                    <a
+                        class="footer-social"
+                        href="https://www.tiktok.com/@maisonzeraya_16"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="TikTok Maison Zeraya"
+                    >
+                        🎵 TikTok
+                    </a>
+
+                    <a
+                        class="footer-social"
+                        href="https://www.facebook.com/profile.php?id=61580833621979"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Facebook Maison Zeraya"
+                    >
+                        📘 Facebook
+                    </a>
+                </div>
             </div>
 
         </div>
