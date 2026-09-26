@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Maison Zeraya | Produit</title>
+<meta name="description" content="Découvrez ce produit Maison Zeraya et commandez en ligne en Algérie.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" id="canonicalLink" href="https://maison-zeraya.pages.dev/produit.html">
+<meta property="og:type" content="product">
+<meta property="og:site_name" content="Maison Zeraya">
+<meta property="og:title" content="Maison Zeraya | Produit">
+<meta property="og:description" content="Découvrez ce produit Maison Zeraya et commandez en ligne en Algérie.">
+<meta property="og:url" id="ogUrl" content="https://maison-zeraya.pages.dev/produit.html">
+<style>
+:root{--green:#123f3a;--gold:#b9975b;--bg:#faf8f3;--text:#222;--muted:#666}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{padding:18px 20px;border-bottom:1px solid #e7e1d7;background:#fff}header a{color:var(--green);text-decoration:none;font-weight:700}
+main{max-width:1050px;margin:30px auto;padding:0 18px}.product{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:38px;background:#fff;padding:24px;border-radius:18px}
+.gallery img{width:100%;max-height:680px;object-fit:contain;background:#f5f2ed;border-radius:14px}
+h1{color:var(--green);font-family:Georgia,serif;font-size:34px;margin:8px 0 14px}.category{color:var(--gold);font-size:12px;text-transform:uppercase;letter-spacing:1px}
+.price{font-size:25px;font-weight:700;color:var(--green);margin:18px 0}.old{font-size:16px;color:#999;text-decoration:line-through;margin-left:8px}
+.description{white-space:pre-line;line-height:1.7;color:#444}.meta{margin-top:22px;padding-top:18px;border-top:1px solid #eee;line-height:1.9}
+.cta{display:inline-block;margin-top:24px;padding:13px 20px;background:var(--green);color:#fff;border-radius:9px;text-decoration:none;font-weight:700}
+.error{text-align:center;padding:70px 20px}.loading{text-align:center;padding:70px 20px}
+@media(max-width:720px){.product{grid-template-columns:1fr;padding:15px;gap:22px}h1{font-size:27px}main{margin:15px auto}}
+</style>
+<script type="application/ld+json" id="productSchema">{"@context":"https://schema.org","@type":"Product","name":"Maison Zeraya","brand":{"@type":"Brand","name":"Maison Zeraya"}}</script>
+</head>
+<body>
+<header><a href="https://maison-zeraya.pages.dev/">Maison Zeraya</a></header>
+<main id="app"><div class="loading">Chargement du produit…</div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://wicjgmiqevbhxuebhdyv.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_TORIACS6heJed6xX3c-o0A_YD2mrY4X";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const params=new URLSearchParams(location.search);
+const productId=params.get("id");
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+const formatPrice=v=>new Intl.NumberFormat("fr-DZ").format(Number(v)||0)+" DA";
+async function load(){
+ if(!productId){showError("Produit introuvable.");return}
+ try{
+  const {data:p,error}=await supabaseClient.from("products").select("*").eq("id",productId).eq("active",true).maybeSingle();
+  if(error)throw error;
+  if(!p){showError("Ce produit n'est plus disponible.");return}
+  const {data:imgs}=await supabaseClient.from("product_images").select("image_url,sort_order").eq("product_id",p.id).order("sort_order",{ascending:true});
+  const images=(imgs||[]).map(x=>x.image_url).filter(Boolean);
+  const image=images[0]||"";
+  const title=p.name+" | Maison Zeraya";
+  const desc=(p.description||("Découvrez "+p.name+" chez Maison Zeraya.")).replace(/\s+/g," ").trim().slice(0,155);
+  const url=location.origin+location.pathname+"?id="+encodeURIComponent(p.id);
+  document.title=title;
+  document.querySelector('meta[name="description"]').setAttribute("content",desc);
+  document.getElementById("canonicalLink").href=url;
+  document.getElementById("ogUrl").setAttribute("content",url);
+  document.querySelector('meta[property="og:title"]').setAttribute("content",title);
+  document.querySelector('meta[property="og:description"]').setAttribute("content",desc);
+  const old=Number(p.old_price)>Number(p.price)?'<span class="old">'+formatPrice(p.old_price)+"</span>":"";
+  const sizes=Array.isArray(p.sizes)&&p.sizes.length?p.sizes.join(" · "):"";
+  const colors=Array.isArray(p.colors)&&p.colors.length?p.colors.join(" · "):"";
+  document.getElementById("app").innerHTML='<article class="product"><div class="gallery">'+(image?'<img src="'+esc(image)+'" alt="'+esc(p.name)+'">':'')+'</div><div><div class="category">'+esc(p.category||"Collection")+'</div><h1>'+esc(p.name)+'</h1><div class="price">'+formatPrice(p.price)+old+'</div><div class="description">'+esc(p.description||"")+'</div><div class="meta">'+(sizes?'<strong>Tailles :</strong> '+esc(sizes)+'<br>':"")+(colors?'<strong>Couleurs :</strong> '+esc(colors)+'<br>':"")+(p.available===false?'<strong>Disponibilité :</strong> Sur réservation': '<strong>Disponibilité :</strong> Disponible')+'</div><a class="cta" href="'+location.origin+'/?product='+encodeURIComponent(p.id)+'">Voir le produit et commander</a></div></article>';
+  const schema={"@context":"https://schema.org","@type":"Product","name":p.name,"description":desc,"brand":{"@type":"Brand","name":"Maison Zeraya"},"offers":{"@type":"Offer","url":url,"priceCurrency":"DZD","price":String(p.price),"availability":p.available===false||Number(p.stock)===0?"https://schema.org/OutOfStock":"https://schema.org/InStock","seller":{"@type":"Organization","name":"Maison Zeraya"}}};
+  if(image)schema.image=images;
+  document.getElementById("productSchema").textContent=JSON.stringify(schema);
+ }catch(e){console.error(e);showError("Impossible de charger ce produit pour le moment.")}
+}
+function showError(t){document.getElementById("app").innerHTML='<div class="error"><h1>Maison Zeraya</h1><p>'+esc(t)+'</p><a class="cta" href="/">Retour à la boutique</a></div>'}
+load();
+</script>
+</body>
+</html>
