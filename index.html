@@ -3247,6 +3247,20 @@ async function loadProducts(){
 
         setupHeroImages();
 
+        const productParam =
+            new URLSearchParams(window.location.search).get("product");
+
+        if(productParam){
+            const requestedProduct =
+                products.find(product =>
+                    String(product.id) === String(productParam)
+                );
+
+            if(requestedProduct){
+                setTimeout(() => openProduct(requestedProduct.id), 0);
+            }
+        }
+
     }catch(error){
 
         console.error(
@@ -3541,7 +3555,13 @@ function renderProducts(){
                 </div>
 
                 <div class="product-name">
-                    ${escapeHtml(product.name || "")}
+                    <a
+                        href="produit.html?id=${encodeURIComponent(product.id)}"
+                        style="color:inherit;text-decoration:none;"
+                        onclick="event.stopPropagation()"
+                    >
+                        ${escapeHtml(product.name || "")}
+                    </a>
                 </div>
 
                 <div class="product-description">
