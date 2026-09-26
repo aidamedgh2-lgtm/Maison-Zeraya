@@ -24,14 +24,26 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "OnlineStore",
-      "name": "Maison Zeraya",
-      "url": "https://maison-zeraya.pages.dev/",
-      "description": "Boutique en ligne de lingerie, homewear et vêtements pour femme en Algérie.",
-      "areaServed": {
-        "@type": "Country",
-        "name": "Algeria"
-      }
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://maison-zeraya.pages.dev/#website",
+          "name": "Maison Zeraya",
+          "alternateName": "Maison Zeraya",
+          "url": "https://maison-zeraya.pages.dev/"
+        },
+        {
+          "@type": "OnlineStore",
+          "@id": "https://maison-zeraya.pages.dev/#store",
+          "name": "Maison Zeraya",
+          "url": "https://maison-zeraya.pages.dev/",
+          "description": "Boutique en ligne de lingerie, homewear et vêtements pour femme en Algérie.",
+          "areaServed": {
+            "@type": "Country",
+            "name": "Algeria"
+          }
+        }
+      ]
     }
     </script>
 
