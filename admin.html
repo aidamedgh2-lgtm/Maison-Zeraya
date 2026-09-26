@@ -349,6 +349,8 @@ button {
 .pack-options{background:#f5f8f7;border:1px solid #e1e7e5;border-radius:10px;padding:12px;max-height:240px;overflow:auto;}
 .pack-option{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #e1e7e5;}
 @media(max-width:700px){.stats-grid{grid-template-columns:1fr 1fr;}}
+.admin-nav{position:sticky;top:0;z-index:50;display:flex;gap:8px;overflow-x:auto;padding:10px;margin:0 0 22px;background:#fff;border:1px solid #e1e7e5;border-radius:14px;box-shadow:0 4px 18px rgba(0,0,0,.06);scrollbar-width:none}.admin-nav::-webkit-scrollbar{display:none}.admin-nav button{flex:0 0 auto;background:#f5f8f7;color:#173f3b;border:1px solid #d5dddd;padding:10px 13px;border-radius:10px;font-size:14px;white-space:nowrap}.admin-nav button.active{background:#123f3a;color:#fff;border-color:#123f3a}.admin-panel{display:none}.admin-panel.active{display:block}@media(max-width:650px){.admin-nav{margin-left:-4px;margin-right:-4px}.admin-nav button{font-size:13px;padding:9px 11px}}
+
 
 
 .checkbox-box {
@@ -584,6 +586,16 @@ button {
 
 </div>
 
+<nav class="admin-nav" id="adminNav" aria-label="Navigation administration">
+<button type="button" data-panel="home" class="active">📊 Accueil</button>
+<button type="button" data-panel="products">📦 Produits</button>
+<button type="button" data-panel="orders">🛒 Commandes</button>
+<button type="button" data-panel="tests">🧪 Tests</button>
+<button type="button" data-panel="reservations">🔖 Réservations</button>
+<button type="button" data-panel="reviews">⭐ Avis</button>
+</nav>
+<section class="admin-panel active" id="panel-home">
+
 <div class="box">
 <h2>📊 Statistiques</h2>
 <div class="stats-grid">
@@ -629,6 +641,9 @@ button {
 </div>
 
 
+</section>
+
+<section class="admin-panel" id="panel-products">
 <!-- PRODUCTS HEADER -->
 
 <div class="box">
@@ -1102,18 +1117,17 @@ button {
 </div>
 
 
+</section>
+
+<section class="admin-panel" id="panel-orders">
 <!-- ORDERS -->
 
 <div class="box">
 
     <h2 class="section-title">
         🧾 Commandes
-    </h2>
-
-    <p class="small-note">Les commandes dont le nom client est <strong>Test1</strong> (sans tenir compte des majuscules/minuscules ni des espaces autour) sont considérées comme des commandes de test.</p>
-    <button type="button" class="danger-btn" id="deleteTestOrdersBtn">🗑️ Supprimer les commandes Test1</button>
-
-    <div id="ordersList">
+    </h2> 
+<div id="ordersList">
         Chargement des commandes...
     </div>
 
@@ -1121,12 +1135,31 @@ button {
 
 </div>
 
+</section>
+
+<section class="admin-panel" id="panel-tests">
+<div class="box">
+<h2 class="section-title">🧪 Commandes expérimentales</h2>
+<p class="small-note">Cette section contient uniquement les commandes dont le nom client est <strong>Test1</strong>. Elles sont exclues des statistiques commerciales.</p>
+<button type="button" class="danger-btn" id="deleteTestOrdersBtn">🗑️ Supprimer les commandes Test1</button>
+<div class="box" style="margin-top:16px;margin-bottom:0;">
+<strong>Règle des commandes de test</strong>
+<p class="small-note">Une commande est considérée comme test si le nom est exactement « Test1 », sans tenir compte des majuscules/minuscules ni des espaces autour.</p>
+</div>
+</div>
+</section>
+
+<section class="admin-panel" id="panel-reservations">
 <div class="box">
 <h2 class="section-title">🔖 Réservations</h2>
 <p class="small-note">Une notification Telegram est envoyée automatiquement lorsqu'un produit atteint 6 réservations en attente.</p>
 <div id="reservationsList">Chargement des réservations...</div>
 </div>
 
+
+</section>
+
+<section class="admin-panel" id="panel-reviews">
 <div class="box">
 <h2 class="section-title">⭐ Avis clients</h2>
 <p class="small-note">Les avis ne sont publiés qu'après votre validation.</p>
@@ -1137,6 +1170,11 @@ button {
 
 </div>
 
+
+
+</section>
+
+</div>
 
 <script>
 
@@ -3566,6 +3604,23 @@ async function updateOrderStatus(
     await loadReviewsAdmin();
 }
 
+
+/* =========================================================
+   ADMIN NAVIGATION
+========================================================= */
+function showAdminPanel(panelName){
+    document.querySelectorAll(".admin-panel").forEach(panel=>{
+        panel.classList.toggle("active", panel.id === "panel-" + panelName);
+    });
+    document.querySelectorAll("#adminNav button").forEach(button=>{
+        button.classList.toggle("active", button.dataset.panel === panelName);
+    });
+}
+document.getElementById("adminNav")?.addEventListener("click",function(event){
+    const button=event.target.closest("button[data-panel]");
+    if(!button) return;
+    showAdminPanel(button.dataset.panel);
+});
 
 /* =========================================================
    BUTTON EVENTS
